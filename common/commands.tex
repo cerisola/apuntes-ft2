@@ -1,0 +1,84 @@
+% ==========================================================================================
+\RequirePackage{mathrsfs}
+\RequirePackage{amsmath}
+\RequirePackage{xparse}
+\RequirePackage{physics}
+
+% ==========================================================================================
+\newcommand{\defeq}{\equiv}
+\newcommand{\eqdef}{\defeq}
+
+% ==========================================================================================
+%\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\set}[1]{\Bqty{#1}}                                         % dep. 'physics.sty'
+
+% ==========================================================================================
+%\newcommand{\vect}[1]{\bm{#1}}
+%\newcommand{\vers}[1]{\vect{\hat{#1}}}
+\newcommand{\vect}[1]{\vb*{#1}}                                         % dep. 'physics.sty'
+\newcommand{\vers}[1]{\vu*{#1}}                                         % dep. 'physics.sty'
+
+\newcommand{\conj}[1]{{{#1}^{*}}}
+
+% ==========================================================================================
+\newcommand{\Naturals}{\mathbb{N}}
+\newcommand{\Integers}{\mathbb{Z}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\Complex}{\mathbb{C}}
+
+\newcommand{\Hilbert}{\mathscr{H}}
+
+\newcommand{\lchivita}{\varepsilon}
+
+% ==========================================================================================
+\DeclareMathOperator{\Variance}{Var}
+\DeclareMathOperator{\StandardDeviation}{Sdv}
+\DeclareMathOperator{\Argument}{Arg}
+\NewDocumentCommand{\Var}{}{\opbraces{\Variance}}                       % dep. 'physics.sty'
+\NewDocumentCommand{\Sdv}{}{\opbraces{\StandardDeviation}}              % dep. 'physics.sty'
+\NewDocumentCommand{\Arg}{}{\opbraces{\Argument}}                       % dep. 'physics.sty'
+\NewDocumentCommand{\Fourier}{}{\opbraces{\mathcal{F}}}                 % dep. 'physics.sty'
+\NewDocumentCommand{\TranslationOp}{}{\opbraces{\mathcal{T}}}           % dep. 'physics.sty'
+
+\DeclareDocumentCommand\opsupscriptbraces{ m o d() }                    % dep. 'physics.sty'
+{
+	\IfNoValueTF{#3}
+	{#1 \IfNoValueTF{#2}{}{[#2]}}
+  {#1 \IfNoValueTF{#2}{}{^{\left(#2\right)}} \argopen(#3\argclose)}
+}
+\NewDocumentCommand{\RotationOp}{}{\opsupscriptbraces{\mathcal{D}}}     % dep. 'physics.sty'
+\NewDocumentCommand{\RotationYMatrix}{}{\opsupscriptbraces{d}}          % dep. 'physics.sty'
+\NewDocumentCommand{\SphericalHarmonic}{m m}{\opbraces{Y^{#2}_{#1}}}    % dep. 'physics.sty'
+
+% ==========================================================================================
+\newcommand{\Id}{\mathbb{I}}
+\newcommand{\projector}[1]{\dyad{#1}}
+
+\newcommand{\Prob}[1]{P\left({#1}\right)}
+\newcommand{\ProbCond}[2]{P\left({#1}\middle|{#2}\right)}
+\newcommand{\ProbRes}[2]{\ProbCond{#1}{#2}}
+\newcommand{\HeisRepr}[1]{U^\dagger(t)\,{#1}\,U(t)}
+\newcommand{\UnitConj}[2]{{#2}^\dagger\,{#1}\,{#2}}
+\newcommand{\UnitConjPar}[2]{\left(#2\right)^\dagger\,{#1}\,\left(#2\right)}
+
+\newcommand{\ketjm}[2]{\ket{j = {#1}, m = {#2}}}
+\newcommand{\ketlm}[2]{\ket{l = {#1}, m = {#2}}}
+
+\newcommand{\tensor}{\otimes}
+\newcommand{\dirsum}{\oplus}
+
+\newcommand{\doublebarmel}[3]{\left\langle{#1}\middle\|{#2}\middle\|{#3}\right\rangle}
+
+\newcommand{\parityop}{\pi}
+\newcommand{\translationop}{\mathcal{T}}
+
+%\newcommand{\grad}{\vect{\nabla}}
+
+%\newcommand{\order}[1]{\mathcal{O}\left(#1\right)}
+
+% ==========================================================================================
+\newcommand{\spin}{spin}
+\newcommand{\spinhalf}{\spin~\ensuremath{1/2}}
+\newcommand{\spinone}{\spin~\ensuremath{1}}
+
+\newcommand{\TODO}[1]{{\small[\textbf{TO-DO}: {#1}]}}

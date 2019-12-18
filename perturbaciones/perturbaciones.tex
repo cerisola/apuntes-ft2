@@ -1,0 +1,1832 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[DIV=14]{typearea}
+% DIV defaults for A4 base
+% font size: 10pt 11pt 12pt | DIV: 8 10 12
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xfrac}
+\usepackage{extarrows}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{placeins}
+
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\setotherlanguage{english}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+
+% =============================================================================
+\usepackage{fontspec}
+
+% =============================================================================
+\input{../common/commands.tex}
+
+\graphicspath{{./}{./images/}}
+
+% =============================================================================
+\usepackage[type={CC},modifier={by-nc-sa},version={4.0},lang={en}]{doclicense}
+
+\usepackage[framemethod=tikz]{mdframed}
+\mdfdefinestyle{mainframe}{
+  frametitlebackgroundcolor=black!15,
+  frametitlerule=true,
+  roundcorner=10pt,
+  middlelinewidth=1pt,
+  innermargin=0.5cm,
+  outermargin=0.5cm,
+  innerleftmargin=0.5cm,
+  innerrightmargin=0.5cm,
+  innertopmargin=\topskip,
+  innerbottommargin=\topskip,
+}
+
+% =============================================================================
+\newcommand{\jpmprefact}{\hbar\sqrt{j(j+1) - m(m\pm1)}}
+\newcommand{\jpmprefactev}[2]{\hbar\sqrt{{#1} - {#2}}}
+\newcommand{\lpmprefact}{\hbar\sqrt{l(l+1) - m(m\pm1)}}
+\newcommand{\Ylm}{Y_{l,m}}
+\newcommand{\Ylmev}[2]{Y_{#1,#2}}
+\newcommand{\Plm}{P_{l,m}}
+\newcommand{\Plmev}[2]{P_{#1,#2}}
+\newcommand{\jmax}{j_{\text{max}}}
+\newcommand{\Ry}{\ensuremath{\text{Ry}}}
+\newcommand{\sinc}{\text{sinc}}
+
+% Header ======================================================================
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancyhead[L]{Apunte TPs Física Teórica 2: Teoría de Perturbaciones}
+\fancyhead[C]{}
+\fancyhead[R]{\thepage/\pageref{LastPage}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.5pt}
+\pagestyle{fancy}
+
+\usepackage{titlesec}
+%\renewcommand{\thesection}{\Roman{section}}
+%\renewcommand{\thesubsection}{\Roman{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+%\titleformat{\section}{\large\bfseries\filcenter}{\Roman{section}.}{0.5em}{}
+%\titleformat{\subsection}{\large\bfseries\filcenter}{\Roman{subsection}.}{0.5em}{}
+
+\numberwithin{equation}{subsection}
+\allowdisplaybreaks
+
+\setcounter{tocdepth}{3}
+
+% =============================================================================
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={Apunte TPs Física Teórica 2: Teoría de Perturbaciones},
+    pdfauthor={Federico Cerisola},
+    pdfencoding=auto,
+    pdfstartview=Fit,
+    pdfpagemode=UseOutlines,
+    hypertexnames=false,
+}
+
+% =============================================================================
+\begin{document}
+
+% =============================================================================
+\title{Apunte TPs Física Teórica 2: Teoría de Perturbaciones}
+\author{Federico Cerisola
+  \\ \small{Departamento de Física -- FCEyN -- Universidad de Buenos Aires}
+  \\ \small{\href{mailto:cerisola@df.uba.ar}{\nolinkurl{cerisola@df.uba.ar}}}
+}
+\date{\small Última actualización: \today \\[1em]
+  Última versión disponible en: \\
+  \texttt{
+    \href{https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+    {https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+  }}
+\maketitle
+\thispagestyle{empty}
+
+\vfill
+\doclicenseThis
+
+\pagebreak
+
+% =============================================================================
+\newpage
+  \tableofcontents
+\newpage
+
+% =============================================================================
+\section{Perturbaciones Independientes del tiempo}
+En general, la gran mayoría de Hamiltonianos que nos encontraremos en problemas
+reales no se pueden resolver de forma analítica, por lo que se vuelve
+necesario desarrollar métodos aproximados para atacar estos problemas más
+complejos. En en esta práctica estudiaremos métodos que nos permite tratar de
+forma sistemática perturbativamente interacciones que se agregan a un
+Hamiltoniano de base que sí sabemos resolver.
+Comenzamos con el caso de perturbaciones independientes del tiempo.
+
+% -----------------------------------------------------------------------------
+\subsection{Formalismo}
+Supongamos que el Hamiltoniano de nuestro sistema se puede escribir como
+\begin{equation}
+  H = H_0 + \lambda V,
+\end{equation}
+con $H_0$ un Hamiltoniano que sabemos diagonalizar de forma exacta y $\lambda$
+un parámetro adimensional pequeño ($\lambda \ll 1$). La idea es ver si podemos
+de alguna forma aprovechar el hecho que conocemos los autoestados y autovalores
+de $H_0$ y que $\lambda$ es pequeño para poder aproximar de forma perturbativa
+los autoestados y energías del Hamiltoniano total $H$. Efectivamente, como
+vieron en la teórica, si $\set{\ket{n}}$ son los autoestados de $H_0$ con
+autovalores $\set{E_n}$,
+\begin{equation}
+  H_0\ket{n} = E_n\ket{n},
+\end{equation}
+(que suponemos conocidos) y sean $\{\ket*{\tilde{\phi}_n}\}$ los autoestados de
+$H$ con autovalores $\{\tilde{E}_n\}$, entonces podemos desarrollar los estados
+y energías en series de potencias de $\lambda$ como
+\begin{align}
+  \tilde{E}_n &= E_n + \lambda E_n^{(1)} + \lambda^2 E_n^{(2)} +
+    \order{\lambda^3}, \label{def:enpertindept} \\
+  \ket*{\tilde{\phi}_n} &= \ket{n} + \lambda\ket*{n^{(1)}} +
+    \order{\lambda^2} \label{def:ketnpertindept}
+\end{align}
+con
+\begin{align}
+  E_n^{(1)} &= \matrixel{n}{V}{n}, \label{def:enord1indept} \\
+  E_n^{(2)} &= \sum_{k \neq n}\frac{\abs{\matrixel{k}{V}{n}}^2}{E_n - E_k}
+    \label{def:enord2indept} \\
+  \ket*{n^{(1)}} &= \sum_{k \neq n}\frac{\matrixel{k}{V}{n}}{E_n - E_k}\ket{k},
+    \label{def:ketnord1indept}
+\end{align}
+donde esto es válido para el caso que la correspondiente energía sin perturbar
+$E_n$ es no degenerada (después veremos qué sucede en el caso degenerado).
+En los problemas que vamos a estudiar, no calcularemos estados a orden mayor
+que $\lambda$. El motivo es que, no solo el término de orden $\lambda^2$ es
+bastante más laborioso de calcular que el lineal, sino que además, como es
+inmediato de \eqref{def:ketnpertindept}, el estado $\ket*{\tilde{\phi}_n}$ no
+está normalizado. Dado el desarrollo de $\ket*{\tilde{\phi}_n}$ truncado a
+orden $k$, habría que a su vez normalizar el estado. La ventaja de trabajar
+hasta primer orden en $\lambda$ es que la norma de $\ket*{\tilde{\phi}_n}$ es
+\begin{equation}
+  \braket*{\tilde{\phi}_n}{\tilde{\phi}_n} = 1 + \order{\lambda^2}.
+\end{equation}
+Por lo tanto, si trabajamos hasta orden lineal en el estado, no hace falta
+normalizarlo.
+
+\bigbreak
+
+Antes de pasar al caso degenerado, cabe mencionar que el parámetro adimensional
+pequeño $\lambda$ que aparece en las expresiones anteriores en un problema real
+típicamente no aparece directamente en el potencial. El potencial tendrá
+constantes con dimensiones y usaremos directamente las expresiones
+\eqref{def:enord1indept}, \eqref{def:enord2indept} y \eqref{def:ketnord1indept}
+directamente usando todo el potencial $V$. Como es típico de un desarrollo
+perturbativo, en un problema real en general no podremos decir exactamente qué
+significa ``pequeño'' de antemano, hasta que no hacemos el desarrollo y vemos
+qué se tiene que satisfacer para que sea consistente.
+
+\bigbreak
+
+Esbocemos ahora qué sucede si $E_n$ es degenerado (aunque probablemente quede
+más claro más adelante en un ejemplo concreto). Supongamos que $H_0$ tiene un
+nivel degenerado $E_n$, con una base $\set{\ket{n,i}, i = 1,\dots,K}$ ($K$
+siendo el grado de degeneración). Claramente, el problema de querer utilizar
+las expresiones \eqref{def:enord2indept} y \eqref{def:ketnord1indept} es que
+tenemos un término dividiendo $E_n - E_k$, que diverge cuando sumamos sobre los
+estados degenerados. La idea entonces es la siguiente (esto no pretende ser una
+demostración, solamente una idea de por qué el método funciona). Para $H_0$ los
+autoestados $\set{\ket{n,i}}$ son tan buenos como cualquier combinación lineal
+de ellos, dado que el subespacio es degenerado. Veamos que efectivamente
+podemos elegir una nueva base $\set{\ket{\psi_{n,i}}, i=1,\dots,K}$ del
+subespacio degenerado que sí nos sirve para aplicar \eqref{def:enord2indept} y
+\eqref{def:ketnord1indept}. Como mencionamos antes, el problema es la
+diferencia de energías en el denominador que diverge. Una forma de solucionar
+esto es hacer que se anule el numerador, así el término no aparece en la
+sumatoria. Para ello, necesitamos que $\matrixel{\psi_{n,i}}{V}{\psi_{n,j}} =
+0$ si $i \neq j$. La forma de lograr esto es diagonalizar la matriz de $V$
+restringida a este subespacio. Por lo tanto, el procedimiento es
+\begin{enumerate}
+  \item Partimos con una base $\set{\ket{n,i}, i=1,\dots,K}$ de estados del
+    subespacio degenerado de $H_0$ con energía $E_n$ (y grado de degeneración
+    $K$).
+  \item Escribimos la matriz de $V$ restringida a este subespacio:
+    \begin{equation}
+      \left(V\right)_{\substack{\text{subesp.}\\\text{degenerado}}} =
+      \begin{pmatrix}
+        \matrixel{n,1}{V}{n,1} & \dots & \matrixel{n,1}{V}{n,K} \\
+        \vdots & \vdots & \vdots \\
+        \matrixel{n,K}{V}{n,1} & \dots & \matrixel{n,K}{V}{n,K}
+      \end{pmatrix},
+    \end{equation}
+    y la diagonalizamos, obteniendo autoestados $\set{\ket{\psi_{n,i}},
+    i=1,\dots,K}$ con energías $\set{V_{n,i}, i=1,\dots,K}$.
+  \item Entonces, los estados $\set{\ket{\psi_{n,i}}}$ son los estados a orden
+    cero del desarrollo perturbativo (es decir que para las expresiones
+    \eqref{def:enord2indept}, \eqref{def:ketnord1indept} usamos estos estados
+    en cambio de los estados $\set{\ket{n,i}}$). Por otro lado, las energías
+    $V_{n,i}$ nos dan la corrección a primer orden en la energía.
+    Si esta corrección a primer orden en la energía rompe la degeneración, para
+    ordenes mayores procedemos como para el caso no degenerado con los estados
+    nuevos. Si no se rompe la degeneración hay que proceder de otra forma (que
+    en el curso no veremos, pero lo idea es similar).
+\end{enumerate}
+Cabe destacar que la diagonalización de $V$ restringida al subespacio
+degenerado, \emph{no} es una diagonalización de $V$. Efectivamente, los estados
+$\ket{\psi_{n,i}}$ en general \emph{no} son autoestados de $V$. Esto se debe a
+que estamos truncando la matriz de $V$ y por lo tanto ignoramos términos de la
+forma $\matrixel{n,i}{V}{m}$ (con $n \neq m$) que en general son distintos de
+cero y por lo tanto hace falta tenerlos en cuenta si uno quisiese hacer una
+diagonalización exacta de $V$.
+
+% -----------------------------------------------------------------------------
+\subsection{Ejemplo: Oscilador armónico forzado (Problema 1 -- Guía 11)}
+Comencemos con un ejemplo sencillo, el oscilador armónico forzado, es decir el
+oscilador armónico al cual le agregamos un potencial adicional $V = F_0x$, con
+$F_0$ constante. De esta forma, el Hamiltoniano total es
+\begin{equation}
+  H = H_0 + V = \frac{p^2}{2m} + \frac{m\omega^2}{2}x^2 + F_0x,
+\end{equation}
+con
+\begin{equation}
+  H_0 = \frac{p^2}{2m} + \frac{m\omega^2}{2}x^2, \qquad V = F_0x.
+\end{equation}
+Este es un problema que en realidad se puede resolver de forma analítica (y de
+hecho lo hicimos en la práctica de oscilador armónico), pero es sencillo y es
+un buen primer ejercicio de los cálculos involucrados en teoría de
+perturbaciones.
+
+Conocemos los autoestados y energías del oscilador libre,
+\begin{equation}
+  H_0\ket{n} = E_n\ket{n}, \qquad \text{con } E_n = \hbar\omega\left(n +
+  \frac{1}{2}\right), \; \text{ y } n \in \Naturals_0.
+\end{equation}
+Por lo tanto, el espectro de $H_0$ es no degenerado y podemos simplemente
+aplicar \eqref{def:enord1indept}, \eqref{def:enord2indept} y
+\eqref{def:ketnord1indept}.
+Para los cálculos a realizar necesitaremos los elementos de matriz de $x$ en la
+base $\set{\ket{n}}$. Esto lo calculamos en la guía de oscilador armónico y
+obtuvimos
+\begin{equation}
+  \matrixel{n'}{x}{n} = \sqrt{\frac{\hbar}{2m\omega}}\left(
+    \sqrt{n+1}\delta_{n',n+1} + \sqrt{n}\delta_{n',n-1}\right)
+\end{equation}
+
+La corrección de energía de primer orden es
+\begin{equation}
+  E_n^{(1)} = \matrixel{n}{V}{n} = F_0\matrixel{n}{x}{n} = 0.
+\end{equation}
+la corrección de energía de segundo orden es
+\begin{align}
+  E_n^{(2)}
+  &= \sum_{n' \neq n} \frac{\abs{\matrixel{n'}{V}{n}}^2}{E_n - E_{n'}}
+  = F_0^2 \sum_{n' \neq n}\frac{\abs{\matrixel{n'}{x}{n}}^2}{\hbar\omega(n-n')}
+  = \frac{F_0^2\hbar}{2m\omega} \left( \frac{n+1}{\hbar\omega(n - (n+1))} +
+    \frac{n}{\hbar\omega(n - (n-1))} \right) \nonumber \\
+  &= \frac{F_0^2}{2m\omega^2} \left( -(n+1) + n \right)
+  = -\frac{F_0^2}{2m\omega^2}.
+\end{align}
+Por lo tanto, a segundo orden la energía es
+\begin{equation}
+  \tilde{E}_n = \hbar\omega\left(n + \frac{1}{2}\right) -
+    \frac{F_0^2}{2m\omega^2}.
+\end{equation}
+
+Por otro lado, la corrección del estado de primer orden es
+\begin{align}
+  \ket*{n^{(1)}}
+  &= \sum_{n' \neq n} \frac{\matrixel{n'}{V}{n}}{E_n - E_{n'}}\ket{n'}
+  = F_0\sum_{n' \neq n} \frac{\matrixel{n'}{x}{n}}{E_n - E_{n'}}\ket{n'}
+  = F_0\sqrt{\frac{\hbar}{2m\omega}} \sum_{n' \neq n}
+    \frac{\sqrt{n+1}\delta_{n',n+1} + \sqrt{n}\delta_{n',n-1}}
+    {\hbar\omega(n - n')} \ket{n'} \nonumber \\
+  &= \frac{F_0}{\hbar\omega}\sqrt{\frac{\hbar}{2m\omega}} \left(
+    \frac{\sqrt{n+1}}{n - (n+1)}\ket{n+1} +
+    \frac{\sqrt{n}}{n - (n-1)}\ket{n-1} \right) \nonumber \\
+  &= \frac{F_0}{\hbar\omega}\sqrt{\frac{\hbar}{2m\omega}} \left(
+    -\sqrt{n+1}\ket{n+1} + \sqrt{n}\ket{n-1} \right).
+\end{align}
+Por lo tanto, a primer orden el estado es
+\begin{equation}
+  \ket*{\tilde{\phi}_n} = \ket{n} +
+  \frac{F_0\sqrt{n}}{\sqrt{2m\hbar\omega^3}}\ket{n-1} -
+  \frac{F_0\sqrt{n+1}}{\sqrt{2m\hbar\omega^3}}\ket{n+1}.
+\end{equation}
+Para que el desarrollo en serie de potencias sea consistente, los coeficientes
+que multiplican a $\ket{n\pm1}$ deber ser mucho menos a 1 (porque sino no es
+más cierto que la norma es aproximadamente 1). En particular, esto quiere decir
+que
+\begin{equation}
+  \frac{F_0}{\sqrt{2m\hbar\omega^3}} \ll 1.
+\end{equation}
+Sin embargo, notemos que en la expansión de $\ket*{\tilde{\phi}_n}$ los
+coeficientes que acompañan a $\ket{n\pm1}$ están multiplicados por un factor
+$\sqrt{n}$ y $\sqrt{n+1}$. Por lo tanto, en principio del desarrollo
+perturbativo no puede ser válido para $n$ arbitrariamente grande. No importa
+cuán pequeña sea $F_0$, el desarrollo a primer orden encontrado no es válido
+para estados con $n$ suficientemente grande.
+
+% -----------------------------------------------------------------------------
+\subsection{Ejemplo: Efecto Stark en el átomo de Hidrógeno
+  (Problema 6 -- Guía 11)}
+
+Veamos ahora un ejemplo que es de gran interés práctico, el efecto Stark en el
+átomo de Hidrógeno.
+
+\bigbreak
+
+Repasemos primero muy brevemente lo fundamental del átomo de Hidrógeno. El
+Hamiltoniano del electrón en un átomo de Hidrógeno es
+\begin{equation}
+  H_0 = \frac{p^2}{2m} - \frac{e^2}{r}.
+\end{equation}
+Como tenemos un potencial central, el Hamiltoniano se diagonaliza
+simultáneamente con $L^2$ y $L_z$ (que junto a $H_0$ forman un CCOC). Se obtenía
+que los autoestados eran
+\begin{equation}
+  \ket{n,l,m}, \qquad n \in \Naturals, \; l = 0,\dots,n-1, \; m = -l, \ldots,
+  l,
+\end{equation}
+con $l$ el número cuántico asociado al autovalor de $L^2$ y $m$ al de $L_z$. De
+esta forma, las funciones de onda en coordenadas esféricas tienen la forma
+\begin{equation}
+  \braket{r,\theta,\phi}{n,l,m} = \psi_{nlm}(r,\theta,\phi) =
+  R_{nl}(r)\SphericalHarmonic{l}{m}(\theta,\phi),
+\end{equation}
+con $\SphericalHarmonic{l}{m}$ los armónicos esféricos.
+
+Por otro lado, los niveles de energía del átomo resultan
+\begin{equation} \label{eq:enehidrogen}
+  E_{nlm} = -\frac{\Ry}{n^2},
+\end{equation}
+con $\Ry \approx 0.13605\ldots \text{eV}$ una unidad de energía llamada
+Rydberg. Notablemente, la energía depende solamente de $n$ pero no de $l$.
+
+\bigbreak
+
+El efecto Stark es un corrimiento de los niveles de energía de un átomo que se
+observa experimentalmente cuando se enciende un campo externo electrostático
+uniforme. Consideremos entonces un átomo de Hidrógeno que se somete a un campo
+externo estático y uniforme $\vect{E} = E_0\vers{z}$. Esto da un término
+adicional de energía
+\begin{equation}
+  V = -qE_0z = \abs{e}E_0z,
+\end{equation}
+donde $z$ es el operador posición en la coordenada $z$ (donde apunta el campo).
+De esta forma, el Hamiltoniano total es
+\begin{equation}
+  H = H_{0} + V.
+\end{equation}
+
+Este Hamiltoniano ya no se puede resolver analíticamente y por lo tanto
+tendremos que recurrir a teoría de perturbaciones. A diferencia del ejemplo
+anterior, ahora no vamos a poder tratar simultáneamente todos los estados y
+energías simultáneamente; así que vamos procediendo uno por uno.
+
+\subsubsection{Energía del estado fundamental hasta segundo orden}
+
+Comencemos con en el estado fundamental. Por \eqref{eq:enehidrogen}, la energía
+del estado fundamental se tiene para el menor $n$ posible, es decir $n = 1$.
+En tal caso, como en el átomo de Hidrógeno $0 \leq l \leq n - 1$, entonces
+necesariamente $l = 0$ y luego $m = 0$. Por lo tanto, el estado fundamental es
+no degenerado y está dado por el estado y energía
+\begin{equation}
+  \text{Estado fundamental: } \set{(n=1,l=0,m=0)}, \ket{1,0,0}, E_{100} = -\Ry.
+\end{equation}
+Por lo tanto, podemos utilizar teoría de perturbaciones para el caso no
+degenerado.
+
+Vamos a calcular primero la energía hasta segundo orden:
+\begin{equation}
+  \tilde{E}_{100} = E_{100} + E^{(1)}_{100} + E^{(2)}_{100}.
+\end{equation}
+Usando \eqref{def:enord1indept}, la corrección de primer orden está dada por
+\begin{equation}
+  E^{(1)}_{100} = \matrixel{100}{V}{100} = \abs{e}E_0\matrixel{100}{z}{100}.
+\end{equation}
+Notemos que el elemento de matriz $\matrixel{100}{z}{100}$ es cero por paridad.
+Efectivamente, $z$ es impar, es decir
+\begin{equation}
+  \parityop z \parityop = -z.
+\end{equation}
+Por otro lado, como vimos en la guía de paridad, los autoestados de momento
+angular orbital tienen paridad bien definida
+\begin{equation}
+  \parityop \ket{n,l,m} = (-1)^{l}\ket{n,l,m}.
+\end{equation}
+Por lo tanto, el valor medio de $z$ en cualquiera de estos estados es cero
+\begin{align}
+  \matrixel{n,l,m}{z}{n,l,m} &=
+    \underbrace{\bra{n,l,m}\parityop}_{(-1)^l\bra{n,l,m}} \underbrace{\parityop
+    z \parityop}_{-z} \underbrace{\parityop\ket{n,l,m}}_{(-1)^l\ket{n,l,m}} =
+    -(-1)^{2l} \matrixel{n,l,m}{z}{n,l,m} = -\matrixel{n,l,m}{z}{n,l,m} \\
+  &\implies \matrixel{n,l,m}{z}{n,l,m} = 0.
+\end{align}
+Por lo tanto,
+\begin{equation}
+  E^{(1)}_{100} = 0.
+\end{equation}
+
+Veamos ahora la corrección de segundo orden. Por \eqref{def:enord2indept}
+tenemos
+\begin{equation}
+  E^{(2)}_{100}
+  = \sum_{(n,l,m)\neq(1,0,0)} \frac{\abs{\matrixel{n,l,m}{V}{1,0,0}}^2}
+    {E_{100} - E_{nlm}}
+  = e^2E_0^2 \sum_{(n,l,m)\neq(1,0,0)}
+    \frac{\abs{\matrixel{n,l,m}{z}{1,0,0}}^2} {E_{100} - E_{nlm}}.
+\end{equation}
+Antes de proceder con el cálculo vale la pena hacer una aclaración sobre la
+sumatoria. Estamos sumando sobre los estados distintos del que estamos
+perturbando (el $(1,0,0)$ en este caso). Como cada combinación distinta de
+$(n,l,m)$ es un estado distinto, en la sumatoria aparecen términos de la forma
+$(2,0,0$) aún si el $l$ y $m$ son los del fundamenta, porque tiene un $n$
+distinto (y por lo tanto es un estado distinto).
+
+Antes de calcular los elementos de matriz de $z$, veamos que muchos de ellos
+son cero por argumentos de simetría. En particular, usemos el teorema de
+Wigner-Eckart. Recordemos que el operador $z$ es la componente $q = 0$ de un
+tensor esférico de rango 1 (cualquier duda sobre esto ver el apunte sobre
+tensores esféricos). Entonces, usando WE tenemos
+\begin{equation}
+  \matrixel{n,l,m}{z}{1,0,0}
+  = \matrixel{n,l,m}{T^{(1)}_{0}}{1,0,0}
+  = \braket{0,1;0,0}{l,m} \doublebarmel{n,l}{T^{(1)}}{1,0},
+\end{equation}
+donde $\braket{0,1;0,0}{l,m}$ es el coeficiente de Clebsch-Gordan
+correspondiente a sumar momentos angulares $j_1 = 0$ y $j_2 = 1$ con
+proyecciones $m_1 = 0$, $m_2 = 0$ para obtener un momento angular total $l$ con
+proyección $m$. De las reglas de selección de los coeficientes de CG tenemos
+que para que este elemento de matriz sea no nulo, necesariamente
+\begin{enumerate}[label=(\alph*)]
+  \item $0 + 0 = m$, es decir que $m = 0$.
+  \item $\abs{0 - 1} \leq l \leq {0 + 1}$, es decir que $l = 1$.
+\end{enumerate}
+Por lo tanto, los únicos elementos de matriz que pueden ser no nulos son los
+$(n,l=1,m=0)$. A su vez, como para el átomo de Hidrógeno sabemos que $l \leq
+n-1$, esto significa que $n \geq 2$. Vale la pena acá remarcar una diferencia
+importante: la selección $l=1$, $m=0$ viene exclusivamente por argumentos de
+simetría debido a WE y es la misma para cualquier problema de potencial
+central; el hecho que $n \geq 2$ en cambio es consecuencia de las propiedades
+particulares del átomo de Hidrógeno.
+
+En conclusión, la expresión para la corrección de segundo orden de la energía
+del estado fundamental es
+\begin{equation}
+  E^{(2)}_{100}
+  = e^2E_0^2 \sum_{n \geq 2}
+    \frac{\abs{\matrixel{n,1,0}{z}{1,0,0}}^2} {E_{1} - E_{n}}
+  = e^2E_0^2 \sum_{n \geq 2}
+    \frac{\abs{\matrixel{n,1,0}{z}{1,0,0}}^2} {-\Ry + \Ry/n^2}
+  = -\frac{e^2E_0^2}{\Ry} \sum_{n \geq 2}
+    \frac{\abs{\matrixel{n,1,0}{z}{1,0,0}}^2} {1 - 1/n^2}.
+\end{equation}
+Una vez llegada a esta expresión no queda más que calcular la integral en todo
+el espacio correspondiente al elemento de matriz $\matrixel{n,1,0}{z}{1,0,0}$.
+Eso se puede hacer de forma analítica, aunque acá no nos preocupamos del
+resultado. Es más la sumatoria también se puede obtener de forma analítica y
+termina quedando simplemente $9a_0^2/4$, con $a_0$ el radio de Bohr (la cuenta
+la pueden ver por ejemplo en el Merzbacher).
+
+Juntando todo, la energía hasta segundo orden para el estado fundamental es
+\begin{equation}
+  \tilde{E}_{100}
+  = E_{100} + E^{(1)}_{100} + E^{(2)}_{100}
+  = -\Ry -\frac{e^2E_0^2}{\Ry} \sum_{n \geq 2}
+    \frac{\abs{\matrixel{n,1,0}{z}{1,0,0}}^2} {1 - 1/n^2}.
+\end{equation}
+Notemos que a menor orden no nulo, el corrimiento de energía del estado
+fundamental es cuadrático en el módulo del campo eléctrico, i.e. va como
+$\abs{\vect{E}}^2$. Este efecto es conocido como el \emph{efecto Stark
+cuadrático}.
+
+\subsubsection{Estado fundamental hasta primer orden}
+
+Por otro lado, a primer orden, usando \eqref{def:ketnord1indept} el estado
+fundamental perturbado es
+\begin{equation}
+  \ket*{\tilde{\phi}_{100}} = \ket{100} + 
+  \sum_{(n,l,m) \neq (1,0,0)}\frac{\matrixel{n,l,m}{V}{1,0,0}}{E_1 - E_n}
+  \ket{n,l,m}.
+\end{equation}
+Notemos que los elementos de matriz que aparecen aquí son los mismos que
+tuvimos que calcular para la corrección de energía de segundo orden. Por lo
+tanto, todos los análisis anteriores siguen valiendo y tenemos
+\begin{equation} \label{eq:statefund1ordstark}
+  \ket*{\tilde{\phi}_{100}} = \ket{100} - \frac{\abs{e}E_0}{\Ry}
+    \sum_{n \geq 2} \frac{\matrixel{n,1,0}{z}{1,0,0}}{1 - 1/n^2} \ket{n,1,0}.
+\end{equation}
+Ahora que tenemos la expresión del estado perturbado podemos finalmente decir
+qué quiere decir que la perturbación sea pequeña. Como mencionamos en la
+introducción del método perturbativo, el parámetro $\lambda$ pequeño que
+aparece en las expresiones es puramente artificial y uno lo introduce para
+llevar el rastro de qué orden es cada termino. En un problema real las
+constantes que acompañan al potencial tienen dimensiones, como en este caso que
+$V = \abs{e}E_0z$. Por lo tanto, para determinar si el potencial es pequeño hay
+que ver con qué compararlo. Esto se puede ver una vez que tenemos el estado
+desarrollado. Efectivamente, para que el desarrollo perturbativo sea
+consistente necesitamos que los coeficientes que acompañan a todos los kets que
+no son el $\ket{1,0,0}$ sean pequeños (efectivamente sino la norma del vector
+$\ket*{\tilde{\phi}_{100}}$ no va a ser aproximadamente 1). Por lo
+tanto, necesitamos que
+\begin{equation}
+  \frac{\abs{e}E_0}{\Ry}\frac{\matrixel{n,1,0}{z}{1,0,0}}{1 - 1/n^2} \ll 1.
+\end{equation}
+(notar que efectivamente el coeficiente que pedimos sea pequeño es
+adimensional). Así escrito todavía no queda claro qué es esta condición. Para
+que quede más claro habría que calcular la integral de $z$ en todo el espacio
+correspondiente a esos elementos de matriz. Como mencionamos antes, eso se puede
+calcular y queda algo proporcional al radio de Bohr $a_0$. De esta forma, la
+condición para que el desarrollo a primer orden sea razonable es
+\begin{equation}
+  \frac{\abs{e}E_0a_0}{\Ry} \ll 1.
+\end{equation}
+
+\subsubsection{Valor medio del momento dipolar a primer orden}
+
+Veamos ahora cómo usar el estado para calcular algún valor medio. En
+particular, resulta interesante calcular el valor medio del momento dipolar del
+átomo.  Recordemos de electrostática que el momento dipolar de dos cargas
+puntuales $q$ y $-q$ separadas una distancia $d$ se define como $\vect{P} =
+q\vect{d}$, donde el vector $\vect{d}$ apunta de la carga negativa a la
+positiva. En el átomo de Hidrógeno, tenemos la carga del electrón $e$ y la del
+protón $\abs{e}$. Por lo tanto podemos definir un momento dipolar del sistema.
+Para ello definimos el operador de momento dipolar, cuya definición es
+directamente la clásica promoviendo los vectores posición en operadores
+posición. De esta forma el operador de momento dipolar es
+\begin{equation}
+  \vect{P} \eqdef e\vect{r}.
+\end{equation}
+El valor medio de $\vect{P}$ nos dará el valor medio del momento dipolar del
+sistema. Notablemente, los autoestados del átomo de Hidrógeno tienen todos
+momento dipolar medio nulo
+\begin{equation}
+  \expval{\vect{P}} = \matrixel{n,l,m}{\vect{P}}{n,l,m} = 0.
+\end{equation}
+Esto sale de forma inmediata por argumentos de paridad (básicamente el mismo
+argumento que usamos antes para $z$ pero ahora también para los operadores $x$
+e $y$).
+
+Veamos ahora que, en cambio, al encender el campo electrostático $\vect{E}$ el
+sistema se polariza y aparece un momento dipolar eléctrico medio no nulo. Para
+ello calculemos el valor medio de $\vect{P}$ en el estado fundamental
+perturbado a primer orden. Tenemos
+\begin{align}
+  \expval{P_i}
+  &= \matrixel*{\tilde{\phi}_{100}}{P_i}{\tilde{\phi}_{100}}
+  = e\matrixel*{\tilde{\phi}_{100}}{r_i}{\tilde{\phi}_{100}} \nonumber \\
+  &= e\left(
+    \bra{100} - \frac{\abs{e}E_0}{\Ry}
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}{1 - 1/n^2} \bra{n,1,0}
+    \right) r_i \left(
+    \ket{100} - \frac{\abs{e}E_0}{\Ry}
+    \sum_{n \geq 2} \frac{\matrixel{n,1,0}{z}{1,0,0}}{1 - 1/n^2} \ket{n,1,0}
+    \right) \nonumber \\
+  &= e\Bigg(
+    \underbrace{\matrixel{100}{r_i}{100}}_{\substack{0 \\ \text{por paridad}}}
+    - \frac{\abs{e}E_0}{\Ry} \sum_{n \geq 2}
+    \frac{\matrixel{n,1,0}{z}{1,0,0}}{1 - 1/n^2} \matrixel{1,0,0}{r_i}{n,1,0}
+    \nonumber \\
+  &- \frac{\abs{e}E_0}{\Ry} \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}
+    {1 - 1/n^2} \matrixel{n,1,0}{r_i}{1,0,0}
+    \nonumber \\
+  &+ \underbrace{\frac{e^2E_0^2}{\Ry^2}
+    \sum_{n,m \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}{1 - 1/n^2}
+    \frac{\matrixel{m,1,0}{z}{1,0,0}}{1 - 1/m^2}
+    \matrixel{n,1,0}{r_i}{m,1,0}}_{\order{\frac{e^2E_0^2}{\Ry^2}}}.
+    \Bigg)
+\end{align}
+Notemos que el último término, como se indica, es de orden $e^2E_0^2/\Ry^2$,
+que es justamente lo que antes dijimos que tiene que ser pequeño. Por lo tanto,
+este término cruzado es de segundo orden en la perturbación y hay que tirarlo.
+Acá vale la pena poner énfasis en por qué es absolutamente necesario tirar ese
+termino. El estado con el que estamos trabajando está calculado a primer orden.
+Por lo tanto, todo cálculo que hagamos con ese estado también debe ser a primer
+orden para sea consistente con la aproximación. Esto es cierto de cualquier
+desarrollo perturbativo de cualquier función. Si uno desarrolla la función a
+orden $n$, entonces todo cálculo que se haga con esa función también debe ser a
+orden $n$. Si al hacer algún cálculo aparecen órdenes mayores (como en este
+caso), hay que tirarlos. Dejar esto términos \emph{no} dan mayor precisión,
+sino que lo contrario, son totalmente espurios y un artificio del hecho que
+estamos trabajando perturbativamente y pueden dar cualquier cosa. Por ejemplo,
+en este cálculo que estamos haciendo, si uno quisiese calcular el momento
+dipolar a segundo orden, entonces tendría que calcular el ket a segundo orden.
+En tal caso, al calcular el valor medio el término de segundo orden que aparece
+arriba estaría, pero también aparecerían otros términos de segundo orden que
+vienen del producto cruzado entre un término de orden cero y uno de segundo. El
+verdadero término de segundo orden en la expansión de $\expval{P_i}$ incluye la
+suma de todas estas contribuciones. Considerar uno solo de esos términos está
+mal y puede dar cualquier cosa. Entonces, tirando el término de segundo orden
+tenemos que
+\begin{align}
+  \expval{P_i}
+  &= -e\Bigg(
+    \frac{\abs{e}E_0}{\Ry} \sum_{n \geq 2}
+    \frac{\matrixel{n,1,0}{z}{1,0,0}}{1 - 1/n^2} \matrixel{1,0,0}{r_i}{n,1,0}
+    + \frac{\abs{e}E_0}{\Ry} \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}
+    {1 - 1/n^2} \matrixel{n,1,0}{r_i}{1,0,0} \Bigg)
+    + \order{\frac{e^2E_0^2}{\Ry^2}} \nonumber \\
+  &= \frac{e^2E_0}{\Ry}\Bigg(
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}{1 - 1/n^2}
+    \matrixel{n,1,0}{r_i}{1,0,0} + \sum_{n \geq 2}
+    \frac{\matrixel{n,1,0}{z}{1,0,0}} {1 - 1/n^2} \matrixel{n,1,0}{r_i}{1,0,0}
+    \Bigg) + \order{\frac{e^2E_0^2}{\Ry^2}} \nonumber \\
+  &= \frac{2e^2E_0}{\Ry}\Re\left[
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}{1 - 1/n^2}
+    \matrixel{n,1,0}{r_i}{1,0,0}\right] + \order{\frac{e^2E_0^2}{\Ry^2}}
+    \nonumber \\
+  &= \frac{2e^2E_0}{\Ry}\Re\left[
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}\matrixel{n,1,0}{r_i}{1,0,0}}{1 - 1/n^2}
+    \right] + \order{\frac{e^2E_0^2}{\Ry^2}}
+\end{align}
+Falta analizar cuánto valen los elementos de matriz
+$\matrixel{n,1,0}{r_i}{1,0,0}$ para los casos $r_1 = x$ y $r_2 = y$. Para ello
+utilicemos el teorema de Wigner-Eckart. Recordemos que así como $z$ era la
+componente $q = 0$ de un tensor esférico de rango 1, con $x$ e $y$ nos podíamos
+armar las componentes $q = \pm1$ de ese mismo tensor. Teníamos que
+\begin{equation}
+  T^{(1)}_{\pm1} = \frac{1}{\sqrt{2}}\left(\mp x - iy\right).
+\end{equation}
+(cualquier duda ver el apunte de tensores esféricos).
+Por lo tanto, $x$ e $y$ se escriben como
+\begin{equation}
+  x = \frac{1}{\sqrt{2}}\left(T^{(1)}_{-1} - T^{(1)}_{1}\right), \quad
+  y = -\frac{1}{\sqrt{2}}\left(T^{(1)}_{-1} + T^{(1)}_{1}\right).
+\end{equation}
+Luego, para $x$ tenemos
+\begin{equation}
+  \matrixel{n,1,0}{x}{1,0,0} =
+  \frac{1}{\sqrt{2}}\matrixel{n,1,0}{T^{(1)}_{-1}}{1,0,0} -
+  \frac{1}{\sqrt{2}}\matrixel{n,1,0}{T^{(1)}_{1}}{1,0,0}
+\end{equation}
+Usando WE para el primer término tenemos que
+\begin{equation}
+  \matrixel{n,1,0}{T^{(1)}_{-1}}{1,0,0} = \braket{0,1;0,-1}{1,0}
+  \doublebarmel{n,1}{T^{(1)}}{1,0}.
+\end{equation}
+Notemos que no se cumple la regla de selección de suma de componentes en cuanto
+$0 - 1 \neq 0$. Por lo tanto, este elemento de matriz es cero. Análogamente el
+elemento de matriz para $T^{(1)}_{1}$ es
+\begin{equation}
+  \matrixel{n,1,0}{T^{(1)}_{1}}{1,0,0} = \braket{0,1;0,1}{1,0}
+  \doublebarmel{n,1}{T^{(1)}}{1,0}.
+\end{equation}
+Nuevamente se viola la regla de selección de la suma de las componentes ($0 + 1
+\neq 0$), así que también este elemento de matriz es cero. En conclusión, el
+elemento de matriz de $x$ es cero
+\begin{equation}
+  \matrixel{n,1,0}{x}{1,0,0} =
+  \frac{1}{\sqrt{2}} \underbrace{\matrixel{n,1,0}{T^{(1)}_{-1}}{1,0,0}}_{0} -
+  \frac{1}{\sqrt{2}} \underbrace{\matrixel{n,1,0}{T^{(1)}_{1}}{1,0,0}}_{0} = 0.
+\end{equation}
+Para $y$ sucede exactamente lo mismo (de hecho $y$ también es combinación de
+lineal de $T^{(1)}_{1}$ y $T^{(1)}_{-1}$ cuyos elementos de matriz son cero)
+\begin{equation}
+  \matrixel{n,1,0}{y}{1,0,0} = -
+  \frac{1}{\sqrt{2}} \underbrace{\matrixel{n,1,0}{T^{(1)}_{-1}}{1,0,0}}_{0} -
+  \frac{1}{\sqrt{2}} \underbrace{\matrixel{n,1,0}{T^{(1)}_{1}}{1,0,0}}_{0} = 0.
+\end{equation}
+Por lo tanto, los valores medios del momento dipolar en las direcciones $x$ e
+$y$ es cero
+\begin{align}
+  \expval{P_x}
+  &= \frac{2e^2E_0}{\Ry}\Re\left[
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}{1 - 1/n^2}
+    \underbrace{\matrixel{n,1,0}{x}{1,0,0}}_{0}
+    \right] = 0. \\
+  \expval{P_y}
+  &= \frac{2e^2E_0}{\Ry}\Re\left[
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}}{1 - 1/n^2}
+    \underbrace{\matrixel{n,1,0}{y}{1,0,0}}_{0}
+    \right] = 0. \\
+\end{align}
+Para $z$ en cambio esos elementos de matriz en principio no se anulan (de hecho
+son los únicos que sobrevivieron usando WE cuando escribimos el desarrollo
+perturbativo del estado fundamental). En este caso tenemos
+\begin{align}
+  \expval{P_z}
+  &= \frac{2e^2E_0}{\Ry}\Re\left[
+    \sum_{n \geq 2} \frac{\matrixel{1,0,0}{z}{n,1,0}\matrixel{n,1,0}{z}{1,0,0}}
+    {1 - 1/n^2} \right] \nonumber \\
+  &= \frac{2e^2E_0}{\Ry}\Re\left[
+    \sum_{n \geq 2} \frac{\abs{\matrixel{1,0,0}{z}{n,1,0}}^2} {1 - 1/n^2}
+    \right] \nonumber \\
+  &= \frac{2e^2E_0}{\Ry} \sum_{n \geq 2}
+    \frac{\abs{\matrixel{1,0,0}{z}{n,1,0}}^2} {1 - 1/n^2}.
+\end{align}
+Por lo tanto, efectivamente ahora sí tenemos un momento dipolar medio no nulo.
+Es más, el momento apunta en la dirección del campo (por este motivo se dice
+que el campo polariza al átomo, generando un momento dipolar neto en su
+dirección).
+
+\bigbreak
+
+Finalmente, notemos que si derivamos la energía perturbada respecto del campo
+$\vect{E}$ tenemos
+\begin{equation}
+  -\pdv{\tilde{E}_{100}}{\vect{E}} = \frac{2e^2E_0}{\Ry} \sum_{n \geq 2}
+    \frac{\abs{\matrixel{1,0,0}{z}{n,1,0}}^2} {1 - 1/n^2} \;\vers{z}.
+\end{equation}
+Notemos que esto es justamente el valor medio del momento dipolar antes
+calculado,
+\begin{equation}
+  \expval{\vect{P}} = -\pdv{\tilde{E}_{100}}{\vect{E}}.
+\end{equation}
+Este es un resultado lindo, porque si recuerdan de electrostática, la energía
+de interacción entre un momento dipolar $\vect{P}$ y un campo electrostático
+externo $\vect{E}$ es justamente $U_{\text{int}} = -\vect{P}\cdot\vect{E}$. En
+particular, derivar la energía de interacción dipolar eléctrica respecto del
+campo da justamente el momento dipolar. Vemos que estas relaciones, a los
+ordenes acá trabajados, se satisfacen y podemos interpretar la corrección
+perturbativa a la energía del átomo como la energía de interacción del campo
+con el momento dipolar inducido.
+
+\subsubsection{Energías y estados del $1^{\text{er}}$ excitado}
+
+Para terminar con este problema, pasemos a calcular cómo cambian la energía y
+los estados del primer excitado. Recordando \eqref{eq:enehidrogen}, el primer
+excitado se tiene para $n = 2$, con energía
+\begin{equation}
+  E_{2} = -\frac{\Ry}{4}.
+\end{equation}
+Para $n = 2$, tenemos los posibles valores de $l = 0, 1$ (dado que $l \leq
+n-1$), y para cada $l$ como siempre $m = -l, \dots, l$. Por lo tanto, el primer
+excitado está degenerado y los estados que lo componen son
+\begin{align}
+  1^{\text{er}}\text{ excitado: }
+  &\set{(2,l,m), 0 \leq l \leq 1, -l \leq m \leq l}, \nonumber \\
+  &l = 0, \quad \implies m = 0, \implies \set{\ket{2,0,0}}, \nonumber \\
+  &l = 1, \quad \implies m = 1,0,-1, \implies \set{\ket{2,1,1}, \ket{2,1,0},
+  \ket{2,1,-1}}.
+\end{align}
+Por lo tanto, el primer excitado tiene degeneración 4 y una base del subespacio
+degenerado está dada por
+\begin{equation}
+  \set{\ket{2,0,0}, \ket{2,1,0}, \ket{2,1,1}, \ket{2,1,-1}}.
+\end{equation}
+Como ahora el nivel está degenerado, tenemos que proceder usando teoría de
+perturbaciones para el caso degenerado. Esto implicaba escribir la matriz de la
+perturbación $V$ en este subespacio y diagonalizarla. Esta matriz es
+\begin{align}
+  (V)_{\substack{\text{subesp.}\\1^{\text{er}}\text{ exc.}}}
+  &= \begin{pmatrix}
+    \matrixel{2,0,0}{V}{2,0,0} & \matrixel{2,0,0}{V}{2,1,0} &
+    \matrixel{2,0,0}{V}{2,1,1} & \matrixel{2,0,0}{V}{2,1,-1} \\
+    \matrixel{2,1,0}{V}{2,0,0} & \matrixel{2,1,0}{V}{2,1,0} &
+    \matrixel{2,1,0}{V}{2,1,1} & \matrixel{2,1,0}{V}{2,1,-1} \\
+    \matrixel{2,1,1}{V}{2,0,0} & \matrixel{2,1,1}{V}{2,1,0} &
+    \matrixel{2,1,1}{V}{2,1,1} & \matrixel{2,1,1}{V}{2,1,-1} \\
+    \matrixel{2,1,-1}{V}{2,0,0} & \matrixel{2,1,-1}{V}{2,1,0} &
+    \matrixel{2,1,-1}{V}{2,1,1} & \matrixel{2,1,-1}{V}{2,1,-1}
+  \end{pmatrix} \nonumber \\
+  &= \abs{e}E_0 \begin{pmatrix}
+    \matrixel{2,0,0}{z}{2,0,0} & \matrixel{2,0,0}{z}{2,1,0} &
+    \matrixel{2,0,0}{z}{2,1,1} & \matrixel{2,0,0}{z}{2,1,-1} \\
+    \matrixel{2,1,0}{z}{2,0,0} & \matrixel{2,1,0}{z}{2,1,0} &
+    \matrixel{2,1,0}{z}{2,1,1} & \matrixel{2,1,0}{z}{2,1,-1} \\
+    \matrixel{2,1,1}{z}{2,0,0} & \matrixel{2,1,1}{z}{2,1,0} &
+    \matrixel{2,1,1}{z}{2,1,1} & \matrixel{2,1,1}{z}{2,1,-1} \\
+    \matrixel{2,1,-1}{z}{2,0,0} & \matrixel{2,1,-1}{z}{2,1,0} &
+    \matrixel{2,1,-1}{z}{2,1,1} & \matrixel{2,1,-1}{z}{2,1,-1}
+  \end{pmatrix}
+\end{align}
+Como discutimos antes, por paridad los valores medios de $z$ en cualquier
+autoestado de momento angular orbital es cero. Por lo tanto, todos los
+elementos diagonales de esta matriz son cero.
+\begin{align}
+  (V)_{\substack{\text{subesp.}\\1^{\text{er}}\text{ exc.}}}
+  &= \abs{e}E_0 \begin{pmatrix}
+    0 & \matrixel{2,0,0}{z}{2,1,0} &
+    \matrixel{2,0,0}{z}{2,1,1} & \matrixel{2,0,0}{z}{2,1,-1} \\
+    \matrixel{2,1,0}{z}{2,0,0} & 0 &
+    \matrixel{2,1,0}{z}{2,1,1} & \matrixel{2,1,0}{z}{2,1,-1} \\
+    \matrixel{2,1,1}{z}{2,0,0} & \matrixel{2,1,1}{z}{2,1,0} &
+    0 & \matrixel{2,1,1}{z}{2,1,-1} \\
+    \matrixel{2,1,-1}{z}{2,0,0} & \matrixel{2,1,-1}{z}{2,1,0} &
+    \matrixel{2,1,-1}{z}{2,1,1} & 0
+  \end{pmatrix}
+\end{align}
+Además, como $z$ es la componente $q = 0$ de un tensor esférico de rango 1, por
+WE tenemos que
+\begin{equation}
+  \matrixel{n,l,m}{z}{n',l',m'}
+  = \matrixel{n,l,m}{T^{(1)}_{0}}{n',l',m'}
+  = \braket{l',1;m',0}{l,m} \doublebarmel{n,l}{T^{(1)}}{n',l'}.
+\end{equation}
+Las reglas de selección debido al coeficiente de CG imponen que
+\begin{enumerate}
+  \item $m' + 0 = m$, es decir que $m = m'$.
+  \item $\abs{l'-1} \leq l \leq l'+1$.
+\end{enumerate}
+En particular, la primera de estas reglas de selección dice que si $m \neq m'$,
+entonces el elemento de matriz es cero. Esto significa que en la matriz de $V$
+restringida al subespacio del primer excitado, los únicos elementos no
+diagonales que sobreviven son los $\matrixel{2,0,0}{z}{2,1,0}$ y
+$\matrixel{2,1,0}{z}{2,0,0}$ (pues son los únicos que tienen igual $m$ y $m'$).
+Entonces, la matriz se simplifica dramáticamente, quedando
+\begin{align}
+  (V)_{\substack{\text{subesp.}\\1^{\text{er}}\text{ exc.}}}
+  &= \abs{e}E_0 \begin{pmatrix}
+    0 & \matrixel{2,0,0}{z}{2,1,0} &
+    0 & 0 \\
+    \matrixel{2,1,0}{z}{2,0,0} & 0 &
+    0 & 0 \\
+    0 & 0 &
+    0 & 0 \\
+    0 & 0 &
+    0 & 0
+  \end{pmatrix}
+\end{align}
+Notemos que la matriz de $V$ en el subespacio del primer excitado a su vez se
+divide en tres bloques (dado que $z$ no mezcla estados con $m$ distintos).
+Tenemos un bloque para los estados $\set{\ket{2,0,0},\ket{2,1,0}}$ y luego es
+diagonal para $\ket{2,1,1}$ y $\set{2,1,-1}$. Para los estados $\ket{2,1,1}$ y
+$\ket{2,1,-1}$ la contribución de $V$ es cero. Esto significa que en el
+subespacio $\set{\ket{2,1,1}, \ket{2,1,-1}}$ no se rompe la degeneración a
+primer orden en $V$. Por lo tanto, no podemos decir nada sobre el estado a
+orden cero ni cuál es la corrección de energía a menor orden no nulo. Por otro
+lado, para el subespacio $\set{\ket{2,0,0}, \ket{2,1,0}}$ tenemos
+\begin{align}
+  (V)_{\substack{\text{subesp.}\\\set{\ket{2,0,0},\ket{2,1,0}}}}
+  &= \abs{e}E_0 \begin{pmatrix}
+    0 & \matrixel{2,0,0}{z}{2,1,0} \\
+    \matrixel{2,1,0}{z}{2,0,0} & 0
+  \end{pmatrix}
+\end{align}
+Si queremos saber cuánto vale el elemento de matriz
+$\matrixel{2,0,0}{z}{2,1,0}$, habría que calcular la correspondiente integral
+en todo el espacio. La integral se puede hacer y resulta $3\sqrt{3}a_0$. Acá no
+nos importa el detalle de cuanto vale dado que vamos a mirar algunos resultados
+más cualitativos. Lo que sí vamos a usar para poder simplificar la cuenta es
+que usando quiénes son las funciones de onda de $\ket{2,0,0}$ y $\ket{2,1,0}$
+se puede verificar fácilmente que ese elemento de matriz es real,
+\begin{equation}
+  \gamma \eqdef \matrixel{2,0,0}{z}{2,1,0} \in \Reals.
+\end{equation}
+Por lo tanto,
+\begin{align}
+  (V)_{\substack{\text{subesp.}\\\set{\ket{2,0,0},\ket{2,1,0}}}}
+  &= \abs{e}E_0 \begin{pmatrix}
+    0 & \gamma \\
+    \gamma & 0
+  \end{pmatrix}
+\end{align}
+Esta matriz se puede diagonalizar fácilmente, obteniendo los estados
+\begin{equation}
+  \ket{\psi_{\pm}} = \frac{1}{\sqrt{2}}\left(\ket{2,0,0} \pm
+    \ket{2,1,0}\right),
+\end{equation}
+con autovalores
+\begin{equation}
+  V_{2,\pm} = \pm\abs{e}E_0\gamma.
+\end{equation}
+Por lo tanto, para el subespacio $\set{\ket{2,0,0},\ket{2,1,0}}$ los
+autoestados a orden cero que tenemos que usar son en cambio la base
+\begin{equation}
+  \set{\ket{\psi_+}, \ket{\psi_-}} = \set{
+    \frac{1}{\sqrt{2}}\left(\ket{2,0,0} + \ket{2,1,0}\right),
+    \frac{1}{\sqrt{2}}\left(\ket{2,0,0} - \ket{2,1,0}\right)},
+  \qquad \text{(estados a orden cero)}.
+\end{equation}
+Además, para estos estados las energías a primer orden son
+\begin{equation}
+  E_{2,\pm} = E_{2} \pm \abs{e}E_0\gamma = -\frac{\Ry}{4} \pm \abs{e}E_0\gamma,
+  \qquad \text{(energías a primer orden)}
+\end{equation}
+En conclusión, para el primer excitado tenemos una ruptura parcial de la
+degeneración en el subespacio con $m = 0$. Notemos además que allí la corrección
+a la energía a menor orden no nulo es proporcional al módulo del campo externo
+$\abs{\vect{E}}$. Este efecto es conocido como \emph{efecto Stark lineal} y se
+contrasta con el caso del estado fundamental, donde la primer corrección no
+nula a la energía era en cambio cuadrática en $\abs{\vect{E}}$.
+
+\bigbreak
+\TODO{poner gráfico separación niveles}
+
+% -----------------------------------------------------------------------------
+\subsection{Ejemplo: Hopping en la molécula de amoníaco
+  (Problema 5 -- Guía 11)}
+A continuación veremos un problema que es un modelo muy sencillo del electrón
+de valencia en la molécula de amoníaco ($\text{NH}_{3}$). Más allá de su
+conexión con un problema real, el ejemplo nos servirá para poner énfasis en
+algunas sutilezas del cálculo de perturbaciones en el caso degenerado. En este
+modelo, si el electrón de valencia se encuentra localizado en el átomo de
+nitrógeno (que identificamos con el estado $\ket{1}$), entonces tiene una
+energía $E_1$. Por otro lado, si está localizado en cualquiera de los tres
+hidrógenos (que identificamos con los estados $\ket{2}, \ket{3}, \ket{4}$)
+entonces tiene una energía $E_2$. El electrón tiene una probabilidad de saltar
+de un átomo al otro (\emph{hopping}) que aquí consideraremos simplemente está
+dada por una interacción $W$ tal que
+\begin{align}
+  W\ket{1} &= a(\ket{2} + \ket{4}), &
+  W\ket{2} &= a(\ket{1} + 2\ket{2} - \ket{3} - \ket{4}), \\
+  W\ket{3} &= a(-\ket{2} + 2\ket{3} - \ket{4}), &
+  W\ket{4} &= a(\ket{1} - \ket{2} - \ket{3} + 2\ket{4}).
+\end{align}
+De esta forma, el Hamiltoniano total está dado por
+\begin{equation}
+  H = H_0 + W,
+\end{equation}
+con $H_0$ y $W$ dados por (en la base $\set{\ket{1}, \ket{2}, \ket{3},
+\ket{4}}$)
+\begin{equation}
+  H_0 = \begin{pmatrix}
+    E_1 & 0 & 0 & 0 \\
+    0 & E_2 & 0 & 0 \\
+    0 & 0 & E_2 & 0 \\
+    0 & 0 & 0 & E_2
+  \end{pmatrix},
+  \quad
+  W = a\begin{pmatrix}
+    0  &  1  &  0  &  1  \\
+    1  &  2  & -1  & -1  \\
+    0  & -1  &  2  & -1  \\
+    1  & -1  & -1  &  2
+  \end{pmatrix}. \label{eq:exc:hoppingWmat}
+\end{equation}
+Notemos que este es un problema de dimensión 4, así que uno en principio podría
+resolverlo de la misma forma que resolvimos problemas hasta ahora,
+diagonalizando $H$. Ahora, diagonalizar a mano un matriz de $4\times4$ no es
+trivial, dado que hay que resolver un polinomio característico de grado 4. A
+continuación trataremos el problema de forma perturbativa, asumiendo que
+$\abs{a} \ll E_{1,2}$ y tomando $W$ como la perturbación.
+
+Los autoestados del Hamiltoniano sin perturbación ($H_0$) son claramente los
+estados $\set{\ket{1}, \ket{2}, \ket{3}, \ket{4}}$ con energías
+\begin{equation}
+  H_0\ket{1} = E_1\ket{1}, \quad
+  H_0\ket{2} = E_2\ket{2}, \quad
+  H_0\ket{4} = E_2\ket{3}, \quad
+  H_0\ket{4} = E_2\ket{4}.
+\end{equation}
+Entonces si $E_1 < E_2$ tenemos un estado fundamental no degenerado y un estado
+excitado con degeneración 3.
+
+\bigbreak
+
+Comencemos a calcular las correcciones para el estado fundamental. Para la
+energía hasta segundo orden tenemos
+\begin{align}
+  \tilde{E}_{1}
+  &= E_{1} + \underbrace{\matrixel{1}{W}{1}}_{0} + \sum_{n \neq 1}
+    \frac{\abs{\matrixel{n}{W}{1}}^2}{E_1 - \underbrace{E_n}_{E_2}}
+  = E_{1} + \frac{1}{E_1 - E_2} \sum_{n \neq 1}
+    \abs{\matrixel{n}{W}{1}}^2 \nonumber \\
+  &= E_{1} + \frac{1}{E_1 - E_2} \left(
+    \underbrace{\abs{\matrixel{2}{W}{1}}^2}_{a^2} +
+    \underbrace{\abs{\matrixel{3}{W}{1}}^2}_{0} +
+    \underbrace{\abs{\matrixel{4}{W}{1}}^2}_{a^2} \right) \nonumber \\
+  &= E_{1} + \frac{2a^2}{E_1 - E_2}
+  = E_{1} - \frac{2a^2}{E_2 - E_1}.
+\end{align}
+Por otro lado, el estado fundamental perturbado a primer orden es
+\begin{align}
+  \ket*{\tilde{\phi}_{1}}
+  &= \ket{1} + \sum_{n \neq 1} \frac{\matrixel{n}{W}{1}}{E_1 -
+    \underbrace{E_n}_{E_2}} \ket{n}
+  = \ket{1} + \frac{1}{E_1 - E_2} \sum_{n \neq 1} \matrixel{n}{W}{1} \ket{n}
+    \nonumber \\
+  &= \ket{1} + \frac{1}{E_1 - E_2} \left( \underbrace{\matrixel{2}{W}{1}}_{a}
+    \ket{2} + \underbrace{\matrixel{3}{W}{1}}_{0} \ket{3} +
+    \underbrace{\matrixel{4}{W}{1}}_{a} \ket{4} \right) \nonumber \\
+  &= \ket{1} + \frac{a}{E_1 - E_2} \ket{2} + \frac{a}{E_1 - E_2} \ket{4}.
+\end{align} 
+Notemos que para que tenga sentido truncar el desarrollo perturbativo a primer
+orden, entonces los coeficientes que multiplican los estados $\ket{2}$ y
+$\ket{3}$ deben ser pequeños (para que así efectivamente la norma sea
+aproximadamente uno). Esto es
+\begin{equation}
+  \frac{\abs{a}}{\abs{E_1 - E_2}} \ll 1
+  \qquad \implies \qquad
+  \abs{a} \ll \abs{E_1 - E_2}.
+\end{equation}
+Notablemente, en realidad no importa que $\abs{a}$ sea pequeño respecto con
+$E_1$ y $E_2$ por sí solos, sino que respecto con la diferencia. Por lo tanto,
+no importa cuán pequeño sea $\abs{a}$, en el límite $E_2 \to E_1$ el desarrollo
+perturbativo falla.
+
+\bigbreak
+
+Pasemos ahora a analizar el estado excitado. Como mencionamos antes, tenemos
+degeneración 3 en $H_0$, con $\set{\ket{2}, \ket{3}, \ket{4}}$ una base. Por lo
+tanto, escribimos $W$ en este subespacio, obteniendo
+\begin{equation}
+  \left(W\right)_{\substack{\text{subesp.}\\\text{excitado}}}
+  = a\begin{pmatrix}
+     2  & -1  & -1  \\
+    -1  &  2  & -1  \\
+    -1  & -1  &  2
+  \end{pmatrix},
+\end{equation}
+pues es simplemente tomar el bloque $3\times3$ inferior en la expresión
+completa de $W$ en \eqref{eq:exc:hoppingWmat}. Tenemos entonces que
+diagonalizar esta matriz para encontrar los estados a orden cero y las
+correcciones a primer orden de la energía. En este ejemplo queda bien claro que
+esta diagonalización que hacemos en el caso degenerado no es una diagonalización
+exacta de $W$, dado que estamos truncando la matriz $W$ en un subespacio. La
+matriz $W$ tiene elementos no diagonales que conectan este bloque con el estado
+$\ket{1}$. Por lo tanto, los estados que buscaremos ahora no son autoestados
+del $W$ completo, sino que solamente de $W$ truncado al subespacio
+degenerado.
+
+Diagonalizando la matriz
+$\left(W\right)_{\substack{\text{subesp.}\\\text{excitado}}}$ obtenemos
+\begin{align}
+  \text{autovector: } \ket{\psi_{2,1}} &= \frac{1}{\sqrt{3}} \left( \ket{2} +
+    \ket{3} + \ket{4} \right), & \text{autovalor: } \lambda_1 &= 0. \\
+  \text{autovector: } \ket{\psi_{2,2}} &= \frac{1}{\sqrt{3}} \left( \ket{2} +
+    \ket{3} \right), & \text{autovalor: } \lambda_2 &= 3a. \\
+  \text{autovector: } \ket{\psi_{2,3}} &= \frac{1}{\sqrt{3}} \left( \ket{2} -
+    \ket{4} \right), & \text{autovalor: } \lambda_3 &= 3a.
+\end{align}
+Por lo tanto, tenemos una ruptura parcial de la degeneración. Uno de los
+autoestados a orden cero es $\ket{\psi_{2,1}}$, mientras que los otros dos
+estados a orden cero todavía no sabemos cuáles son (pues sigue habiendo
+degeneración). Por otro lado, para el estado $\ket{\psi_{2,1}}$ a orden 1 la
+energía no tienen ninguna corrección (seguimos teniendo energía $E_2$);
+mientras que en el subespacio $\set{\ket{\psi_{2,2}}, \ket{\psi_{2,3}}}$
+tenemos una corrección en la energía a primer orden de $3a$ (de forma tal que
+la energía es $\tilde{E}_{2,2/3} = E_2 + 3a$).
+
+% =============================================================================
+
+\pagebreak
+
+% =============================================================================
+\section{Perturbaciones Dependientes del tiempo}
+A continuación vamos a estudiar perturbativamente problemas donde la
+perturbación depende explícitamente del tiempo (porque, por ejemplo, se debe a
+un campo eléctrico o magnético externo que podemos variar como queremos). Para
+desarrollar esta teoría conviene antes introducir una nueva forma de
+representar la evolución temporal, distinta tanto a Schrödinger como a
+Heisenberg, que es conocida como representación de interacción o de Dirac.
+
+% -----------------------------------------------------------------------------
+\subsection{Representación de interacción}
+Consideremos un sistema cuyo Hamiltoniano es $H(t)$. El operador de evolución
+temporal $U(t)$ está entonces dado por la ecuación diferencial
+\begin{equation} \label{eqdiff:optevol}
+  \dv{t}U(t) = \frac{1}{i\hbar}H(t)U(t).
+\end{equation}
+En la guía de dinámica vimos dos formas distintas de representar la evolución
+temporal
+\begin{enumerate}
+  \item Representación de Schrödinger: evolucionan los estados según
+    \begin{equation} \label{def:statesch}
+      \ket{\psi_S(t)} = U(t)\ket{\psi_0}.
+    \end{equation}
+  \item Representación de Heisenberg: evolucionan los observables según
+    \begin{equation} \label{def:opheis}
+      A_{H}(t) = U^\dagger(t)A_{S}U(t).
+    \end{equation}
+\end{enumerate}
+A continuación veremos una tercer forma de representar la evolución temporal,
+conocida como representación de interacción o de Dirac, que es particularmente
+útil para tratar problemas dependientes del tiempo cuyo Hamiltoniano se puede
+escribir como
+\begin{equation} \label{eq:hfactpint}
+  H = H_0 + V(t),
+\end{equation}
+con $H_0$ independiente del tiempo y que típicamente sabemos resolver de forma
+analítica. Dados $\ket{\psi_S(t)}$ y $A_{S}(t)$ los estados y operadores en
+función del tiempo en la representación de Schrödinger, definimos los estados
+$\ket{\psi_I(t)}$ y los operadores $A_I(t)$ evolucionados en el tiempo en la
+representación de interacción como
+\begin{align}
+  \ket{\psi_I(t)} &\eqdef e^{iH_0t/\hbar}\ket{\psi_S(t)} =
+    U^\dagger_0(t)\ket{\psi_S(t)}, \label{def:stateint} \\
+  A_{I}(t) &\eqdef e^{iH_0t/\hbar}\,A_{S}(t)\,e^{-iH_0t/\hbar} =
+    U^\dagger_0(t)\,A_{S}(t)\,U_0(t), \label{def:opint}
+\end{align}
+donde $U_0(t) = \exp\left(-iH_0t/\hbar\right)$ es el operador de evolución
+temporal asociado al Hamiltoniano $H_0$.
+
+Notemos que entonces el valor medio de un observable en función del tiempo en
+la representación de interacción es
+\begin{equation}
+  \expval{A}
+  = \bra{\psi_I(t)} A_I(t) \ket{\psi_I(t)}
+  = \bra{\psi_S(t)} U_0(t) U^\dagger_0(t) A_{S} U_0(t) U^\dagger_0(t)
+    \ket{\psi_S(t)}
+  = \bra{\psi_S(t)} A_{S} \ket{\psi_S(t)}.
+\end{equation}
+Luego, los valores medios calculados en la representación de interacción dan el
+mismo resultado que en la representación de Schrödinger. Por lo tanto, todas
+las predicciones que tienen sentido físico (valores medios, probabilidades)
+darán el mismo resultado en cualquiera de las tres representaciones que
+elijamos para trabajar y cualquiera de ellas es tan válida como las otras.
+
+\bigbreak
+
+A partir de las definiciones \eqref{def:stateint} y \eqref{def:opint} podemos
+encontrar también ecuaciones diferenciales para calcular la evolución temporal
+de los estados y operadores en la representación de interacción (que son
+análogas a las ecuaciones de Schrödinger y de Heisenberg). Como vieron en la
+teórica se obtiene
+\begin{align}
+  \dv{t}\ket{\psi_I(t)} &= \frac{1}{i\hbar} V_{I}(t)\ket{\psi_I(t)},
+    \label{eqdiff:stateint} \\
+  \dv{t} A_{I}(t) &= \frac{1}{i\hbar}\comm{A_{I}(t)}{H_0} +
+    \left(\pdv{A_{S}}{t}\right)_{I}. \label{eqdiff:opint}
+\end{align}
+Notemos que en la representación de interacción los operadores evolucionan
+según una ecuación diferencial análoga a la de Heisenberg, pero donde solamente
+aparece el término $H_0$ del Hamiltoniano.
+Los estados en cambio evoluciona según una ecuación diferencial análoga a la de
+Schrödinger, pero donde aparece solamente $V_I(t)$ (es decir el término $V(t)$
+del Hamiltoniano en la representación de interacción). Cabe notar que para
+resolver esta ecuación diferencial eligiendo oportunamente la base no hace
+falta nunca calcular explícitamente quién es $V_I(t)$. Efectivamente,
+supongamos conocida la base $\set{\ket{n}}$ de autoestados de $H_0$, es decir
+que
+\begin{equation}
+  H_0\ket{n} = E_n\ket{n}.
+\end{equation}
+Como esta es una base del espacio de Hilbert, todo vector se puede expandir en
+ella. En particular podemos expandir $\ket{\psi_I(t)}$ a todo tiempo en esta
+base. Tenemos
+\begin{equation}
+  \ket{\psi_I(t)} = \sum_{n} c_n(t)\ket{n}, \qquad c_n(t) =
+    \braket{n}{\psi_I(t)}.
+\end{equation}
+Escribiendo la ecuación diferencial \eqref{eqdiff:stateint} para el estado en
+esta base se llega al siguiente sistema de ecuaciones diferenciales
+\begin{equation}
+  \dv{c_n(t)}{t} = \frac{1}{i\hbar}\sum_{m} V_{nm}(t) \,
+    e^{i\omega_{nm}t} \, c_m(t),
+    \qquad V_{nm}(t) = \matrixel{n}{V(t)}{m},
+    \qquad \omega_{nm} = \frac{E_n - E_m}{\hbar}.
+\end{equation}
+Notemos que aparecen los elementos de matriz de $V(t)$ en la representación de
+Schrödinger.
+
+\bigbreak
+
+Por último, la otra noción de la representación de interacción que nos va a ser
+útil para perturbaciones es la del \emph{operador evolución temporal en la
+representación de interacción}. Para empezar, notemos a tiempo $t = 0$, todas
+las representaciones coinciden. En particular
+\begin{equation}
+  \ket{\psi_I(0)} = \ket{\psi_S(0)} = \ket{\psi(0)}.
+\end{equation}
+Por este motivo, a tiempo $t = 0$, de ahora en más obviamos el índice que
+indica la representación. El \emph{operador de evolución temporal} $U(t)$ que
+satisface la ecuación diferencial \eqref{eqdiff:optevol} es tal que el estado
+en la representación de Schrödinger a tiempo $t$ está dado por
+\eqref{def:statesch}. De forma análoga, definimos el \emph{operador de
+evolución temporal en la representación de interacción}, $T(t)$, como el
+operador tal que
+\begin{equation}
+  \ket{\psi_I(t)} = T(t)\ket{\psi(0)}.
+\end{equation}
+Cabe notar que este operador genera solamente la evolución temporal de los
+estados en la representación de interacción, no la de los operadores. Utilizando
+las definiciones \eqref{def:stateint} y \eqref{def:statesch} de los estados
+evolucionados en el tiempo en las representaciones de interacción y de
+Schrödinger se puede concluir que
+\begin{equation}
+  T(t) = U^\dagger_0(t)\,U(t) = e^{iH_0t/\hbar}\,U(t).
+\end{equation}
+A su vez, usando la ecuación diferencial \eqref{eqdiff:stateint} para el estado
+en la representación de interacción, se puede llegar a la siguiente ecuación
+para $T(t)$
+\begin{equation}
+  \dv{t}T(t) = \frac{1}{i\hbar}V_{I}(t)T(t),
+\end{equation}
+que es análoga a la ecuación \eqref{eqdiff:optevol}, salvo que aparece $V(t)$
+en la representación de interacción en lugar del Hamiltoniano completo.
+
+% -----------------------------------------------------------------------------
+\subsection{Serie de Dyson}
+La última herramienta que necesitamos para formular perturbaciones dependientes
+del tiempo es la serie de Dyson. Consideremos la ecuación diferencial que nos
+da el operador de evolución temporal
+\begin{equation} \label{eqdiff:tevolv2}
+  \dv{t}U(t,t_0) = \frac{1}{i\hbar}H(t)U(t,t_0).
+\end{equation}
+Si $H$ es independiente del tiempo, esta ecuación tiene una solución sencilla
+que conocemos
+\begin{equation}
+  U(t) = e^{-iH(t-t_0)/\hbar}, \qquad\text{si } H \text{ indep. } t.
+\end{equation}
+Hay un otro caso en que la solución se conoce. Si $H$ depende del tiempo pero
+conmuta a dos tiempos cualesquiera, es decir
+\begin{equation}
+  \comm{H(t)}{H(t')} = 0, \;\forall\,t,t',
+\end{equation}
+entonces se puede mostrar que el operador evolución temporal está dado por
+\begin{equation}
+  U(t) = \exp\left[-\frac{i}{\hbar}\int_{t_0}^t\dd{t'}H(t')\right].
+\end{equation}
+
+Pero, para el caso más general, en que $H$ depende del tiempo y no conmuta a
+tiempos distintos, no se conoce una expresión analítica general para la
+solución de la ecuación \eqref{eqdiff:tevolv2}. Es más, son muy pocos los casos
+particulares de $H(t)$ para los cuales \eqref{eqdiff:tevolv2} se puede
+resolver. La serie de Dyson es una forma formal de expresar la solución de
+\eqref{eqdiff:tevolv2} en términos de integrales (en cambio de derivadas).
+
+Notemos que si integramos ambos miembros de \eqref{eqdiff:tevolv2} tenemos
+\begin{align}
+  U(t,t_0) - \underbrace{U(t_0,t_0)}_{\Id} &=
+    \frac{1}{i\hbar}\int_{t_0}^{t}\dd{t_1}H(t_1)U(t_1,t_0) \\
+  U(t,t_0) &= \Id + \frac{1}{i\hbar}\int_{t_0}^{t}\dd{t_1}H(t_1)U(t_1,t_0).
+\end{align}
+Esta última no es maś que la ecuación para $U(t,t_0)$ escrita de forma
+integral. Notemos que podemos reemplazar $U(t_1,t_0)$ adentro de la integral
+usando esta misma expresión. Iterando esto infinitas veces, $U(t,t_0)$ se puede
+expresar como la siguiente serie, conocida como \emph{serie de Dyson},
+\begin{align}
+  U(t,t_0)
+  &= \Id + \frac{1}{i\hbar} \int_{t_0}^{t}\dd{t_1} H(t_1) +
+    \frac{1}{(i\hbar)^2} \int_{t_0}^{t}\dd{t_1} \int_{t_0}^{t_1}\dd{t_2}
+    H(t_1)H(t_2) + \dots \\
+  &= \sum_{n=0}^{\infty}\frac{1}{(i\hbar)^n} \int_{t_0}^{t}\dd{t_1}
+    \int_{t_0}^{t_1}\dd{t_2} \dots \int_{t_0}^{t_{n-1}}\dd{t_n}
+    H(t_1)H(t_2) \dots H(t_n).
+\end{align}
+
+% -----------------------------------------------------------------------------
+\subsection{Perturbaciones dependientes del tiempo}
+Pasemos ahora sí a presentar cómo vamos a tratar perturbativamente potenciales
+que dependen explícitamente del tiempo. Si uno entiende representación de
+interacción y la serie de Dyson, teoría de perturbaciones dependientes del
+tiempo no es más que una aplicación directa de estos dos conceptos.
+
+Supongamos que tenemos un problema cuyo Hamiltoniano se puede escribir como
+\begin{equation}
+  H = H_0 + \lambda V(t),
+\end{equation}
+con $\lambda$ un parámetro adimensional mucho menor que uno ($\lambda \ll 1$) y
+$H_0$ independiente del tiempo y que sabemos resolver, es decir conocemos sus
+autoestados $\set{\ket{n}}$ y autovalores $\set{E_n}$,
+\begin{equation}
+  H_0\ket{n} = E_n\ket{n}.
+\end{equation}
+
+Vamos a trabajar en la representación de interacción. Entonces, los estados
+evolucionan según
+\begin{equation}
+  \ket{\psi_I(t)} = T(t)\ket{\psi(0)},
+\end{equation}
+con
+\begin{equation}
+  \dv{t}T(t) = \frac{1}{i\hbar}\lambda V_I(t) T(t),
+\end{equation}
+y los operadores según
+\begin{equation}
+  A_I(t) = e^{iH_0t/\hbar}Ae^{-iH_0t/\hbar}.
+\end{equation}
+
+Para calcular $T(t)$, en cambio de resolver la ecuación diferencial (que en
+general no vamos a poder resolver analíticamente), vamos a usar su desarrollo
+en serie de Dyson. Tenemos
+\begin{align}
+  T(t)
+  &= \Id + \frac{\lambda}{i\hbar} \int_{0}^{t}\dd{t_1} V_I(t_1) +
+    \frac{\lambda^2}{(i\hbar)^2} \int_{0}^{t}\dd{t_1} \int_{t_0}^{t_1}\dd{t_2}
+    V_I(t_1)V_I(t_2) + \dots \\
+  &= \sum_{n=0}^{\infty}\frac{\lambda^n}{(i\hbar)^n} \int_{0}^{t}\dd{t_1}
+    \int_{0}^{t_1}\dd{t_2} \dots \int_{0}^{t_{n-1}}\dd{t_n}
+    V_I(t_1)V_I(t_2) \dots V_I(t_n).
+\end{align}
+Notemos que la serie de Dyson en este caso justamente es un desarrollo en serie
+de potencias de $\lambda$. Por lo tanto, la aproximación en teoría de
+perturbaciones dependientes del tiempo consiste en truncar este desarrollo de
+$T(t)$ a un dado orden de $\lambda$.
+
+\bigbreak
+
+En la mayoría de problemas donde se aplica teoría de perturbaciones
+dependientes del tiempo, y todos los problemas que vamos a ver en la práctica,
+se comienza inicialmente en un autoestado de $H_0$. Luego, a un dado tiempo se
+enciende la perturbación $V(t)$ y uno está interesado en calcular el estado a
+tiempo posterior y, en particular, cuál es la probabilidad de encontrar el
+sistema en los distintos autoestados de $H_0$. Dado que estas preguntas
+aparecen en todos los problemas que vamos a ver, vale la pena estudiarlas con
+detenimiento de forma general.
+
+Consideremos que inicialmente estamos en el autoestado $\ket{i}$ de $H_0$, es
+decir
+\begin{equation}
+  \ket{\psi(0)} = \ket{i}, \qquad \text{con } H_0\ket{i} = E_i\ket{i}.
+\end{equation}
+Luego, a tiempo $t$ el estado en la representación de interacción es
+\begin{equation} \label{eq:psitintbasish0}
+  \ket{\psi_I(t)}
+  = T(t)\ket{\psi(0)}
+  = T(t)\ket{i}
+  = \sum_{n} \matrixel{n}{T(t)}{i} \ket{n}
+  = \sum_{n} c_n(t) \ket{n},
+\end{equation}
+con
+\begin{equation}
+  c_n(t) = \matrixel{n}{T(t)}{i}.
+\end{equation}
+Usando el desarrollo en serie de Dyson para $T(t)$ tenemos
+\begin{align}
+  c_n(t)
+  &= \matrixel{n}{\Id}{i} + \frac{\lambda}{i\hbar} \int_{0}^{t}\dd{t_1}
+    \matrixel{n}{V_I(t_1)}{i} + \frac{\lambda^2}{(i\hbar)^2}
+    \int_{0}^{t}\dd{t_1} \int_{t_0}^{t_1}\dd{t_2}
+    \matrixel{n}{V_I(t_1)V_I(t_2)}{i} + \dots \\
+  &= c_n^{(0)}(t) + \lambda c_n^{(1)}(t) + \lambda^2 c_n^{(2)}(t) + \dots
+\end{align}
+con
+\begin{align}
+  c_n^{(0)}(t)
+  &= \matrixel{n}{\Id}{i} = \delta_{ni} \label{eq:cnord0} \\
+  c_n^{(1)}(t)
+  &= \frac{1}{i\hbar} \int_{0}^{t}\dd{t_1}
+    \matrixel{n}{V_I(t_1)}{i} 
+  = \frac{1}{i\hbar} \int_{0}^{t}\dd{t_1}
+    \matrixel{n}{e^{iH_0t_1/\hbar}V(t_1)e^{-iH_0t_1/\hbar}}{i}  \nonumber \\
+  &= \frac{1}{i\hbar} \int_{0}^{t}\dd{t_1} e^{i(E_n-E_i)t_1/\hbar}
+    \matrixel{n}{V(t_1)}{i} \nonumber \\
+  &= \frac{1}{i\hbar} \int_{0}^{t}\dd{t_1} e^{i\omega_{ni}t_1}
+    \matrixel{n}{V(t_1)}{i}, \qquad \omega_{ni} = (E_n - E_i)/\hbar
+    \label{eq:cnord1} \\
+  c_n^{(2)}(t)
+  &= \frac{1}{(i\hbar)^2} \int_{0}^{t}\dd{t_1} \int_{t_0}^{t_1}\dd{t_2}
+    \matrixel{n}{V_I(t_1)V_I(t_2)}{i} 
+  = \frac{1}{(i\hbar)^2} \sum_{m}\int_{0}^{t}\dd{t_1} \int_{t_0}^{t_1}\dd{t_2}
+    \matrixel{n}{V_I(t_1)\projector{m}V_I(t_2)}{i} \nonumber \\
+  &= \frac{1}{(i\hbar)^2} \sum_{m}\int_{0}^{t}\dd{t_1} \int_{t_0}^{t_1}\dd{t_2}
+    e^{i\omega_{nm}t_1} e^{i\omega_{mi}t_2}
+    \matrixel{n}{V(t_1)}{m}\matrixel{m}{V(t_2)}{i},
+    \qquad \omega_{kl} = (E_k - E_l)/\hbar, \label{eq:cnord2}
+\end{align}
+y así siguiendo (en la práctica nos quedaremos siempre hasta primer orden).
+
+\bigbreak
+
+En particular, una pregunta típica en estos problemas es cuál es la
+probabilidad de encontrar el sistema en el estado $\ket{f}$ de $H_0$ dado que
+inicialmente se encontraba en el autoestado $\ket{i}$. Esto es
+\begin{equation}
+  P_{i \to f}(t) = \abs{\matrixel{f}{U(t)}{i}}^2 =
+    \abs{\matrixel{f}{T(t)}{i}}^2.
+\end{equation}
+Usando la expresión \eqref{eq:psitintbasish0} del estado en la representación
+de interacción escrito en la base de autoestados de $H_0$, esta probabilidad es
+simplemente
+\begin{equation}
+  P_{i \to f}(t) = \abs{c_f(t)}^2,
+\end{equation}
+y usando la expansión en potencias de $\lambda$
+\begin{equation} \label{eq:probtrans}
+  P_{i \to f}(t)
+  = \abs{c_f(t)}^2
+  = \abs{c^{(0)}_f(t) + \lambda c^{(1)}_f(t) + \lambda^2 c^{(2)}_f(t) +
+    \order{\lambda^3}}^2.
+\end{equation}
+En particular, si $f \neq i$, $c^{(0)}_f = 0$, y entonces
+\begin{equation} \label{eq:probtrans1stord}
+  P_{i \to f}(t)
+  = \abs{\lambda c^{(1)}_f(t) + \lambda^2 c^{(2)}_f(t) +
+    \order{\lambda^3}}^2
+  = \lambda^2 \abs{c^{(1)}_f(t)} + \order{\lambda^3}.
+\end{equation}
+Por lo tanto, para calcular la probabilidad de transición $i \to f$ a segundo
+orden (que es el primer orden no nulo), necesitamos solamente calcular el
+coeficiente $c_f(t)$ a primer orden. Esto no es así para la probabilidad de
+permanecer en el estado inicial, $\ket{i}$, pues en este caso tenemos
+\begin{equation} \label{eq:probrem1stord}
+  P_{i \to i}(t)
+  = \abs{c^{(0)}_i(t) + \lambda c^{(1)}_i(t) + \lambda^2 c^{(2)}_i(t) +
+    \order{\lambda^3}}^2
+  = \abs{1 + \lambda c^{(1)}_i(t) + \lambda^2 c^{(2)}_i(t) +
+    \order{\lambda^3}}^2.
+\end{equation}
+Como el término constante ahora no desaparece, para tener $P_{i \to i}$ a
+segundo orden tendríamos que calcular $c^{(2)}_i(t)$. Típicamente es más
+sencillo no meterse con las integrales de segundo orden sino que derivar la
+probabilidad de permanecer en el estado inicial por normalización
+\begin{equation}
+  P_{i \to i}(t) = 1 - \sum_{f \neq i}P_{i \to f}(t).
+\end{equation}
+
+% -----------------------------------------------------------------------------
+\subsection{Ejemplo: Oscilador armónico con forzado armónico
+  (Problema 7 -- Guía 11)}
+Como primer ejemplo consideremos una versión más general del oscilador armónico
+forzado, en donde el forzado depende del tiempo. En particular, vamos a
+considerar un forzado armónico. Tenemos entonces el Hamiltoniano
+\begin{equation}
+  H = \frac{p^2}{2m} + \frac{m\omega_0^2}{2}x^2 + F_0x\sin(\omega t)
+  = H_0 + V(t),
+\end{equation}
+con
+\begin{equation}
+  H_0 = \frac{p^2}{2m} + \frac{m\omega_0^2}{2}x^2, \qquad 
+  V(t) = F_0x\sin(\omega t),
+\end{equation}
+y
+\begin{equation}
+  H_0\ket{n} = \hbar\omega_0\left(n + \frac{1}{2}\right)\ket{n}.
+\end{equation}
+Supongamos que a $t = 0$ el sistema se encuentra en el estado fundamental
+$\ket{0}$ del oscilador. Nos preguntamos entonces cuál es la probabilidad de
+encontrarlo en el estado excitado $\ket{n}$ a un tiempo $t > 0$ a primer orden
+en teoría de perturbaciones.
+
+Usando \eqref{eq:cnord0} y \eqref{eq:cnord1}, el coeficiente $c_n(t)$ a primer
+orden es
+\begin{align}
+  c_n(t)
+  &= \delta_{n0} + \frac{1}{i\hbar} \int_{0}^{t}\dd{t'} e^{i\omega_{ni}t'}
+    \matrixel{n}{V(t')}{0}
+  = \delta_{n0} + \frac{1}{i\hbar} \int_{0}^{t}\dd{t} e^{i\omega_0(n - 0)t'}
+    F_0\matrixel{n}{x}{0}\sin(\omega t') \nonumber \\
+  &= \delta_{n0} + \frac{F_0}{i\hbar}
+    \underbrace{\matrixel{n}{x}{0}}_{\sqrt{\frac{\hbar}{2m\omega_0}}\delta_{n1}}
+    \int_{0}^{t}\dd{t'} e^{in\omega_0t'} \sin(\omega t')
+  = \delta_{n0} - \delta_{n1}i\frac{F_0}{\sqrt{2m\hbar\omega_0}}
+    \int_{0}^{t}\dd{t'} e^{in\omega_0t'} \sin(\omega t') \nonumber \\
+  &= \delta_{n0} - \delta_{n1}i\frac{F_0}{\sqrt{2m\hbar\omega_0}}
+    \int_{0}^{t}\dd{t'} e^{i\omega_0t'} \sin(\omega t').
+\end{align}
+La integral se puede resolver, pero para evitar cuentas de más la guía nos dice
+que
+\begin{align}
+  \abs{\int_0^t \dd{t'} e^{i\tilde{\omega}t'} \sin(\omega t')}^2 &=
+    \abs{\frac{\sin\left[(\tilde{\omega} - \omega)t/2\right]}
+    {(\tilde{\omega} - \omega)} e^{i(\tilde{\omega} - \omega)t/2} -
+    \frac{\sin\left[(\tilde{\omega}+\omega)t/2\right]} {(\tilde{\omega} +
+    \omega)} e^{i(\tilde{\omega} + \omega)t/2}}^2
+    \label{eq:helptintsine} \\
+  &= \frac{\sin^2[(\tilde{\omega} - \omega)t/2]}
+    {(\tilde{\omega} - \omega)^2} + \frac{\sin^2\left[(\tilde{\omega} +
+    \omega)t/2\right]} {(\tilde{\omega} + \omega)^2} -
+    \frac{2\sin\left[(\tilde{\omega} - \omega)t/2\right]
+    \sin\left[(\tilde{\omega} + \omega)t/2\right] \cos\left[\omega
+    t\right]} {(\tilde{\omega} - \omega)(\tilde{\omega} + \omega)}.
+\end{align}
+Por lo tanto,
+\begin{equation}
+  \int_0^t \dd{t'} e^{i\omega_0t'} \sin(\omega t')
+  = \frac{\sin\left[(\omega_0 - \omega)t/2\right]}
+    {(\omega_0 - \omega)} e^{i(\omega_0 - \omega)t/2} -
+    \frac{\sin\left[(\omega_0+\omega)t/2\right]} {(\omega_0 +
+    \omega)} e^{i(\omega_0 + \omega)t/2}
+  = f(t),
+\end{equation}
+y
+\begin{equation}
+  \abs{f(t)}^2
+  = \frac{\sin^2[(\omega_0 - \omega)t/2]}
+    {(\omega_0 - \omega)^2} + \frac{\sin^2\left[(\omega_0 +
+    \omega)t/2\right]} {(\omega_0 + \omega)^2} -
+    \frac{2\sin\left[(\omega_0 - \omega)t/2\right]
+    \sin\left[(\omega_0 + \omega)t/2\right] \cos\left[\omega
+    t\right]} {(\omega_0 - \omega)(\omega_0 + \omega)}.
+\end{equation}
+Entonces, hasta primer orden tenemos que
+\begin{equation}
+  c_n(t) \approx \delta_{n0} -
+    \delta_{n1}i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t).
+\end{equation}
+Esto significa que a primer orden el estado a tiempo $t$ en la representación
+de interacción es
+\begin{equation} \label{exc:osc:stateevol}
+  \ket{\psi_I(t)} \approx \ket{0} -
+  i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)\ket{1}.
+\end{equation}
+En particular, la probabilidad de encontrar el oscilador en el estado $\ket{1}$ es
+\begin{align}
+  P_{0 \to 1}(t)
+  &= \abs{c_1(t)}^2
+  \approx \frac{F_0^2}{2m\hbar\omega_0}\abs{f(t)}^2 \nonumber\\
+  &= \frac{F_0^2}{2m\hbar\omega_0} \left[
+    \frac{\sin^2[(\omega_0 - \omega)t/2]}
+    {(\omega_0 - \omega)^2} + \frac{\sin^2\left[(\omega_0 +
+    \omega)t/2\right]} {(\omega_0 + \omega)^2} -
+    \frac{2\sin\left[(\omega_0 - \omega)t/2\right]
+    \sin\left[(\omega_0 + \omega)t/2\right] \cos[\omega t]}
+    {(\omega_0 - \omega)(\omega_0 + \omega)} \right].
+\end{align}
+Todas las otras probabilidades de transición son cero dado que $c_n(t) = 0$
+para $n \neq 0,1$.
+
+Notemos que para que el desarrollo perturbativo sea válido, esta probabilidad
+debe ser pequeña. Claramente, esto implica que
+\begin{equation}
+  \frac{F_0^2}{2m\hbar\omega_0(\omega_0 - \omega)^2} \ll 1, \qquad
+  \frac{F_0^2}{2m\hbar\omega_0(\omega_0 + \omega)^2} \ll 1  
+\end{equation}
+Mientras que la segunda de estas dos condiciones se puede satisfacer sin mayor
+dificultad eligiendo $F_0$ suficientemente pequeño, para la primera la situación
+es un poco más complicada. Como tenemos el término $(\omega_0 - \omega)$
+dividiendo, en principio no podemos pedir que este término se haga pequeño para
+$\omega \to \omega_0$. Para entender mejor qué sucede en este límite evaluemos
+la probabilidad en $\omega = \omega_0$. Para ello recordemos que
+\begin{equation}
+  \lim_{x \to 0}\sinc(x) = \lim_{x \to 0}\frac{\sin(x)}{x} = 1.
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  \lim_{\omega \to \omega_0} P_{0 \to 1}(t)
+  = \frac{F_0^2}{2m\hbar\omega_0} \left[
+    \frac{t^2}{4} +
+    \frac{\sin^2\left[\omega_0t\right]}{4\omega_0^2} -
+    \frac{t\sin\left[\omega_0t\right] \cos[\omega_0t]}{2\omega_0} \right].
+\end{equation}
+Notemos que la probabilidad va como $t^2$. Por lo tanto, si $\omega =
+\omega_0$, no importa cuan pequeño es $F_0$, para tiempos suficientemente
+largos la aproximación deja de ser válida.
+
+\bigbreak
+
+Por último, veamos cómo usar el estado perturbado para calcular un valor medio.
+En particular, calculemos $\expval{x}$ en función del tiempo para este
+problema. Como estamos trabajando en la representación de interacción (el
+estado evolucionado en el tiempo \eqref{exc:osc:stateevol} lo tenemos escrito en
+esta representación) vamos a calcular este valor medio como
+\begin{equation}
+  \expval{x} = \bra{\psi_I(t)}\,x_{I}\,\ket{\psi_I(t)},
+\end{equation}
+donde $\ket{\psi_I(t)}$ a primer orden lo tenemos ya calculado en
+\eqref{exc:osc:stateevol} y $x_{I}$ está dado por
+\begin{equation}
+  e^{iH_0t/\hbar}xe^{-iH_0t/\hbar}.
+\end{equation}
+De acá para calcular $\expval{x}$ hay dos formas diferentes de proceder.
+
+Para la primer forma, reemplazamos directamente la definición de $x_I$ y la
+expresión de $\ket{\psi(t)}_I$ en el valor medio para obtener
+\begin{align}
+  \expval{x}
+  &= \left(\bra{0} + i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f^*(t)\bra{1}\right)
+    \left(e^{iH_0t/\hbar}xe^{-iH_0t/\hbar}\right)
+    \left(\ket{0} - i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)\ket{1}\right)
+    \nonumber \\
+  &= \left(\bra{0}e^{iH_0t/\hbar} +
+    i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f^*(t)\bra{1}e^{iH_0t/\hbar}\right)
+    x
+    \left(e^{-iH_0t/\hbar}\ket{0} -
+    i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)e^{-iH_0t/\hbar}\ket{1}\right)
+    \nonumber \\
+  &= \left(\bra{0}e^{i\omega_0(0 + 1/2)t} +
+    i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f^*(t)\bra{1}e^{i\omega_0(1+1/2)t}\right)
+    x
+    \left(e^{-i\omega_0(0 + 1/2)t}\ket{0} -
+    i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)e^{-i\omega_0(1 + 1/2)t}\ket{1}\right)
+    \nonumber \\
+  &= \left(\bra{0}e^{i\omega_0t/2} +
+    i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f^*(t)\bra{1}e^{i3\omega_0t/2}\right)
+    x
+    \left(e^{-i\omega_0t/2}\ket{0} -
+    i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)e^{-i3\omega_0t/2}\ket{1}\right)
+    \nonumber \\
+  &= \matrixel{0}{x}{0} + 
+    \underbrace{\frac{F_0^2}{2m\hbar\omega_0}\abs{f(t)}^2\matrixel{1}{x}{1}}_{\order{F_0^2}}
+    + 2\Re\left[-i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)e^{-i\omega_0t}
+    \matrixel{0}{x}{1}\right]
+    \nonumber \\
+  &= \underbrace{\matrixel{0}{x}{0}}_{0} +
+    2\Re\Big[-i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)e^{-i\omega_0t}
+    \underbrace{\matrixel{0}{x}{1}}_{\sqrt{\frac{\hbar}{2m\omega_0}}}\Big]
+    + \order{F_0^2} \nonumber \\
+  &= 2\Re\Big[-i\frac{F_0}{2m\hbar\omega_0}f(t)e^{-i\omega_0t}\Big] +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\hbar\omega_0}\Re\Big[-if(t)e^{-i\omega_0t}\Big] +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\hbar\omega_0}\Im\Big[f(t)e^{-i\omega_0t}\Big] +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\hbar\omega_0} \left[ 
+    \frac{\sin\left[(\omega_0+\omega)t/2\right]\sin\left[(\omega_0-\omega)t/2\right]}
+    {(\omega_0 + \omega)}  -
+    \frac{\sin\left[(\omega_0-\omega)t/2\right]\sin\left[(\omega_0+\omega)t/2\right]}
+    {(\omega_0 - \omega)} \right] + \order{F_0^2}.
+\end{align}
+
+\bigbreak
+
+La segunda forma para calcular $\expval{x}$ consisten en darse cuenta que
+$x_I(t)$ no es más que el operador $x$ en la representación de Heisenberg del
+oscilador armónico. La expresión para $x$ en representación de Heisenberg del
+oscilador armónico ya la calculamos en prácticas anteriores y habíamos obtenido
+que
+\begin{equation}
+  e^{iH_0t/\hbar}xe^{-iH_0t/\hbar} = x\cos(\omega_0t) +
+    \frac{p}{m\omega_0}\sin(\omega_0t).
+\end{equation}
+Por lo tanto,
+\begin{align}
+  \expval{x}
+  &= \left(\bra{0} + i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f^*(t)\bra{1}\right)
+    \left(x\cos(\omega_0t) + \frac{p}{m\omega_0}\sin(\omega_0t)\right)
+    \left(\ket{0} - i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)\ket{1}\right)
+    \nonumber \\
+  &= 2\Re\left[-i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)\matrixel{0}{x}{1}\right]\cos(\omega_0t) +
+    2\Re\left[-i\frac{F_0}{m\omega_0\sqrt{2m\hbar\omega_0}}f(t)\matrixel{0}{p}{1}\right]\sin(\omega_0t) +
+    \order{F_0^2} \nonumber \\
+  &= 2\Re\left[-i\frac{F_0}{\sqrt{2m\hbar\omega_0}}f(t)\sqrt{\frac{\hbar}{2m\omega_0}}\right]\cos(\omega_0t) +
+    2\Re\left[-i\frac{F_0}{m\omega_0\sqrt{2m\hbar\omega_0}}f(t)(-i)\sqrt{\frac{m\hbar\omega_0}{2}}\right]\sin(\omega_0t) +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\omega_0}\Re\left[-if(t)\right]\cos(\omega_0t) +
+    \frac{F_0}{m\omega_0}\Re\left[-f(t)\right]\sin(\omega_0t) +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\omega_0}\left(\Im\left[f(t)\right]\cos(\omega_0t) -
+    \Re\left[f(t)\right]\sin(\omega_0t) \right) +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\omega_0}\left(
+    \Im\left[f(t)\right]\Re\left[e^{-i\omega_0t}\right] +
+    \Re\left[f(t)\right]\Im\left[e^{-i\omega_0t}\right]\right) +
+    \order{F_0^2} \nonumber \\
+  &= \frac{F_0}{m\omega_0}\Im\left[f(t)e^{-i\omega_0t}\right] +
+    \order{F_0^2}.
+\end{align}
+Notemos que efectivamente tenemos el mismo resultado del método anterior.
+
+% -----------------------------------------------------------------------------
+\subsection{Ejemplo: Átomo de hidrógeno con perturbación dependiente del tiempo
+  (Problema 10 -- Guía 11)}
+Consideremos un átomo de Hidrógeno que inicialmente a $t > 0$ se encuentra en
+el estado fundamental. A $t = 0$ se enciende una perturbación
+\begin{equation}
+  V(t) = -e(ax -b(3z^2 - r^2))\sin(\omega t),
+\end{equation}
+que en la práctica podría realizarse con un campo eléctrico con la dependencia
+espacial apropiada.
+
+\bigbreak
+
+La primer pregunta que nos hacemos es qué transiciones $\ket{1,0,0} \to
+\ket{n,l,m}$ son en principio posibles si consideramos teoría de perturbaciones
+a primer orden. Para que una transición $\ket{1,0,0} \to \ket{n,l,m}$ sea
+posible, el correspondiente coeficiente $c_{nlm}(t)$ deber ser distinto de
+cero. A primer orden, tenemos la expresión \eqref{eq:cnord1} para
+$c_{nlm}(t)$. Para que sea distinta de cero necesitamos que el elemento de
+matriz de $V(t)$ correspondiente sea distinto de cero
+\begin{equation}
+  c^{(1)}_{nlm}(t) \neq 0 \;\implies\; \matrixel{n,l,m}{V(t)}{1,0,0} \neq 0.
+\end{equation}
+En nuestro caso tenemos
+\begin{equation}
+  \matrixel{n,l,m}{V(t)}{1,0,0} = -e\left(a\matrixel{n,l,m}{x}{1,0,0} -b
+  \matrixel{n,l,m}{(3z^2 - r^2)}{1,0,0}\right)\sin(\omega t).
+\end{equation}
+Para descartar casos donde seguro estos elementos de matriz son cero hacemos
+uso del teorema de Wigner-Eckart y de las reglas de selección de paridad.
+
+\bigbreak
+
+Recordemos que $(3z^2 - r^2)$ es la componente $T^{(2)}_{0}$ de un tensor
+esférico de rango 2; mientras que $x$ se podía escribir como una combinación
+lineal de componentes de un tensor de rango 1
+\begin{equation}
+  x = \frac{T^{(1)}_{-1} - T^{(1)}_{1}}{\sqrt{2}}.
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  \matrixel{n,l,m}{V(t)}{1,0,0} =
+  -e\left(\frac{a}{\sqrt{2}}\matrixel{n,l,m}{T^{(1)}_{-1}}{1,0,0} -
+  \frac{a}{\sqrt{2}}\matrixel{n,l,m}{T^{(1)}_{1}}{1,0,0} -b
+  \matrixel{n,l,m}{T^{(2)}_{0}}{1,0,0}\right)\sin(\omega t).
+\end{equation}
+Veamos las reglas de selección de los distintos términos
+\begin{enumerate}
+  \item Para el primer término
+    \begin{equation}
+      \matrixel{n,l,m}{T^{(1)}_{-1}}{1,0,0} = \braket{0,1;0,-1}{l,m}
+        \doublebarmel{n,l}{T^{(1)}}{1,0}.
+    \end{equation}
+    Por lo tanto, para que sea no nulo necesitamos que:
+    \begin{enumerate}
+      \item $0 - 1 = m$, es decir que $m = -1$.
+      \item $\abs{0 - 1} \leq l \leq {0 + 1}$, es decir que $l = 1$.
+    \end{enumerate}
+    Por lo tanto, este primer término solo permite transiciones a los estados
+    $\ket{n,1,-1}$, con $n \geq 2$.
+  \item Para el segundo término
+    \begin{equation}
+      \matrixel{n,l,m}{T^{(1)}_{1}}{1,0,0} = \braket{0,1;0,1}{l,m}
+        \doublebarmel{n,l}{T^{(1)}}{1,0}.
+    \end{equation}
+    Por lo tanto, para que sea no nulo necesitamos que:
+    \begin{enumerate}
+      \item $0 + 1 = m$, es decir que $m = 1$.
+      \item $\abs{0 - 1} \leq l \leq {0 + 1}$, es decir que $l = 1$.
+    \end{enumerate}
+    Por lo tanto, este primer término solo permite transiciones a los estados
+    $\ket{n,1,1}$, con $n \geq 2$.
+  \item Para el tercer término
+    \begin{equation}
+      \matrixel{n,l,m}{T^{(2)}_{0}}{1,0,0} = \braket{0,2;0,0}{l,m}
+        \doublebarmel{n,l}{T^{(2)}}{1,0}.
+    \end{equation}
+    Por lo tanto, para que sea no nulo necesitamos que:
+    \begin{enumerate}
+      \item $0 + 0 = m$, es decir que $m = 0$.
+      \item $\abs{0 - 2} \leq l \leq {0 + 2}$, es decir que $l = 2$.
+    \end{enumerate}
+    Por lo tanto, este primer término solo permite transiciones a los estados
+    $\ket{n,2,0}$, con $n \geq 3$.
+\end{enumerate}
+Combinando las tres contribuciones, a lo sumo podremos tener transiciones a los
+estados
+\begin{equation}
+  \set{\ket{n,1,-1}, n\geq2} \cup \set{\ket{n,1,1}, n\geq2} \cup
+    \set{\ket{n,2,0}, n\geq3}.
+\end{equation}
+
+\bigbreak
+
+Pasemos ahora a calcular las respectivas probabilidades de transición. Usando
+\eqref{eq:cnord1} a primer orden tenemos
+\begin{align}
+  c^{(1)}_{nlm}(t)
+  &= \frac{1}{i\hbar} \int_{0}^{t}\dd{t'} e^{i(E_{nlm} - E_{100})t'/\hbar}
+    \matrixel{nlm}{V(t')}{100}
+  = \frac{1}{i\hbar} \int_{0}^{t}\dd{t'} e^{i(E_{n} - E_{1})t'/\hbar}
+    \matrixel{nlm}{V(t')}{100} \nonumber \\
+  &= -\frac{e}{i\hbar} \int_{0}^{t}\dd{t'} e^{i(E_{n} - E_{1})t'/\hbar}
+    \left(a\matrixel{nlm}{x}{100} -b\matrixel{nlm}{(3z^3 - r^2)}{100}\right)
+    \sin(\omega t') \nonumber \\
+  &= -\frac{e}{i\hbar} 
+    \left(a\matrixel{nlm}{x}{100} -b\matrixel{nlm}{(3z^3 - r^2)}{100}\right)
+    \underbrace{\int_{0}^{t}\dd{t'} e^{i(1/n^2 - 1)t'\,\Ry/\hbar}
+    \sin(\omega t')}_{f(t) \text{, ver ec \eqref{eq:helptintsine}}} \nonumber
+    \\
+  &= -\frac{e}{i\hbar} 
+    \left(a\matrixel{nlm}{x}{100} -b\matrixel{nlm}{(3z^3 - r^2)}{100}\right)
+    f(t) \nonumber \\
+  &= -\frac{e}{i\hbar} 
+    \left(\frac{a}{\sqrt{2}}\matrixel{nlm}{T^{(1)}_{-1}}{100} -
+    \frac{a}{\sqrt{2}}\matrixel{nlm}{T^{(1)}_{1}}{100}
+    -b\matrixel{nlm}{T^{(2)}_{0}}{100}\right) f(t). \label{eq:exc:cnlmgen}
+\end{align}
+Cada uno de los tres elementos de matriz que aparecen en el coeficiente son no
+nulos en casos diferentes (que analizamos antes). Separamos entonces en los
+tres casos. Para los estados finales $\set{\ket{n,2,0}, n\geq3}$ tenemos
+\begin{align}
+  c^{(1)}_{n20}(t)
+  &= -\frac{e}{i\hbar} 
+    \Bigg(\frac{a}{\sqrt{2}} \underbrace{\matrixel{n20}{T^{(1)}_{-1}}{100}}_{0}
+    - \frac{a}{\sqrt{2}} \underbrace{\matrixel{n20}{T^{(1)}_{1}}{100}}_{0}
+    -b \underbrace{\matrixel{n20}{T^{(2)}_{0}}{100}}_{\braket{0,2;0,0}{2,0}
+    \doublebarmel{n,2}{T^{(2)}}{1,0}} \Bigg) f(t) \nonumber \\
+  &= \frac{eb}{i\hbar} \underbrace{\braket{0,2;0,0}{2,0}}_{\text{tabla CG}}
+    \doublebarmel{n,2}{T^{(2)}}{1,0} f(t),
+\end{align}
+y entonces la respectiva probabilidad de transición es
+\begin{equation}
+  P_{100 \to n20}(t)
+  = \frac{e^2b^2}{\hbar^2} \abs{\braket{0,2;0,0}{2,0}}^2
+    \abs{\doublebarmel{n,2}{T^{(2)}}{1,0}}^2 \abs{f(t)}^2.
+\end{equation}
+Por otro lado, para los estados finales $\set{\ket{n,1,1}, n\geq2}$ tenemos
+\begin{align}
+  c^{(1)}_{n11}(t)
+  &= -\frac{e}{i\hbar} 
+    \Bigg(\frac{a}{\sqrt{2}} \underbrace{\matrixel{n11}{T^{(1)}_{-1}}{100}}_{0}
+    - \frac{a}{\sqrt{2}}
+    \underbrace{\matrixel{n11}{T^{(1)}_{1}}{100}}_{\braket{0,1;0,1}{1,1}
+    \doublebarmel{n,1}{T^{(1)}}{1,0}}
+    -b \underbrace{\matrixel{n11}{T^{(2)}_{0}}{100}}_{0} \Bigg) f(t) \nonumber \\
+  &= \frac{ea}{i\sqrt{2}\hbar} \underbrace{\braket{0,1;0,1}{1,1}}_{\text{tabla
+    CG}} \doublebarmel{n,1}{T^{(1)}}{1,0} f(t),
+\end{align}
+y entonces la respectiva probabilidad de transición es
+\begin{equation}
+  P_{100 \to n11}(t)
+  = \frac{e^2a^2}{2\hbar^2} \abs{\braket{0,1;0,1}{1,1}}^2
+    \abs{\doublebarmel{n,1}{T^{(1)}}{1,0}}^2 \abs{f(t)}^2.
+\end{equation}
+Por último, para los estados finales $\set{\ket{n,1,-1}, n\geq2}$ tenemos
+\begin{align}
+  c^{(1)}_{n1-1}(t)
+  &= -\frac{e}{i\hbar} 
+    \Bigg(\frac{a}{\sqrt{2}}
+    \underbrace{\matrixel{n1-1}{T^{(1)}_{-1}}{100}}_{\braket{0,1;0,-1}{1,-1}
+    \doublebarmel{n,1}{T^{(1)}}{1,0}}
+    - \frac{a}{\sqrt{2}}
+    \underbrace{\matrixel{n1-1}{T^{(1)}_{1}}{100}}_{0}
+    -b \underbrace{\matrixel{n1-1}{T^{(2)}_{0}}{100}}_{0} \Bigg) f(t) \nonumber \\
+  &= -\frac{ea}{i\sqrt{2}\hbar}
+  \underbrace{\braket{0,1;0,-1}{1,-1}}_{\text{tabla CG}}
+  \doublebarmel{n,1}{T^{(1)}}{1,0} f(t),
+\end{align}
+y entonces la respectiva probabilidad de transición es
+\begin{equation}
+  P_{100 \to n1-1}(t)
+  = \frac{e^2a^2}{2\hbar^2} \abs{\braket{0,1;0,-1}{1,-1}}^2
+    \abs{\doublebarmel{n,1}{T^{(1)}}{1,0}}^2 \abs{f(t)}^2.
+\end{equation}
+Notemos que, gracias a WE, la única diferencia entre las probabilidades de
+transición $P_{100 \to n11}(t)$ y $P_{100 \to n11-1}(t)$ está en el coeficiente
+de CG que aparece multiplicando. Por lo tanto, podemos escribir una
+probabilidad en función de la otra como
+\begin{equation}
+  P_{100 \to n1-1}(t) = P_{100 \to n11}(t)
+  \frac{\abs{\braket{0,1;0,-1}{1,-1}}^2}{\abs{\braket{0,1;0,1}{1,1}}^2}.
+\end{equation}
+Es decir que gracias a WE, conociendo una de las probabilidades de transición
+tenemos también cuanto vale la otra.
+
+% =============================================================================
+\end{document}

@@ -1,0 +1,687 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[DIV=14]{typearea}
+% DIV defaults for A4 base
+% font size: 10pt 11pt 12pt | DIV: 8 10 12
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xfrac}
+\usepackage{extarrows}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{placeins}
+
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\setotherlanguage{english}
+
+% =============================================================================
+\usepackage{fontspec}
+
+% =============================================================================
+\input{../common/commands.tex}
+
+\graphicspath{{./}{./images/}}
+
+% =============================================================================
+\usepackage[type={CC},modifier={by-nc-sa},version={4.0},lang={en}]{doclicense}
+
+\usepackage[framemethod=tikz]{mdframed}
+\mdfdefinestyle{mainframe}{
+  frametitlebackgroundcolor=black!15,
+  frametitlerule=true,
+  roundcorner=10pt,
+  middlelinewidth=1pt,
+  innermargin=0.5cm,
+  outermargin=0.5cm,
+  innerleftmargin=0.5cm,
+  innerrightmargin=0.5cm,
+  innertopmargin=\topskip,
+  innerbottommargin=\topskip,
+}
+
+% =============================================================================
+\newcommand{\jpmprefact}{\hbar\sqrt{j(j+1) - m(m\pm1)}}
+\newcommand{\jpmprefactev}[2]{\hbar\sqrt{{#1} - {#2}}}
+\newcommand{\lpmprefact}{\hbar\sqrt{l(l+1) - m(m\pm1)}}
+\newcommand{\Ylm}{Y_{l,m}}
+\newcommand{\Ylmev}[2]{Y_{#1,#2}}
+\newcommand{\Plm}{P_{l,m}}
+\newcommand{\Plmev}[2]{P_{#1,#2}}
+\newcommand{\jmax}{j_{\text{max}}}
+
+% Header ======================================================================
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancyhead[L]{Apunte TPs Física Teórica 2: Paridad}
+\fancyhead[C]{}
+\fancyhead[R]{\thepage/\pageref{LastPage}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.5pt}
+\pagestyle{fancy}
+
+\usepackage{titlesec}
+%\renewcommand{\thesection}{\Roman{section}}
+%\renewcommand{\thesubsection}{\Roman{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+%\titleformat{\section}{\large\bfseries\filcenter}{\Roman{section}.}{0.5em}{}
+%\titleformat{\subsection}{\large\bfseries\filcenter}{\Roman{subsection}.}{0.5em}{}
+
+\numberwithin{equation}{subsection}
+\allowdisplaybreaks
+
+\setcounter{tocdepth}{3}
+
+% =============================================================================
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={Apunte TPs Física Teórica 2: Paridad},
+    pdfauthor={Federico Cerisola},
+    pdfencoding=auto,
+    pdfstartview=Fit,
+    pdfpagemode=UseOutlines,
+    hypertexnames=false,
+}
+
+% =============================================================================
+\begin{document}
+
+% =============================================================================
+\title{Apunte TPs Física Teórica 2: Paridad}
+\author{Federico Cerisola
+  \\ \small{Departamento de Física -- FCEyN -- Universidad de Buenos Aires}
+  \\ \small{\href{mailto:cerisola@df.uba.ar}{\nolinkurl{cerisola@df.uba.ar}}}
+}
+\date{\small Última actualización: \today \\[1em]
+  Última versión disponible en: \\
+  \texttt{
+    \href{https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+    {https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+  }}
+\maketitle
+\thispagestyle{empty}
+
+\vfill
+\doclicenseThis
+
+\pagebreak
+
+% =============================================================================
+\newpage
+  \tableofcontents
+\newpage
+
+% =============================================================================
+\section{Transformación de Paridad}
+
+En esta práctica estudiaremos una nueva transformación de simetría que también
+aparece con frecuencia en mecánica clásica: la transformación de paridad o de
+inversión espacial. Clásicamente, la transformación de inversión espacial
+consiste en la transformación
+\begin{equation} \label{eq:defparityclass}
+  \vect{r} \xrightarrow{\qquad} \vect{r}' = -\vect{r},
+\end{equation}
+donde $\vect{r}$ es el vector posición en $\Reals^3$.
+
+La idea ahora es ver cómo definir el operador $\parityop$ que representa la
+acción de esta transformación sobre el espacio de Hilbert de estados cuánticos.
+Hay distintos caminos que se pueden elegir para definir $\parityop$. El que
+vamos a tomar aquí no es el más ideal desde un punto de vista formal, pero en
+general resulta el más intuitivo. Inspirándonos en \eqref{eq:defparityclass},
+definimos el operador de paridad $\parityop$ como el operador cuya acción sobre
+los autoestados de posición $\set{\ket{\vect{r}}}$ es
+\begin{equation} \label{eq:defparityquantpos}
+  \parityop\ket{\vect{r}} = \ket{-\vect{r}}.
+\end{equation}
+Veamos un par de consecuencias de la definición \eqref{eq:defparityquantpos}.
+En primer lugar notemos que
+\begin{equation}
+  \parityop^2\ket{\vect{r}} = \parityop\ket{-\vect{r}} = \ket{\vect{r}}.
+\end{equation}
+Esto implica que
+\begin{equation} \label{eq:parityopprop1}
+  \parityop^2 = \Id, \qquad \text{ y } \qquad \parityop = \parityop^{-1}.
+\end{equation}
+Esto está en acuerdo con lo que uno esperaría clásicamente, dado que claramente
+aplicar dos veces la transformación \eqref{eq:defparityclass} deja al vector
+posición invariante.
+
+Otra consecuencia de \eqref{eq:defparityquantpos} es
+\begin{equation}
+  \matrixel{\vect{r}}{\parityop^\dagger\parityop}{\vect{r}} =
+  \braket{-\vect{r}}{-\vect{r}} = 1.
+\end{equation}
+Como esto debe ser cierto para todo $\ket{\vect{r}}$, esto implica que
+\begin{equation} \label{eq:parityopprop2}
+  \parityop^\dagger \parityop = \Id.
+\end{equation}
+La propiedad \eqref{eq:parityopprop2} junto con \eqref{eq:parityopprop1}
+significa que el operador paridad es tanto \emph{hermítico} como
+\emph{unitario} y por lo tanto
+\begin{equation} \label{eq:parityophermunit}
+  \parityop = \parityop^\dagger = \parityop^{-1}.
+\end{equation}
+Como el operador paridad es hermítico, sus autovalores son reales. Como es
+unitario, sus autovalores tienen que ser números complejos de módulo uno. Por
+lo tanto, los autovalores de $\parityop$ son $\pm 1$ (esto también se puede ver
+del hecho que $\parityop^2 = \Id$).
+
+Veamos que esta definición de paridad satisface algunas propiedades análogas a
+lo que uno esperaría de la definición clásica. En primer lugar, notemos cómo
+cambia la función de onda $\psi(\vect{r})$ ante una transformación de paridad.
+Tenemos
+\begin{align}
+  \ket{\psi} &\xrightarrow{\qquad} \braket{\vect{r}}{\psi} = \psi(\vect{r}), \\
+  \parityop\ket{\psi} &\xrightarrow{\qquad}
+    \matrixel{\vect{r}}{\parityop}{\psi} = \braket{-\vect{r}}{\psi} =
+    \psi(-\vect{r}). \label{eq:paritywavefunc}
+\end{align}
+Por lo tanto, la transformación de paridad transforma la función de onda
+$\psi(\vect{r})$ en la función de onda $\psi(-\vect{r})$, como uno esperaría
+dada la definición clásica \eqref{eq:defparityclass}.
+
+Podemos además ver cómo afecta la transformación paridad al operador
+$\vect{r}$. Tenemos
+\begin{equation}
+  \matrixel{\vect{r}'}{\parityop\,\vect{r}\,\parityop^\dagger}{\vect{r}}
+  = \matrixel{-\vect{r}'}{\vect{r}}{-\vect{r}}
+  = -\vect{r}\braket{-\vect{r}'}{-\vect{r}}
+  = -\vect{r}\delta\left(-\vect{r}' + \vect{r}\right)
+  = -\vect{r}\delta\left(\vect{r}' - \vect{r}\right)
+\end{equation}
+Por otro lado,
+\begin{equation}
+  \matrixel{\vect{r}'}{\left(-\vect{r}\right)}{\vect{r}}
+  = -\vect{r}\braket{\vect{r}'}{\vect{r}}
+  = -\vect{r}\delta\left(\vect{r}' - \vect{r}\right).
+\end{equation}
+Por lo tanto, podemos concluir que
+\begin{equation} \label{eq:paritytranspos}
+  \parityop\,\vect{r}\,\parityop^\dagger = -\vect{r}.
+\end{equation}
+Notemos que la transformación del operador posición ante paridad es totalmente
+análoga a la transformación clásica \eqref{eq:defparityclass}.
+
+% -----------------------------------------------------------------------------
+\subsection{Vectores y Pseudo-vectores}
+
+Clásicamente los vectores (en el sentido de cómo se transforma una magnitud
+ante rotaciones del sistema de coordenadas) se pueden clasificar en términos de
+vectores propios o pseudo-vectores, dependiendo de cómo transforman ante
+paridad. Un vector propiamente dicho, cambia de signo ante paridad tal como la
+posición en \eqref{eq:defparityclass}. Por otro lado, un pseudo-vector
+permanece invariante ante una transformación de paridad. Clásicamente un
+pseudo-vector se tiene por ejemplo para cualquier magnitud que se defina como
+el producto vectorial entre dos vectores.
+
+A continuación extenderemos de forma natural estas definiciones al caso de
+operadores cuánticos y veremos cómo estas definiciones nos resultan útiles para
+obtener reglas de selección en los autoestados de paridad.
+
+\subsubsection{Vectores}
+Dado un operador vectorial $\vect{V}$, decimos que $\vect{V}$ es un
+\emph{vector} si ante una transformación de paridad se transforma de la forma
+\begin{equation} \label{eq:defvect}
+  \parityop\,\vect{V}\,\parityop^\dagger = -\vect{V}.
+\end{equation}
+Notar que usando \eqref{eq:parityophermunit} esta condición es equivalente a
+\begin{equation} \label{eq:defvectacomm}
+  \acomm{\parityop}{\vect{V}} = 0.
+\end{equation}
+
+Esta definición es consistente con la noción clásica de vector. Efectivamente,
+como vimos en la sección anterior, $\vect{r}$ es un vector (ec.
+\eqref{eq:paritytranspos}). Otro ejemplo clásico de vector es el momento
+$\vect{p}$. Veamos que tenemos lo mismo para el operador $\vect{p}$.
+Para ello, miremos cómo transforma el operador traslación
+$\translationop(\vect{d}) = \exp\left(-i\vect{p}\cdot\vect{d}/\hbar\right)$.
+Tenemos
+\begin{equation}
+  \matrixel{\vect{r}} {\parityop\,\translationop(\vect{d})\,\parityop^\dagger}
+    {\psi}
+  = \matrixel{-\vect{r}}{\translationop(\vect{d})\,\parityop^\dagger}{\psi}
+  = \matrixel{-\vect{r} - \vect{d}}{\parityop^\dagger}{\psi}
+  = \braket{\vect{r} + \vect{d}}{\psi}
+  = \psi\left(\vect{r} + \vect{d}\right).
+\end{equation}
+Por otro lado,
+\begin{equation}
+  \matrixel{\vect{r}}{\translationop(-\vect{d})}{\psi}
+  = \braket{\vect{r} + \vect{d}}{\psi}
+  = \psi\left(\vect{r} + \vect{d}\right).
+\end{equation}
+Por lo tanto, podemos concluir que
+\begin{equation} \label{eq:paritytranstrans}
+  \parityop\,\translationop(\vect{d})\,\parityop^\dagger = 
+  \translationop(-\vect{d}),
+\end{equation}
+o, lo que es lo mismo,
+\begin{equation}
+  \parityop\,e^{-i\vect{p}\cdot\vect{d}/\hbar}\,\parityop^\dagger =
+  e^{i\vect{p}\cdot\vect{d}/\hbar}.
+\end{equation}
+Claramente, esto significa que
+\begin{equation} \label{eq:paritytransmom}
+  \parityop\,\vect{p}\,\parityop^\dagger = -\vect{p},
+\end{equation}
+y por lo tanto efectivamente el momento es un vector.
+%Recordando la acción del operador $\vect{p}$ en la base de posición tenemos
+%\begin{equation}
+%  \matrixel{\vect{r}'}{\parityop\,\vect{p}\,\parityop^\dagger}{\vect{r}}
+%  = \matrixel{-\vect{r}'}{\vect{p}}{-\vect{r}}
+%  = -i\hbar\grad_{-\vect{r}'}\delta\left(-\vect{r}' + \vect{r}\right)
+%  = -i\hbar\grad_{-\vect{r}'}\delta\left(\vect{r}' - \vect{r}\right)
+%\end{equation}
+%Por otro lado,
+%\begin{equation}
+%  \matrixel{\vect{r}'}{\left(-\vect{p}\right)}{\vect{r}}
+%  = i\hbar\grad_{\vect{r}'}\delta\left(\vect{r}' - \vect{r}\right).
+%\end{equation}
+
+\subsubsection{Pseudo-vectores}
+Dado un operador vectorial $\vect{V}$, decimos que $\vect{V}$ es un
+\emph{pseudo-vector} si ante una transformación de paridad permanece invariante
+\begin{equation} \label{eq:defpseudovect}
+  \parityop\,\vect{V}\,\parityop^\dagger = \vect{V}.
+\end{equation}
+Notar que usando \eqref{eq:parityophermunit} esta condición es equivalente a
+\begin{equation} \label{eq:defpseudovectcomm}
+  \comm{\parityop}{\vect{V}} = 0.
+\end{equation}
+
+Un ejemplo de pseudo-vector en mecánica clásica es el momento angular. Veamos
+que esto también es cierto en mecánica cuántica. Tenemos
+\begin{align}
+  \parityop\,L_i\,\parityop^\dagger
+  &= \parityop\,\left(\vect{r}\times\vect{p}\right)_i\,\parityop^\dagger
+    = \parityop\,\lchivita_{ijk}r_jp_k\,\parityop^\dagger
+    = \lchivita_{ijk} \parityop\,r_jp_k\,\parityop^\dagger
+    = \lchivita_{ijk} \parityop\,r_j\, \underbrace{\parityop^\dagger
+      \parityop}_{\Id} p_k\,\parityop^\dagger \nonumber \\
+  &= \lchivita_{ijk} \underbrace{\parityop\,r_j\, \parityop^\dagger}_{-r_j}
+     \underbrace{\parityop p_k\,\parityop^\dagger}_{-p_k}
+    = \lchivita_{ijk} \,r_jp_k = L_i.
+\end{align}
+Efectivamente tenemos que $\parityop\,\vect{L}\,\parityop^\dagger = \vect{L}$ y
+entonces $\vect{L}$ es un pseudo-vector. Esto tiene una consecuencia
+particularmente importante. Notar en primer lugar que la condición
+\eqref{eq:defpseudovect} es equivalente a $\comm{\parityop}{\vect{L}} = 0$. Por
+lo tanto, tenemos que $\comm{\parityop}{\RotationOp(R)} = 0$ para cualquier
+operador de rotación $\RotationOp(R)$. Entonces,
+\begin{equation}
+  \parityop\,\RotationOp(R)\,\parityop^\dagger = \RotationOp(R).
+\end{equation}
+Este resultado es importante en cuanto es otra de las propiedades fundamentales
+de paridad en mecánica clásica que se recupera en cuántica. Clásicamente
+también es cierto que aplicar una transformación de paridad, luego rotar y
+finalmente volver a transforman por paridad es equivalente a directamente
+aplicar la rotación.
+
+\subsubsection{Reglas de selección para vectores y pseudo-vectores}
+
+A continuación veremos que el hecho que un operador sea un vector o
+pseudo-vector impone reglas de selección muy específicas al mirar elementos de
+matriz del operador en autoestados de paridad.
+
+Consideremos dos autoestados de paridad $\ket{\alpha}$ y $\ket{\beta}$, de
+forma tal que
+\begin{equation}
+  \parityop\ket{\alpha} = \lambda_\alpha\ket{\alpha}, \qquad
+  \parityop\ket{\beta} = \lambda_\beta\ket{\beta},
+\end{equation}
+con $\lambda_\alpha$ y $\lambda_\beta$ iguales a $+1$ o $-1$.
+
+Sea $\vect{V}$ un vector propiamente dicho, entonces
+\begin{equation}
+  \matrixel{\alpha}{\vect{V}}{\beta} = \matrixel{\alpha}{
+    \underbrace{\parityop\parityop}_{\Id} \vect{V}
+    \underbrace{\parityop\parityop}_{\Id}}{\beta}
+  = \underbrace{\bra{\alpha}\parityop}_{\lambda_\alpha\bra{\alpha}}
+    \underbrace{\parityop\,\vect{V}\,\parityop}_{-\vect{V}}
+    \underbrace{\parityop\ket{\beta}}_{\lambda_\beta\ket{\beta}}
+  = -\lambda_\alpha\lambda_\beta\matrixel{\alpha}{\vect{V}}{\beta}.
+\end{equation}
+Por lo tanto, para que el elemento de matriz sea distinto de cero,
+necesariamente tiene que ser $-\lambda_\alpha\lambda_\beta = 1$.
+En conclusión \emph{para que los elementos de matriz de un operador vectorial
+propiamente dicho en autoestados de paridad sean distintos de cero,
+necesariamente los estados deben tener distinta paridad}. En otras palabras,
+decimos que los operadores vectoriales propiamente dichos conectan solamente
+autoestados de paridad distinta.
+
+Un resultado análogo tenemos para pseudo-vectores. Sea $\vect{V}$ un
+pseudo-vector, entonces
+\begin{equation}
+  \matrixel{\alpha}{\vect{V}}{\beta} = \matrixel{\alpha}{
+    \underbrace{\parityop\parityop}_{\Id} \vect{V}
+    \underbrace{\parityop\parityop}_{\Id}}{\beta}
+  = \underbrace{\bra{\alpha}\parityop}_{\lambda_\alpha\bra{\alpha}}
+    \underbrace{\parityop\,\vect{V}\,\parityop}_{\vect{V}}
+    \underbrace{\parityop\ket{\beta}}_{\lambda_\beta\ket{\beta}}
+  = \lambda_\alpha\lambda_\beta\matrixel{\alpha}{\vect{V}}{\beta}.
+\end{equation}
+Por lo tanto, para que el elemento de matriz sea distinto de cero,
+necesariamente tiene que ser $\lambda_\alpha\lambda_\beta = 1$.
+En conclusión \emph{para que los elementos de matriz de un operador
+pseudo-vectorial en autoestados de paridad sean distintos de cero,
+necesariamente los estados deben tener igual paridad}. En otras palabras,
+decimos que los operadores pseudo-vectoriales conectan solamente autoestados de
+igual paridad.
+
+% -----------------------------------------------------------------------------
+\subsection{Escalares y Pseudo-escalares}
+
+Análogamente a como tenemos vectores y pseudo-vectores, clásicamente también se
+definen escalares (propiamente dichos) y pseudo-escalares según cómo
+transforman ante paridad. Un escalar propiamente dicho resulta invariante ante
+paridad, mientras que un pseudo-escalar cambia de signo.
+
+A continuación extenderemos las definiciones a operadores cuánticos.
+
+\subsubsection{Escalar}
+Dado un operador invariante ante rotaciones $K$, decimos que $K$ es un
+\emph{escalar} si ante una transformación de paridad permanece invariante
+\begin{equation} \label{eq:defscalar}
+  \parityop\,K\,\parityop^\dagger = K.
+\end{equation}
+Notar que usando \eqref{eq:parityophermunit} esta condición es equivalente a
+\begin{equation} \label{eq:defscalarcomm}
+  \comm{\parityop}{K} = 0.
+\end{equation}
+
+Clásicamente, un ejemplo de escalar es el producto interno de dos vectores
+(propiamente dichos) cualesquiera. Veamos que esto también es cierto con
+operadores. Sean $\vect{V}$ y $\vect{W}$ dos operadores vectoriales
+propiamente dichos. Como vimos en las notas sobre rotaciones, efectivamente el
+producto interno de dos vectores es invariante ante rotaciones. Falta ver cómo
+transforma ante paridad. Tenemos
+\begin{equation}
+  \parityop\,(\vect{V}\cdot\vect{W})\,\parityop^\dagger
+  = \parityop\,V_iW_i\,\parityop^\dagger
+  = \parityop\,V_i\,\parityop^\dagger\parityop\,W_i\,\parityop^\dagger
+  = (-V_i)(-W_i) = V_iW_i = \vect{V}\cdot\vect{W}.
+\end{equation}
+Por lo tanto, efectivamente el producto interno de dos vectores propiamente
+dichos es un escalar propiamente dicho. En particular, el ``módulo cuadrado''
+de cualquier vector es un operador escalar y por lo tanto $r$ el operador
+radial en coordenadas esféricas también lo es.
+
+\subsubsection{Pseudo-escalar}
+Dado un operador invariante ante rotaciones $K$, decimos que $K$ es un
+\emph{pseudo-escalar} si ante una transformación de paridad se transforma de la
+forma
+\begin{equation} \label{eq:defpseudoscalar}
+  \parityop\,K\,\parityop^\dagger = -K.
+\end{equation}
+Notar que usando \eqref{eq:parityophermunit} esta condición es equivalente a
+\begin{equation} \label{eq:defpseudoscalaracomm}
+  \acomm{\parityop}{K} = 0.
+\end{equation}
+
+\subsubsection{Reglas de selección para escalares y pseudo-escalares}
+
+Análogamente al caso de vectores y pseudo-vectores, al mirar los elementos de
+matriz de escalares y pseudo-escalares en autoestados de paridad tendremos
+reglas de selección que nos dirán cuáles son las únicas posibles combinaciones
+que en principio pueden ser distintas de cero.
+
+Para un escalar $K$ propiamente dicho tenemos
+\begin{equation}
+  \matrixel{\alpha}{K}{\beta} = \matrixel{\alpha}{
+    \underbrace{\parityop\parityop}_{\Id} K
+    \underbrace{\parityop\parityop}_{\Id}}{\beta}
+  = \underbrace{\bra{\alpha}\parityop}_{\lambda_\alpha\bra{\alpha}}
+    \underbrace{\parityop\,K\,\parityop}_{K}
+    \underbrace{\parityop\ket{\beta}}_{\lambda_\beta\ket{\beta}}
+  = \lambda_\alpha\lambda_\beta\matrixel{\alpha}{K}{\beta},
+\end{equation}
+y por lo tanto un escalar propiamente dicho conecta solamente estados con
+misma paridad.
+
+Para un pseudo-escalar $K$ tenemos
+\begin{equation}
+  \matrixel{\alpha}{K}{\beta} = \matrixel{\alpha}{
+    \underbrace{\parityop\parityop}_{\Id} K
+    \underbrace{\parityop\parityop}_{\Id}}{\beta}
+  = \underbrace{\bra{\alpha}\parityop}_{\lambda_\alpha\bra{\alpha}}
+    \underbrace{\parityop\,K\,\parityop}_{-K}
+    \underbrace{\parityop\ket{\beta}}_{\lambda_\beta\ket{\beta}}
+  = -\lambda_\alpha\lambda_\beta\matrixel{\alpha}{K}{\beta},
+\end{equation}
+y por lo tanto un pseudo-escalar conecta solamente estados con paridad
+distinta.
+
+% -----------------------------------------------------------------------------
+\subsection{Potenciales centrales y paridad (Problema 6 -- Guía 8)}
+
+Para que todos los análisis anteriores sean de utilidad práctica, los
+autoestados de paridad deberían ser estados que aparecen naturalmente en
+problemas de interés práctico; sino de poco nos va a servir saber cuanto valen
+los elementos de matriz en estos estados. A continuación veremos que, por
+ejemplo, los autoestados de un potencial central son siempre autoestados de
+paridad.
+
+Consideremos una partícula en un potencial central $V(r)$. El Hamiltoniano del
+sistema es
+\begin{equation}
+  H = \frac{p^2}{2m} + V(r).
+\end{equation}
+Veamos cómo transforma $H$ ante paridad. Para ello, podemos ver cómo
+transforman $p^2$ y $V(r)$ cada un por separado. En la sección de escalares,
+mostramos que el producto interno de dos vectores propios era un escalar
+propio y, entonces, en particular el ``módulo cuadrado'' de un operador
+vectorial es un escalar propio. Por lo tanto $p^2$ es invariante ante paridad.
+Análogamente el operador $r$ también es invariante ante paridad. Como $V(r)$ es
+simplemente una función de $r$ (que podemos por ejemplo desarrollar en serie de
+potencias de $r$), entonces $V(r)$ también es invariante ante paridad. En
+conclusión
+\begin{equation}
+  \parityop\,p^2\,\parityop^\dagger = p^2, \;
+  \parityop\,V(r)\,\parityop^\dagger = V(r), \qquad \implies \qquad
+  \parityop\,H\,\parityop^\dagger = H \qquad \implies \qquad
+  \comm{\parityop}{H} = 0.
+\end{equation}
+Por lo tanto existe una base común de autoestados de paridad y del
+Hamiltoniano. Como vimos en la guía de momento angular, para un potencial
+central $\comm{H}{L^2} = 0$ y $\comm{H}{L_z} = 0$. Además, por ser $\vect{L}$
+un pseudo-vector, $\comm{L_z}{\parityop} = 0$. Además, es fácil verificar que
+$L^2$ es invariante ante paridad y, por lo tanto, $\comm{L^2}{\parityop} = 0$.
+En conclusión tenemos que
+\begin{equation}
+  \set{H, L^2, L_z, \parityop} \qquad \text{forman un CCOC}.
+\end{equation}
+En los casos en que $\set{H, L^2, L_z}$ ya forman un CCOC por sí solos (como
+por ejemplo en el caso del átomo de Hidrógeno), esto significa que
+necesariamente los autoestados de $\set{H, L^2, L_z}$ son también autoestados
+de paridad. Efectivamente, a continuación veremos que la paridad del estado
+está totalmente determinada por la dependencia angular en $\set{L^2, L_z}$ del
+estado.
+
+Sea $\set{\ket{\alpha,l,m}}$ una base de autoestados de $\set{H, L^2, L_z}$,
+donde, como es usual,
+\begin{equation}
+  L^2\ket{\alpha,l,m} = \hbar^2l(l+1)\ket{\alpha,l,m}, \qquad
+  L_z\ket{\alpha,l,m} = \hbar m\ket{\alpha,l,m}.
+\end{equation}
+En coordenadas esféricas, las funciones de onda de estos autoestados son
+\begin{equation}
+  \braket{r,\theta,\phi}{\alpha,l,m} =
+  R_{\alpha,l}(r)\,\SphericalHarmonic{l}{m}(\theta,\phi),
+\end{equation}
+con $R_{\alpha,l}$ la función de onda radial y $\SphericalHarmonic{l}{m}$ los
+armónicos esféricos. Como vimos en la introducción, ante paridad la función de
+onda $\psi(\vect{r})$ se transforma en la función de onda $\psi(-\vect{r})$
+(ec. \eqref{eq:paritywavefunc}). La transformación $\vect{r} \rightarrow
+-\vect{r}$ en coordenadas esféricas se escribe como
+\begin{equation} \label{eq:paritypolar}
+  r \xrightarrow{\quad} r, \qquad
+  \theta \xrightarrow{\quad} \pi - \theta, \qquad
+  \phi \xrightarrow{\quad} \pi + \phi.
+\end{equation}
+Por lo tanto, la función radial $R_{\alpha,l}$ permanece invariante y cualquier
+cambio proviene de la dependencia en los armónicos esféricos. Recordemos que
+los armónicos esféricos se pueden escribir como
+\begin{equation}
+  \SphericalHarmonic{l}{m}(\theta,\phi) =
+    (-1)^{m}\,e^{im\phi}\,\Plmev{l}{m}(\cos\theta),
+\end{equation}
+con $\Plmev{l}{m}(x)$ los polinomios asociados de Legendre. Ante la
+transformación \eqref{eq:paritypolar} tenemos que
+\begin{align}
+  e^{im\phi} &\xrightarrow{\quad} e^{im(\pi + \phi)} = e^{im\pi}e^{im\phi} =
+  (-1)^{m}e^{im\phi}. \\
+  \cos\theta &\xrightarrow{\quad} \cos(\pi - \theta) = -\cos\theta.
+\end{align}
+Por lo tanto, falta ver cómo cambian los polinomios asociados de Legendre al
+evaluar $\Plmev{l}{m}(-x)$. La definición de estas funciones es
+\begin{equation}
+  \Plmev{l}{m}(x) = \frac{(-1)^m}{2^ll!}(1-x^2)^{m/2} \dv[l+m]{x} (x^2 - 1)^l.
+\end{equation}
+Por lo tanto, tenemos que $\Plmev{l}{m}(-x) = (-1)^{l+m}\Plmev{l}{m}(x)$.
+Finalmente, juntando todo tenemos que
+\begin{equation}
+  \psi_{\alpha,l,m}(-\vect{r}) = R_{\alpha,l}(r)\SphericalHarmonic{l}{m}(\pi -
+    \theta, \pi + \phi) = R_{\alpha,l}(r)\,(-1)^m (-1)^{l+m}
+    \SphericalHarmonic{l}{m}(\theta,\pi) = (-1)^l \psi_{\alpha,l,m}(\vect{r}).
+\end{equation}
+En conclusión
+\begin{equation}
+  \parityop\ket{\alpha,l,m} = (-1)^l \,\ket{\alpha,l,m}.
+\end{equation}
+
+\subsubsection{Ejemplo: algunos elementos de matriz del átomo de Hidrógeno
+  (Problema 9 -- Guía 8)}
+
+Veamos unos ejemplos sencillos de aplicación de estas reglas de selección en
+elementos de matriz del átomo de Hidrógeno.
+
+Supongamos que queremos calcular el elemento de matriz
+\begin{equation}
+  \matrixel{n=2,l=1,m=0}{p_z}{n=2,l=1,m=0}.
+\end{equation}
+Para ver si este elemento de matriz se anula o no podemos mirar paridad (lo que
+estuvimos viendo esta guía) o también Wigner-Eckart (que vimos en la guía de
+tensores esféricos). Por paridad tenemos que
+\begin{equation}
+  \matrixel{2,1,0}{p_z}{2,1,0}
+  = \underbrace{\bra{2,1,0}\parityop^\dagger}_{(-1)^1\bra{2,1,0}}
+    \underbrace{\parityop\,p_z\,\parityop^\dagger}_{-p_z}
+    \underbrace{\parityop\ket{2,1,0}}_{(-1)^1\ket{2,1,0}}
+  = (-1)^3 \matrixel{2,1,0}{p_z}{2,1,0}
+  = -\matrixel{2,1,0}{p_z}{2,1,0}.
+\end{equation}
+Por lo tanto, $\matrixel{2,1,0}{p_z}{2,1,0} = 0$.
+
+Por otro lado, para aplicar Wigner-Eckart, recordemos que la componente $z$ de
+un vector corresponde a la componente $q = 0$ de un tensor esférico de rango
+$1$. Por lo tanto,
+\begin{equation}
+  \matrixel{2,1,0}{p_z}{2,1,0}
+  \propto \matrixel{2,1,0}{T^{(1)}_{0}}{2,1,0}
+  = \braket{1,1;0,0}{1,0} \doublebarmel{2,1}{T^{(1)}}{2,1}.
+\end{equation}
+Notemos que ambas reglas de selección de Wigner-Eckart se satisfacen: $0 + 0 =
+0$ y $1 - 1 \leq 1 \leq 1 + 1$. Por lo tanto, en este caso a priori WE no nos
+dice que el elemento de matriz se anula.
+
+\bigbreak
+
+Veamos ahora otro ejemplo. Supongamos que queremos calcular el elemento de
+matriz
+\begin{equation}
+  \matrixel{n=2,l=1,m=0}{x}{n=2,l=0,m=0}.
+\end{equation}
+Utilizando paridad tenemos
+\begin{equation}
+  \matrixel{2,1,0}{x}{2,0,0}
+  = \underbrace{\bra{2,1,0}\parityop^\dagger}_{(-1)^1\bra{2,1,0}}
+    \underbrace{\parityop\,x\,\parityop^\dagger}_{-x}
+    \underbrace{\parityop\ket{2,0,0}}_{(-1)^0\ket{2,0,0}}
+  = (-1)^2 \matrixel{2,1,0}{x}{2,0,0}
+  = \matrixel{2,1,0}{x}{2,0,0}.
+\end{equation}
+Por lo tanto, paridad no nos dice nada sobre si este elemento de matriz sea
+anula o no.  Veamos qué sucede con WE. Recordemos que $x$ se puede escribir
+como combinación lineal de las componentes $q = \pm1$ de un tensor esférico de
+rango 1. Por lo tanto,
+\begin{align}
+  \matrixel{2,1,0}{x}{2,0,0}
+  &= \matrixel{2,1,0}{(C_1T^{(1)}_{1} + C_{-1}T^{(1)}_{-1})}{2,0,0}
+  = C_1\matrixel{2,1,0}{T^{(1)}_{1}}{2,0,0} +
+    C_{-1}\matrixel{2,1,0}{T^{(1)}_{-1}}{2,0,0} \nonumber \\
+  &= C_1\braket{0,1;0,1}{1,0} \doublebarmel{2,1}{T^{(1)}}{2,0} +
+    C_{-1}\braket{0,1;0,-1}{1,0} \doublebarmel{2,1}{T^{(1)}}{2,0}
+\end{align}
+Claramente, en ambos términos se viola la condición de la suma de las
+proyecciones; tenemos $0 + 1 \neq 0$ y $0 - 1 \neq 0$. Por lo tanto ambos
+términos son cero y entonces $\matrixel{2,1,0}{x}{2,0,0} = 0$.
+
+\bigbreak
+
+Más allá de proveer un ejemplo concreto de cómo usar paridad para determinar si
+un elemento de matriz se anula; estos dos cálculos nos muestran que las reglas
+de selección impuestas por paridad son distintas de las de Wigner-Eckart y nos
+dan diferente información: puede ser que por uno de los argumentos un
+elemento de matriz se anula pero el otro no nos diga nada conclusivo.
+
+% -----------------------------------------------------------------------------
+\subsection{Oscilador armónico unidimensional y paridad}
+
+Otro problema relevante donde los autoestados del Hamiltoniano son autoestados
+de paridad es el del oscilador armónico unidimensional. Efectivamente, notemos
+que el Hamiltoniano
+\begin{equation}
+  H = \frac{p^2}{2m} + \frac{m\omega^2}{2}x^2,
+\end{equation}
+es invariante ante paridad, $\comm{H}{\parityop} = 0$. Como el Hamiltoniano del
+oscilador no tiene ninguna degeneración, necesariamente los autoestados
+$\set{\ket{n}}$ del oscilador tienen que ser también autoestados de paridad.
+Veamos que esto efectivamente es así.
+
+En la guía de oscilador armónico mostramos que el estado fundamental $\ket{0}$
+es un estado Gaussiano. Por lo tanto, la función de onda del estado fundamental
+es par $\psi_{0}(-x) = \psi_{0}(x)$ y entonces el estado $\ket{0}$ es
+autoestado de autovalor $+1$ de paridad
+\begin{equation}
+  \parityop\ket{0} = \ket{0}.
+\end{equation}
+El primer excitado lo podíamos construir aplicando el operador de creación
+$a^\dagger$ al fundamental
+\begin{equation}
+  \ket{1} = a^\dagger\ket{0}.
+\end{equation}
+Recordemos que $a^\dagger$ es una combinación lineal de $x$ y $p$, ambos
+impares, es decir tales que $\parityop\,x\,\parityop^\dagger = -x$ y
+$\parityop\,p\,\parityop^\dagger = -p$. Por lo tanto, necesariamente
+$a^\dagger$ es impar
+\begin{equation}
+  \parityop\,a^\dagger\,\parityop^\dagger = -a^\dagger.
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  \parityop\ket{1} = \parityop a^\dagger \ket{0} = \parityop a^\dagger
+  \parityop^\dagger \parityop \ket{0} = -a^\dagger\ket{0} = -\ket{1},
+\end{equation}
+y entonces $\ket{1}$ es un estado impar. Análogamente podemos encontrar la
+paridad del estado $\ket{n}$
+\begin{align}
+  \parityop\ket{n}
+  &= \parityop\left[\frac{1}{\sqrt{n!}}(a^\dagger)^n\ket{0}\right]
+  = \frac{1}{\sqrt{n!}}\parityop(a^\dagger)^n\parityop^\dagger\parityop\ket{0}
+  = \frac{1}{\sqrt{n!}}\parityop(a^\dagger)^n\parityop^\dagger\ket{0}
+    \nonumber \\
+  &= \frac{1}{\sqrt{n!}}\left(\parityop a^\dagger\parityop^\dagger
+    \dots \parityop a^\dagger\parityop^\dagger\right)\ket{0}
+  = (-1)^n \left[\frac{1}{\sqrt{n!}}(a^\dagger)^n\ket{0}\right]
+  = (-1)^n \ket{n}.
+\end{align}
+Por lo tanto, para $n$ par, el estado es par y para $n$ impar el estado es
+impar.
+
+% =============================================================================
+\end{document}

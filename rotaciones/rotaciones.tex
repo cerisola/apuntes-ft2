@@ -1,0 +1,1406 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[DIV=14]{typearea}
+% DIV defaults for A4 base
+% font size: 10pt 11pt 12pt | DIV: 8 10 12
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xfrac}
+\usepackage{extarrows}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{placeins}
+
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\setotherlanguage{english}
+
+% =============================================================================
+\usepackage{fontspec}
+
+% =============================================================================
+\input{../common/commands.tex}
+
+\graphicspath{{./}{./images/}}
+
+% =============================================================================
+\usepackage[type={CC},modifier={by-nc-sa},version={4.0},lang={en}]{doclicense}
+
+\usepackage[framemethod=tikz]{mdframed}
+\mdfdefinestyle{mainframe}{
+  frametitlebackgroundcolor=black!15,
+  frametitlerule=true,
+  roundcorner=10pt,
+  middlelinewidth=1pt,
+  innermargin=0.5cm,
+  outermargin=0.5cm,
+  innerleftmargin=0.5cm,
+  innerrightmargin=0.5cm,
+  innertopmargin=\topskip,
+  innerbottommargin=\topskip,
+}
+
+% =============================================================================
+\newcommand{\jpmprefact}{\hbar\sqrt{j(j+1) - m(m\pm1)}}
+\newcommand{\jpmprefactev}[2]{\hbar\sqrt{{#1} {#2}}}
+\newcommand{\lpmprefact}{\hbar\sqrt{l(l+1) - m(m\pm1)}}
+\newcommand{\Ylm}{Y_{l,m}}
+\newcommand{\Ylmev}[2]{Y_{#1,#2}}
+\newcommand{\Plm}{P_{l,m}}
+\newcommand{\Plmev}[2]{P_{#1,#2}}
+
+% Header ======================================================================
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancyhead[L]{Apunte TPs Física Teórica 2: Rotaciones y Momento Angular}
+\fancyhead[C]{}
+\fancyhead[R]{\thepage/\pageref{LastPage}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.5pt}
+\pagestyle{fancy}
+
+\usepackage{titlesec}
+%\renewcommand{\thesection}{\Roman{section}}
+%\renewcommand{\thesubsection}{\Roman{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+%\titleformat{\section}{\large\bfseries\filcenter}{\Roman{section}.}{0.5em}{}
+%\titleformat{\subsection}{\large\bfseries\filcenter}{\Roman{subsection}.}{0.5em}{}
+
+\numberwithin{equation}{subsection}
+\allowdisplaybreaks
+
+\setcounter{tocdepth}{3}
+
+% =============================================================================
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={Apunte TPs Física Teórica 2: Rotaciones y Momento Angular},
+    pdfauthor={Federico Cerisola},
+    pdfencoding=auto,
+    pdfstartview=Fit,
+    pdfpagemode=UseOutlines,
+    hypertexnames=false,
+}
+
+% =============================================================================
+\begin{document}
+
+% =============================================================================
+\title{Apunte TPs Física Teórica 2: Rotaciones y Momento Angular}
+\author{Federico Cerisola
+  \\ \small{Departamento de Física -- FCEyN -- Universidad de Buenos Aires}
+  \\ \small{\href{mailto:cerisola@df.uba.ar}{\nolinkurl{cerisola@df.uba.ar}}}
+}
+\date{\small Última actualización: \today \\[1em]
+  Última versión disponible en: \\
+  \texttt{
+    \href{https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+    {https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+  }}
+\maketitle
+\thispagestyle{empty}
+
+\vfill
+\doclicenseThis
+
+\pagebreak
+
+% =============================================================================
+\newpage
+  \tableofcontents
+\newpage
+
+% =============================================================================
+\section{Representación de rotaciones y momento angular}
+
+Hasta ahora en el curso vimos dos familias de transformaciones físicas y su
+representación en el espacio de Hilbert. En efecto vimos
+\begin{itemize}
+  \item Las traslaciones (espaciales), que están representadas por el operador
+    $\TranslationOp(\vect{\ell}) = e^{-i\vect{p}\cdot\vect{\ell}/\hbar}$. El
+    operador $\vect{p}$ es el generador infinitesimal de la traslación y por lo
+    tanto lo identificamos con el momento lineal (en analogía con mecánica
+    clásica).
+  \item Las evoluciones temporales (o traslaciones temporales), que están
+    representadas por el operador $U(t)$, que (para sistemas con simetría
+    temporal) toma la forma $U(t) = e^{-iHt/\hbar}$. El operador $H$ es el
+    generador infinitesimal de la evolución temporal y lo identificamos con el
+    operador Hamiltoniano (i.e. la energía).
+\end{itemize}
+
+En mecánica clásica además de estas dos trasformaciones estudiamos también otra
+familia de transformaciones de enorme interés que son las \emph{rotaciones}.
+Por lo tanto, es natural preguntarnos \emph{cómo representar las rotaciones en
+el espacio de Hilbert}. Acá vale la pena detenernos un momento y hacer bien
+explícito a qué nos referimos dado que, a diferencia de los otros dos casos,
+ahora tendremos matrices que viven en espacios completamente distintos pero
+representan la misma acción física y esto suele causar algún grado de
+confusión.
+
+Pensemos en el espacio de coordenadas $\Reals^3$ cuyos vectores $\vect{r} = (x,
+y, z)$ son simplemente la posición como entendemos clásicamente. Ante una
+rotación del sistema de coordenadas, los vectores se transforman de forma
+particular. En efecto, sea $R(\vers{n}, \theta)$ la matriz de rotación
+alrededor del eje $\vers{n}$ en un ángulo $\theta$. La matriz $R(\vers{n},
+\theta)$ es real, i.e. $R(\vers{n}, \theta) \in \Reals^3\times\Reals^3$, y
+además (recordando de mecánica clásica) satisface que es ortogonal, es decir
+$R^T R = \Id$. Ante la rotación, un vector $\vect{r}$ se transforma según
+\begin{equation}
+  \vect{r} \xrightarrow[R(\vers{n},\theta)]{} \vect{r}'=
+  R(\vers{n},\theta)\vect{r}.
+\end{equation}
+
+\bigbreak
+\TODO{agregar dibujo rotación genérica}
+\bigbreak
+
+En mecánica clásica no necesitamos pensar mucho en el concepto de
+representación de las rotaciones porque, como los estados de los sistemas 
+son simplemente función de las coordenadas $\vect{r} \in \Reals^3$, donde
+justamente estamos definiendo la rotación, entonces simplemente tendremos que
+$f(\vect{r}) \rightarrow f(\vect{r}') = f(R(\vers{n},\theta)\vect{r})$.
+
+Sin embargo, en mecánica cuántica nuestros estados son vectores que pertenecen
+a un espacio de Hilbert $\Hilbert$ complejo, de dimensión arbitraria y que a
+priori no tiene nada que ver con el espacio $\Reals^3$ donde definimos la
+rotación $R(\vers{n},\theta)$. Por lo tanto, lo que tenemos que buscar es cómo
+definir, de forma apropiada, un operador $\RotationOp(R(\vers{n},\theta)) =
+\RotationOp(\vers{n}, \theta)$ que actúa sobre $\Hilbert$ y transforme estados
+como deberían ante una rotación.
+\begin{alignat*}{2}
+  &R(\vers{n}, \theta) \xrightarrow[\hphantom{very long text till the end}]{}
+  &&\RotationOp(\vers{n}, \theta) \\
+  &\text{actúa sobre } \Reals^3
+  &&\text{actúa sobre } \Hilbert
+\end{alignat*}
+
+\bigbreak
+
+Para encontrar quién es $\RotationOp(\vers{n}, \theta)$ en la teórica siguieron
+un procedimiento similar al tomado en el caso de las traslaciones, comenzando
+por mirar qué pasa con una rotación infinitesimal y cómo se componen las
+rotaciones. La gran diferencia con la translación es que, mientras que las
+traslaciones conmutan (en el sentido que da lo mismo trasladar primero en
+$\vect{d}_1$ y después en $\vect{d}_2$ o viceversa), aún clásicamente las
+rotaciones no conmutan. Efectivamente en general tenemos que $R(\vers{n},
+\theta)\,R(\vers{q}, \varphi) \neq R(\vers{q}, \varphi)\,R(\vers{n}, \theta)$.
+Analizando cómo se comportan las matrices $R$ y qué es razonable pedirle a
+$\RotationOp$, llegaron a la conclusión que $\RotationOp$ es un operador
+unitario tal que
+\begin{equation} \label{eq:def:rotop}
+  \RotationOp(\vers{n}, \theta) = e^{-i\vect{J}\cdot\vers{n}\theta/\hbar},
+\end{equation}
+donde $\vect{J} = (J_x, J_y, J_z)$ es un conjunto de tres operadores hermíticos
+que satisfacen
+\begin{equation} \label{eq:def:Jcommrels}
+  \comm{J_j}{J_k} = i\hbar\lchivita_{jkl}\,J_l.
+\end{equation}
+Notemos que $\vect{J}$ son los generadores infinitesimales de las rotaciones y
+por lo tanto los identificaremos con el \emph{momento angular}, en analogía con
+la mecánica clásica.
+Las relaciones de conmutación \eqref{eq:def:Jcommrels} \emph{definen} un
+operador de momento angular. El hecho que no conmuten entre sí las distintas
+proyecciones de momento angular está justamente asociado al hecho que las
+rotaciones no conmutan. Ésto además será la fuente de la complejidad matemática
+adicional que tendremos ahora respecto del caso de las traslaciones.
+
+Aunque las distintas componentes de $\vect{J}$ no conmutan, en la teórica
+vieron que si se define el operador $J^2$ como
+\begin{equation} \label{eq:def:J2}
+  J^2 \defeq J_x^2 + J_y^2 + J_z^2,
+\end{equation}
+(notar que la notación que estamos usando sugiere que $J^2$ es una suerte de
+``módulo cuadrado'' de $\vect{J}$; sin embargo, por ahora, $\vect{J}$ es
+simplemente notación para indicar la colección de tres operadores $\set{J_x,
+J_y, J_z}$; no obstante, más adelante veremos que esta notación tan sugestiva
+tendrá efectivamente asociada una interpretación física concreta e intuitiva),
+usando \eqref{eq:def:Jcommrels} es sencillo mostrar que
+\begin{equation} \label{eq:prop:J2Jicommrels}
+  \comm{J^2}{J_i} = 0, \quad i = x,y,z.
+\end{equation}
+Esto quiere decir que $J^2$ y $J_i$ se pueden diagonalizar simultáneamente,
+para cualquier elección de $i$. Es convención tomar la base en que $J^2$ y
+$J_z$ son diagonales. Notaremos con $\set{\ket{j,m}}$ a la base de autoestados
+comunes de $J^2$ y $J_z$ donde las etiquetas $j$ y $m$ estarán asociadas a los
+autovalores de $J^2$ y $J_z$, respectivamente.
+
+\bigbreak
+
+Para diagonalizar simultáneamente $J^2$ y $J_z$ en la teórica vieron un
+procedimiento que recuerda fuertemente al método utilizado en la resolución del
+oscilador armónico. Efectivamente, definieron dos operadores $J_+$ y $J_-$
+dados por
+\begin{equation} \label{eq:def:Jpm}
+  J_+ \defeq J_x + iJ_y, \qquad J_- \defeq J_x -iJ_y, \qquad J_+^\dagger = J_.
+\end{equation}
+Es sencillo mostrar usando \eqref{eq:def:Jcommrels} que
+\begin{equation} \label{eq:prop:Jpmcommrels}
+  \comm{J_z}{J_\pm} = \pm\hbar J_\pm, \qquad \comm{J_+}{J_-} = 2\hbar J_z.
+\end{equation}
+Con estas reglas de conmutación se puede ver que, análogamente al oscilador,
+$J_\pm\ket{jm}$ es autoestado de $J_z$ con autovalor $m\pm1$. Por otro lado, el
+operador $J^2$ se puede escribir en términos de $J_\pm$ de las formas
+\begin{align}
+  J^2 &= J_+J_- + J_z^2 - \hbar J_z, \label{eq:prop:J2Jpmwriting1} \\
+  J^2 &= J_-J_+ + J_z^2 + \hbar J_z, \label{eq:prop:J2Jpmwriting2} \\
+  J^2 &= \frac{1}{2}\left(J_+J_- + J_-J_+\right) + J_z^2.
+    \label{eq:prop:J2Jpmwriting3}
+\end{align}
+Usando estas igualdades y las reglas de conmutación eventualmente se puede
+mostrar que
+\begin{align}
+  J^2\ket{j,m} &= \hbar^2\,j(j+1)\ket{j,m}, \;j = \frac{n}{2}, n\in\Naturals,
+    \label{eq:prop:J2action} \\
+  J_z\ket{j,m} &= \hbar\,m\ket{j,m}, \;m = -j, -j + 1, \dots, j - 1, j.
+    \label{eq:prop:Jzaction}
+\end{align}
+Notar que $j = n/2$ con $n \in \Naturals$ significa que $j$ puede tomar valores
+enteros o semi-enteros. Por otro lado, dado $j$, tenemos $m = -j, \dots, j$, es
+decir $(2j + 1)$ valores de $m$. Esto quiere decir que cada autovalor de $J^2$
+tiene degeneración $(2j+1)$.
+
+Además, la acción de los operadores $J_\pm$ sobre la base $\ket{j,m}$
+finalmente queda
+\begin{equation} \label{eq:prop:Jpmaction}
+  J_\pm\ket{j,m} = \jpmprefact\ket{j,m\pm1}.
+\end{equation}
+En particular, dos casos de esta expresión que vale la pena escribir a parte
+por su gran utilidad son
+\begin{equation} \label{eq:prop:Jpmzeroaction}
+  J_+\ket{j,j} = 0, \qquad J_-\ket{j,-j} = 0.
+\end{equation}
+
+\bigbreak
+Finalmente, antes de pasar a realizar algunos ejercicios, vale la pena hacer un
+comentario sobre el operador de rotación $\RotationOp$ en vista de los
+resultados que obtuvimos. Como $J^2$ conmuta con todas las proyecciones de
+$\vect{J}$, entonces necesariamente $\RotationOp$ conmuta con $J^2$,
+\begin{equation}
+  \comm{\RotationOp(\vers{n},\theta)}{J^2} = 0.
+\end{equation}
+Esto significa que $\RotationOp$ y $J^2$ son diagonalizables en la misma base.
+Es más, en particular $\RotationOp$ no puede nunca mezclar estados con
+autovalores de $J^2$ con $j$ distintos (porque sino ya no serían mas
+diagonalizables simultáneamente). Esto quiere decir que $\RotationOp$ es
+diagonal en bloques, con cada bloque correspondiente al subespacio de
+autovalor de $J^2$ dado por $j$. Por lo discutido anteriormente, cada uno de
+estos subespacios tiene dimensión $(2j+1)$. Esto significa que si estamos en un
+estado con $j$ bien definido, una rotación siempre nos va a dejar en ese mismo
+subespacio (sólo va a poder mezclar los valores de $m$). Por estos motivos,
+además de hablar del operador de rotación $\RotationOp(\vers{n},\theta)$ se
+habla también del operador de rotación restringido al subespacio de autovalor
+$j$, que notaremos como $\RotationOp[j](\vers{n},\theta)$ (esta es una matriz
+de $(2j+1)\times(2j+1)$ mientras que $\RotationOp$ es infinita).
+
+\bigbreak
+\TODO{dibujito D en bloques}
+
+\bigbreak
+\TODO{hacer algunas de las cuentas explícitamente}
+
+% -----------------------------------------------------------------------------
+\subsection{Cálculo valores medios utilizando operadores de subida y bajada}
+
+Como primer ejercicio, vamos a ver cómo se pueden utilizar los operadores $J_+$
+y $J_-$ para calcular en ciertos casos de forma sencilla valores medios.
+
+Esto es por ejemplo lo que se pide en el Problema 2 de la Guía 6. En tal caso
+nos dicen que sabemos que el sistema se encuentra en un autoestado de $J_z$ de
+autovalor $\hbar m$. Es decir que el estado es $\ket{\psi} = \ket{j,m}$  y
+$J_z\ket{\psi} = \hbar\,m\ket{\psi}$. Nos piden mostrar que entonces el valor
+medio tanto de $J_x$ como $J_y$ son cero. Para ello usaremos la descomposición
+de $J_x$ y $J_y$ en términos de $J_\pm$. Efectivamente, invirtiendo
+\eqref{eq:def:Jpm} tenemos
+\begin{equation} \label{eq:prop:JxJyJpmdescomp}
+  J_x = \frac{1}{2}\left(J_+ + J_-\right), \qquad
+  J_y = \frac{1}{2i}\left(J_+ - J_-\right).
+\end{equation}
+Por lo tanto, tenemos que
+\begin{equation}
+  \expval{J_x} = \frac{1}{2}\left(\expval{J_+} + \expval{J_-}\right), \qquad
+  \expval{J_y} = \frac{1}{2i}\left(\expval{J_+} - \expval{J_-}\right).
+\end{equation}
+Para los valores medios de $J_\pm$ usando que el estado es $\ket{j,m}$ y cómo
+operan los $J_\pm$ (ec. \eqref{eq:prop:Jpmaction}) tenemos
+\begin{align}
+  \expval{J_\pm} &= \expval{J_\pm}{j,m} = \matrixel{j,m}{\jpmprefact}{j,m\pm1}
+    \nonumber \\
+  &= \jpmprefact\braket{j,m}{j,m\pm1} = 0,
+\end{align}
+puesto que los estados $\ket{j,m}$ son ortogonales. Luego, claramente tenemos
+que $\expval{J_x} = \expval{J_y} = 0$.
+
+\bigbreak
+
+\TODO{hacer la cuenta del valor medio también usando relación incerteza}
+
+\bigbreak
+
+El ejercicio también nos pide calcular el valor medio la proyección de
+$\vect{J}$ en una dirección $\vers{n}$ que forma un ángulo $\theta$ con el eje
+$\vers{z}$.  Esto quiere decir que $\vers{n}$ en polares se puede escribir como
+$\vers{n} = (\sin\theta\cos\phi, \sin\theta\sin\phi, \cos\theta)$. Luego, el
+operador $\vect{J}\cdot\vers{n}$ es
+\begin{equation}
+  \vect{J}\cdot\vers{n} = \sin\theta\cos\phi J_x + \sin\theta\sin\phi J_y +
+    \cos\theta J_z.
+\end{equation}
+Tomando valor medio
+\begin{equation}
+  \expval{\vect{J}\cdot\vers{n}} = \sin\theta\cos\phi\expval{J_x} +
+    \sin\theta\sin\phi\expval{J_y} + \cos\theta\expval{J_z}.
+\end{equation}
+Como $\expval{J_x} = \expval{J_y} = 0$ y $\expval{J_z} = \hbar m$ (pues el
+estado es autoestado de $J_z$ con autovalor $\hbar m$) entonces tenemos lo que
+nos pide el enunciado,
+\begin{equation}
+  \expval{\vect{J}\cdot\vers{n}} = \hbar m \cos\theta.
+\end{equation}
+
+% -----------------------------------------------------------------------------
+\subsection{Cálculo representación matricial de los operadores de momento
+    angular}
+
+A continuación vamos a ver otra de las extremadamente útiles aplicaciones de
+los operadores $J_+$ y $J_-$. Efectivamente vamos a ver cómo utilizando la
+descomposición de $J_x$ y $J_y$ en términos de estos operadores vamos a poder
+encontrar la representación matricial de $J_x$ y $J_y$ en la base de
+autoestados de $J_z$ de forma sencilla.
+
+\bigbreak
+
+Antes de pasar a los ejemplos concretos, esbocemos cómo es el procedimiento.
+Queremos calcular la matriz de $J_x$ y $J_y$ en el subespacio de autovalor fijo
+de $J^2$ dado por $j$. Eso quiere decir que las matrices serán de
+dimensión $(2j+1)\times(2j+1)$. En la ecuación \eqref{eq:prop:JxJyJpmdescomp}
+vimos que podemos escribir $J_x$ y $J_y$ en términos de $J_+$ y $J_-$. Por lo
+tanto, si tenemos las matrices de $J_\pm$ es simplemente cuestión de sumarlas
+(o restarlas) y dividirlas por un factor $2$ (o $2i$). A su vez, ni siquiera
+hace falta calcular $J_+$ y $J_-$ por separado, porque por su definición
+tenemos que (ec. \eqref{eq:def:Jpm}) $J_- = J_+^\dagger$. Por lo tanto, si
+tenemos la matriz de $J_+$, obtenemos la de $J_-$ simplemente transponiendo y
+conjugando. Para calcular la matriz de $J_+$ simplemente vemos cómo actúa sobre
+cada elemento de la base $\set{\ket{j,m}}$ (que ya sabemos cuanto va a ser
+gracias a \eqref{eq:prop:Jpmaction}). Veamos en unos ejemplos concretos.
+
+\subsubsection{Caso $j = 1/2$ (\spinhalf)}
+
+En este caso buscamos matrices de $2\times2$ que van a ser la representación de
+momento angular para \spinhalf. La base de autoestados de $S^2$ y $S_z$ es
+\begin{equation}
+  \set{\ketjm{\frac{1}{2}}{\frac{1}{2}}, \ketjm{\frac{1}{2}}{-\frac{1}{2}}}.
+\end{equation}
+Como dijimos antes, necesitamos la matriz de $S_+$. La acción de $S_+$ sobre
+los elementos de la base es (usando \eqref{eq:prop:Jpmaction})
+\begin{align}
+  S_+ \ketjm{\frac{1}{2}}{\frac{1}{2}} &= 0, \\
+  S_+ \ketjm{\frac{1}{2}}{-\frac{1}{2}} &=
+    \hbar\sqrt{\frac{1}{2}\left(\frac{1}{2} + 1\right) +
+    \frac{1}{2}\left(-\frac{1}{2} + 1\right)}\ketjm{\frac{1}{2}}{\frac{1}{2}}
+    = \hbar\ketjm{\frac{1}{2}}{\frac{1}{2}}.
+\end{align}
+Luego, la representación matricial de $S_+$ es
+\begin{equation}
+  S_+ = \hbar\begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}.
+\end{equation}
+Entonces
+\begin{equation}
+  S_- = S_+^\dagger = \hbar\begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}.
+\end{equation}
+Finalmente,
+\begin{align}
+  S_x &= \frac{1}{2}\left(S_+ + S_-\right) =
+    \frac{\hbar}{2}\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \\
+  S_y &= \frac{1}{2i}\left(S_+ - S_-\right) =
+    \frac{\hbar}{2}\begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}.
+\end{align}
+
+La matriz de $S_z$ claramente ya es diagonal y se escribe
+\begin{equation}
+  S_z = \frac{\hbar}{2}\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.
+\end{equation}
+Notemos que recuperamos que los operadores de \spinhalf~son proporcionales a
+las matrices de Pauli, $S_i = \frac{\hbar}{2}\sigma_i$, como habíamos escrito
+en la Guía 1 en base a los experimentos de Stern--Gerlach y la analogía con la
+polarización de la luz.
+
+\subsubsection{Caso $j = 2$}
+
+Para terminar con otro ejemplo, veamos el caso del subespacio de momento
+angular $j = 2$. Ahora el espacio es de dimensión 5. Como siempre $J_z$ ya es
+diagonal en la base $\set{\ket{2,m}} = \set{\ket{2,2}, \ket{2,1}, \ket{2,0},
+\ket{2,-1}, \ket{2,-2}}$ y es
+\begin{equation}
+  J_z = \hbar\begin{pmatrix}
+    2 & 0 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & -1 & 0 \\
+    0 & 0 & 0 & 0 & -2
+  \end{pmatrix}.
+\end{equation}
+Por otro lado, para $J_x$ y $J_y$ calculamos $J_+$. Tenemos
+\begin{align}
+  J_+\ket{2,2} &= 0, \\
+  J_+\ket{2,1} &= \hbar\sqrt{6 -1(1+1)}\ket{2,2} = \hbar2\ket{2,2}, \\
+  J_+\ket{2,0} &= \hbar\sqrt{6}\ket{2,1}, \\
+  J_+\ket{2,-1} &= \hbar\sqrt{6}\ket{2,0}, \\
+  J_+\ket{2,-2} &= \hbar\sqrt{6 + 2(-2 + 1)}\ket{2,-1} = \hbar2\ket{2,-1}.
+\end{align}
+Entonces,
+\begin{equation}
+  J_+ = \hbar \begin{pmatrix}
+    0 & 2 & 0 & 0 & 0 \\
+    0 & 0 & \sqrt{6} & 0 & 0 \\
+    0 & 0 & 0 & \sqrt{6} & 0 \\
+    0 & 0 & 0 & 0 & 2 \\
+    0 & 0 & 0 & 0 & 0
+  \end{pmatrix}
+\end{equation}
+Luego, para $J_- = J_+^\dagger$ queda
+\begin{equation}
+  J_- = \hbar \begin{pmatrix}
+    0 & 0 & 0 & 0 & 0 \\
+    2 & 0 & 0 & 0 & 0 \\
+    0 & \sqrt{6} & 0 & 0 & 0 \\
+    0 & 0 & \sqrt{6} & 0 & 0 \\
+    0 & 0 & 0 & 2 & 0
+  \end{pmatrix},
+\end{equation}
+y entonces finalmente
+\begin{align}
+  J_x &= \frac{J_+ + J_-}{2} = \frac{\hbar}{2}
+  \begin{pmatrix}
+    0 & 2 & 0 & 0 & 0 \\
+    2 & 0 & \sqrt{6} & 0 & 0 \\
+    0 & \sqrt{6} & 0 & \sqrt{6} & 0 \\
+    0 & 0 & \sqrt{6} & 0 & 2 \\
+    0 & 0 & 0 & 2 & 0
+  \end{pmatrix}, \\
+  J_y &= \frac{J_+ - J_-}{2i} = \frac{\hbar}{2i}
+  \begin{pmatrix}
+    0 & 2 & 0 & 0 & 0 \\
+    -2 & 0 & \sqrt{6} & 0 & 0 \\
+    0 & -\sqrt{6} & 0 & \sqrt{6} & 0 \\
+    0 & 0 & -\sqrt{6} & 0 & 2 \\
+    0 & 0 & 0 & -2 & 0
+  \end{pmatrix}.
+\end{align}
+
+Notemos que la estructura de estas matrices será siempre similar. $J_+$ tiene
+siempre elementos no nulos únicamente sobre la diagonal superior. $J_-$, al ser
+el traspuesto de $J_+$, tiene elementos no nulos únicamente en la diagonal
+inferior. Finalmente $J_x$ y $J_y$ sólo tienen elementos en la diagonal superior
+e inferior.
+
+\subsubsection{Comentario: cálculo autovectores}
+
+Tener las matrices de $J_x$ y $J_y$ en la base de $J_z$ sirve para todo tipo de
+cálculos. En particular, sirven para calcular cómo se escriben los autoestados
+de $J_x$ (o $J_y$) en términos de los $J_z$. Acá vale la pena hacer un
+comentario. Típicamente, para el cálculo de los autoestados de un operador uno
+diagonalizaría la matriz asociada; lo cual implica calcular los autovalores y
+luego autovectores. Sin embargo, este caso (el de momento angular) es mucho más
+sencillo. Notemos que los autovalores de $J_x$ y $J_y$ también \emph{deben} ser
+$\hbar m$, $m = -j, \dots, j$. Efectivamente, la elección de diagonalizar $J_z$
+junto a $J^2$ es puramente arbitraria. Si se hubiese elegido $J_x$ procediendo
+de la misma forma, también se hubiese llegado a los autovalores $\hbar m$. Por
+lo tanto, si queremos por ejemplo el autoestado $+\hbar$ de $J_x$ para $j = 2$,
+usando la expresión de $J_x$ antes encontrada, simplemente tenemos que resolver
+el sistema de ecuaciones
+\begin{equation}
+  J_x = \frac{\hbar}{2}
+  \begin{pmatrix}
+    0 & 2 & 0 & 0 & 0 \\
+    2 & 0 & \sqrt{6} & 0 & 0 \\
+    0 & \sqrt{6} & 0 & \sqrt{6} & 0 \\
+    0 & 0 & \sqrt{6} & 0 & 2 \\
+    0 & 0 & 0 & 2 & 0
+  \end{pmatrix}
+  \begin{pmatrix} a \\ b \\ c \\ d \\ f \end{pmatrix} = 
+  \hbar\begin{pmatrix} a \\ b \\ c \\ d \\ f \end{pmatrix}.
+\end{equation}
+Este es simplemente un sistema de ecuaciones para calcular los coeficientes
+$a$, $b$, $c$, $d$, $f$. En particular, nunca hace falta calcular el polinomio
+característico en cuanto ya conocemos los autovalores.
+
+% -----------------------------------------------------------------------------
+\subsection{Operador de rotación para \spinhalf~($j = 1/2$)}
+  \label{sec:oprotspinhalf}
+
+En lo siguiente veremos qué forma toma el operador de rotación para el caso
+particular de \spinhalf. Por definición sabemos que
+\begin{equation}
+  \RotationOp[1/2](\vers{n},\theta) =
+    e^{-i\frac{\vect{J}\cdot\vers{n}\theta}{\hbar}}.
+\end{equation}
+Además, en la sección anterior mostramos que para \spinhalf, $J_i =
+\frac{\hbar}{2}\sigma_i$, con $\sigma_i$ las matrices de Pauli. Entonces
+\begin{equation} \label{eq:prop:rotoppauli}
+  \RotationOp[1/2](\vers{n},\theta) =
+    e^{-i\vect{\sigma}\cdot\vers{n}\frac{\theta}{2}}.
+\end{equation}
+A su vez, esto se puede reescribir de forma mucho más sencilla usando las
+propiedades de las matrices de Pauli. En particular, sabemos que $\sigma_i^2 =
+\Id$. Usando esto en la Guía 1 mostramos que entonces si $\vers{n}$ es un
+versor (i.e. tiene módulo uno) vale también que
+$\left(\vect{\sigma}\cdot\vers{n}\right)^2 = \Id$. Esta propiedad va a
+simplificar drásticamente la expresión del operador $\RotationOp$ para el caso
+$j = 1/2$. Efectivamente, desarrollando en serie de potencias
+\eqref{eq:prop:rotoppauli} tenemos
+\begin{align}
+  \RotationOp[1/2](\vers{n},\theta) &= 
+    e^{-i\vect{\sigma}\cdot\vers{n}\frac{\theta}{2}} =
+    \sum_{n=0}^\infty \frac{(-i)^n}{n!}\left(\frac{\theta}{2}\right)^n
+      \left(\vect{\sigma}\cdot\vers{n}\right)^n \nonumber \\ &=
+  \sum_{n=0}^\infty \frac{(-i)^{2n}}{(2n)!}\left(\frac{\theta}{2}\right)^{2n}
+    \left(\vect{\sigma}\cdot\vers{n}\right)^{2n} +
+  \sum_{n=0}^\infty \frac{(-i)^{2n+1}}{(2n+1)!}\left(\frac{\theta}{2}\right)^{2n+1}
+      \left(\vect{\sigma}\cdot\vers{n}\right)^{2n+1},
+\end{align}
+donde simplemente separamos la serie en términos de orden par e impar.
+Ahora, como $\left(\vect{\sigma}\cdot\vers{n}\right)^2 = \Id$, entonces,
+claramente $\left(\vect{\sigma}\cdot\vers{n}\right)^{2n} = \Id$ y
+$\left(\vect{\sigma}\cdot\vers{n}\right)^{2n+1} =
+\vect{\sigma}\cdot\vers{n}$. Además, $(-i)^2 = -1$ y por lo tanto $(-i)^{2n} =
+(-1)^n$ y $(-1)^{2n+1} = (-i)(-1)^n$. Luego,
+\begin{align}
+  \RotationOp[1/2](\vers{n},\theta) &= 
+    \sum_{n=0}^\infty \frac{(-1)^n}{(2n)!}\left(\frac{\theta}{2}\right)^{2n}
+      \Id
+    -i \sum_{n=0}^\infty \frac{(-1)^n}{(2n+1)!}\left(\frac{\theta}{2}\right)^{2n+1}
+      \;\left(\vect{\sigma}\cdot\vers{n}\right) \nonumber \\ &=
+    \Id\cos\left(\frac{\theta}{2}\right)
+    -i\left(\vect{\sigma}\cdot\vers{n}\right)\sin\left(\frac{\theta}{2}\right),
+    \label{eq:prop:rotop2d}
+\end{align}
+donde en la última igualdad simplemente notamos que los operadores ya no
+dependen de $n$ e identificamos los desarrollos en serie del coseno y del seno.
+La forma \eqref{eq:prop:rotop2d} del operador de rotación para \spinhalf~es
+extremadamente útil, ya que no aparecen más exponenciales de operadores. En
+particular podemos escribir explícitamente quién es la matriz de $\RotationOp$
+en la base de $S_z$. Efectivamente, si $\vers{n} =(n_x, n_y, n_z)$, tenemos
+\begin{align}
+  \RotationOp[1/2](\vers{n},\theta) &= 
+    \Id\cos\left(\frac{\theta}{2}\right)
+      -i\left(\vect{\sigma}\cdot\vers{n}\right)\sin\left(\frac{\theta}{2}\right)
+      \\
+    &= \cos\left(\frac{\theta}{2}\right)
+      \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+      -i\begin{pmatrix} n_z & n_x - in_y \\ n_x + in_y & -n_z\end{pmatrix}
+      \sin\left(\frac{\theta}{2}\right) \nonumber \\
+    &= \begin{pmatrix}
+      \cos\left(\frac{\theta}{2}\right) 
+        -in_z\sin\left(\frac{\theta}{2}\right) &
+      \left(-in_x - n_y\right)\sin\left(\frac{\theta}{2}\right) \\[0.6em]
+      \left(-in_x + n_y\right)\sin\left(\frac{\theta}{2}\right) &
+      \cos\left(\frac{\theta}{2}\right) 
+        +in_z\sin\left(\frac{\theta}{2}\right)
+    \end{pmatrix}.
+\end{align}
+Con esta expresión podemos calcular la rotación de cualquier estado escrito en
+la base de $S_z$ de forma relativamente sencilla.
+
+\subsection{Rotación como cambio de base}
+  \label{sec:rotcambiobase}
+
+Una aplicación particular del operador de rotación (más allá de decirnos cómo
+transforma el estado del sistema ante rotaciones del sistema de coordenadas),
+es que nos permite calcular los autoestados de $\vect{J}\cdot\vers{n}$
+aplicándole una rotación a los autoestados de $J_z$. Antes de ver un ejemplo
+concreto, convenzámonos de porqué esto debe ser así. Supongamos que tenemos
+una partícula con \spinhalf~bien definido en la dirección $+\vers{z}$ (es decir
+es autoestado de $S_z$ con autovalor $+\hbar/2$). Ahora, la elección de un
+sistema de referencia es arbitraria, lo que tiene realmente significado físico
+es el hecho que la partícula tiene \spin~bien definido que apunta en una dada
+dirección del espacio. Efectivamente, supongamos que otra persona, mirando la
+misma partícula, elige un sistema de coordenadas cuyo eje $\vers{x}$ coincide
+con la dirección del \spin. En tal caso, para ella el estado del sistema es el
+autoestado $+\hbar/2$ de $S_x$. Los dos sistemas de referencia están
+relacionados por una rotación que lleve el eje $\vers{z}$ de la primera en el
+eje $\vers{x}$ de la segunda. Por lo tanto, es de esperar, si nuestra
+definición de operador de rotación es consistente, que $\RotationOp$ para esa
+rotación nos transforme el autoestado $+\hbar/2$ de $S_z$ en el de $+\hbar/2$
+de $S_x$.
+
+Vamos a mostrar esto en un caso particular. Consideremos un sistema de
+\spinhalf~y veamos cómo transformar el autoestado de autovalor $+\hbar/2$ de
+$S_z$ en el de autovalor $+\hbar/2$ de $\vect{S}\cdot\vers{n}$, es decir del
+\spin~en una dirección $\vers{n}$ arbitraria. Vale la pena recordar que el
+autoestado $+\hbar/2$ de $\vect{S}\cdot\vers{n}$ lo calculamos ya en la Guía 1
+de forma directa diagonalizando el operador. Si parametrizamos el versor
+$\vers{n}$ en ángulos polares según
+\begin{equation}
+  \vers{n} = \left(\sin\beta\cos\alpha, \sin\beta\sin\alpha, \cos\beta\right),
+\end{equation}
+habíamos obtenido que en la base de autoestados de $S_z$ el estado
+$\ket{+,\vers{n}}$ estaba dado por
+\begin{equation}
+  \ket{+,\vers{n}} = \cos\frac{\beta}{2}\ket{+,\vers{z}} +
+    e^{i\alpha} \sin\frac{\beta}{2}\ket{-,\vers{z}}.
+\end{equation}
+
+Veamos ahora cómo obtener esto utilizando el operador de rotación. Para ello,
+necesitamos encontrar un versor $\vers{q}$ y un ángulo $\phi$ tales que la
+matriz de rotación $R(\vers{q}, \phi)$ nos transforme el eje $\vers{z}$ en el
+eje $\vers{n}$ (ver figura \ref{fig:nvrot}). Una vez hecho eso, simplemente
+tenemos que evaluar $\RotationOp[1/2](\vers{q}, \phi)$ y aplicárselo a
+$\ket{+,\vers{z}}$. Mirando con detenimiento la figura \ref{fig:nvrot}, notemos
+que la rotación que transforma $\vers{z}$ en $\vers{n}$ es una rotación cuyo
+eje ($\vers{q}$) es perpendicular al plano formado por $\vers{z}$ y $\vers{n}$.
+En particular, esto quiere decir que podemos tomar $\vers{q}$ en el plano
+$\vers{x}$ e $\vers{y}$. Es más, la rotación no solo es alrededor este eje sino
+que es una rotación en un ángulo $\beta$. Para encontrar exactamente el versor
+$\vers{q}$, grafiquemos el eje de rotación sobre el plano $\vers{x}$,
+$\vers{y}$, tal como se muestra en la figura \ref{fig:nvrot2d}. Dada la
+definición de $\alpha$ y el hecho que este eje es perpendicular a $\vers{n}$ y
+$\vers{z}$ es fácil verificar que el ángulo que forma el eje de la rotación con
+el eje $\vers{y}$ es $\alpha$, tal como se indica en la figura
+\ref{fig:nvrot2d}. Para determinar $\vers{q}$ no solo tenemos que dar un eje,
+sino que también un sentido. Estamos utilizando la convención de la mano
+derecha y por lo tanto para obtener una rotación del eje $\vers{z}$ en
+$\vers{n}$ tal como están graficados en las figuras \ref{fig:nvrot} y
+\ref{fig:nvrot2d}, necesitamos que $\vers{q}$ apunte hacia los $x$ negativos y
+los $y$ positivos. Por lo tanto, tenemos que
+\begin{equation}
+  \vers{q} = \left(-\sin\alpha, \cos\alpha, 0\right).
+\end{equation}
+
+\bigbreak
+\TODO{hacer figuras}
+\bigbreak
+
+Entonces, el operador de rotación es
+\begin{align}
+  \RotationOp[1/2](\vers{q},\beta) &= e^{-i\vect{S}\cdot\vers{q}\beta/\hbar}
+    = \Id\cos\frac{\beta}{2} -i\vect\sigma\cdot\vers{q}\sin\frac{\beta}{2} \\
+  &= \Id\cos\frac{\beta}{2} + i\left(\sin(\alpha)\sigma_x -
+    \cos(\alpha)\sigma_y\right) \sin\frac{\beta}{2}.
+\end{align}
+Aplicando la rotación al estado $\ket{+,\vers{z}}$ tenemos
+\begin{align}
+  \RotationOp[1/2](\vers{q},\beta) \ket{+,\vers{z}}
+    &= \left[\Id\cos\frac{\beta}{2} + i\left(\sin(\alpha)\sigma_x -
+    \cos(\alpha)\sigma_y\right) \sin\frac{\beta}{2}\right]\ket{+,\vers{z}}
+    \nonumber \\
+  &= \cos\frac{\beta}{2}\ket{+,\vers{z}} + i\left(\sin\alpha
+    \underbrace{\sigma_x\ket{+,\vers{z}}}_{\ket{-,\vers{z}}} - \cos\alpha
+    \underbrace{\sigma_y\ket{+,\vers{z}}}_{i\ket{-,\vers{z}}}\right)
+    \sin\frac{\beta}{2} \nonumber \\
+  &= \cos\frac{\beta}{2}\ket{+,\vers{z}} + i\left(\sin\alpha
+    \ket{-,\vers{z}} - i\cos\alpha \ket{-,\vers{z}}\right)
+    \sin\frac{\beta}{2} \nonumber \\
+  &= \cos\frac{\beta}{2}\ket{+,\vers{z}} + \left(i\sin\alpha
+    + \cos\alpha\right) \sin\frac{\beta}{2} \ket{-,\vers{z}} \nonumber \\
+  &= \cos\frac{\beta}{2}\ket{+,\vers{z}} +
+    e^{i\alpha}\sin\frac{\beta}{2}\ket{-,\vers{z}} = \ket{+,\vers{n}}.
+  \label{eq:res:ketnrot}
+\end{align}
+Efectivamente, como esperábamos, obtenemos el autoestado de \spin~en la
+dirección $\vers{n}$.
+
+\subsection{Parametrización en ángulos de Euler}
+
+En la sección \ref{sec:oprotspinhalf} mostramos que el operador de rotación
+para \spinhalf~tiene una forma sencilla. Desafortunadamente, este no es el caso
+para sistemas con momento angular mayor, donde calcular quién es $\RotationOp$
+es un problema no trivial. Para ayudar en el cálculo, es particularmente útil
+utilizar la parametrización de las rotaciones en ángulos de Euler.
+
+Los ángulos de Euler son una construcción clásica que permiten parametrizar de
+forma cómoda cualquier rotación en $\Reals^3$. En cambio de parametrizar la
+rotación en función de un eje $\vers{n}$ y un ángulo $\theta$, en este caso
+descomponemos la rotación en tres rotaciones alrededor de los ejes coordenados
+$y$ y $z$. Efectivamente, se puede mostrar que para toda dirección $\vers{n}$ y
+ángulo $\theta$ existen tres ángulos $\alpha$, $\beta$, $\gamma$ tales que
+\begin{equation} \label{eq:def:eulerclassic}
+  R(\vers{n},\theta) = R(\vers{z},\alpha)R(\vers{y},\beta)R(\vers{z},\gamma).
+\end{equation}
+Notemos que ahora tenemos rotaciones solamente alrededor de $\vers{z}$ y
+$\vers{y}$ y nuestros parámetros libres son los ángulos (cabe destacar: la
+cantidad de parámetros libres es la misma y es siempre tres; el versor
+$\vers{n}$ es de norma uno y por lo tanto tiene solamente dos grados de
+libertad).
+
+Claramente, una expresión análoga a \eqref{eq:def:eulerclassic} debe valer para
+los operadores $\RotationOp$, dado que si hacemos una única rotación o la
+descomponemos en más rotaciones elementales, el resultado final debe ser el
+mismo. Efectivamente, se tiene que
+\begin{equation} \label{eq:def:eulerquantum}
+  \RotationOp(\vers{n},\theta) = \RotationOp(\vers{z},\alpha)
+    \RotationOp(\vers{y},\beta)\RotationOp(\vers{z},\gamma).
+\end{equation}
+
+La ventaja de la parametrización \eqref{eq:def:eulerquantum} se hace evidente
+si se quiere calcular los elementos de matriz de $\RotationOp$. Esto en general
+es un problema no trivial, pero usando \eqref{eq:def:eulerquantum} tenemos
+\begin{align}
+  \matrixel{jm'}{\RotationOp(\vers{n},\theta)}{jm} &=
+  \matrixel{jm'}{\RotationOp(\vers{z},\alpha)
+    \RotationOp(\vers{y},\beta)\RotationOp(\vers{z},\gamma)}{jm} \nonumber \\
+  &= \underbrace{\bra{jm'}e^{-iJ_z\alpha/\hbar}}_{\bra{jm'}e^{-im'\alpha}}
+  e^{-iJ_y\beta/\hbar}
+  \underbrace{e^{-iJ_z\gamma/\hbar}\ket{jm}}_{e^{-im\gamma}\ket{jm}} \nonumber
+  \\ &= e^{-i(m'\alpha + m\gamma)}\matrixel{jm'}{e^{-iJ_y\beta/\hbar}}{jm},
+\end{align}
+donde simplemente usamos que $\ket{jm}$ es autoestado de $J_z$ con autovalor
+$\hbar m$. Por lo tanto, podemos reducir el problema de calcular los elementos
+de matriz de $\RotationOp(\vers{n},\theta)$ a encontrar los de
+$\RotationOp(\vers{y},\beta)$ usando la parametrización en ángulos de Euler.
+Una vez conocidos los elementos de matriz de la rotación en $\vers{y}$
+simplemente tenemos que multiplicar por fases para obtener los de la rotación
+en $\vers{n}$. Esto simplifica mucho las cuentas porque fijar la dirección de
+la rotación fija el operador que aparece en el exponente y hace el problema de
+calcularle los elementos de matriz mucho más sencillo. Tanto es así que a los
+elementos de matriz de la rotación en $\vers{y}$ se les pone un nombre
+particular
+\begin{equation} \label{eq:def:matyrot}
+  \RotationYMatrix^{(j)}_{m'\,m}(\beta) \defeq
+    \matrixel{jm'}{e^{-iJ_y\beta/\hbar}}{jm},
+\end{equation}
+y se pueden encontrar tabulados en distintos lados. De esta forma
+\begin{equation} \label{eq:def:matrotyz}
+  \matrixel{jm'}{\RotationOp[j](\vers{n},\theta)}{jm} =
+  \matrixel{jm'}{\RotationOp[j](\vers{z},\alpha)
+    \RotationOp[j](\vers{y},\beta)\RotationOp[j](\vers{z},\gamma)}{jm}
+  = e^{-i(m'\alpha + m\gamma)} \RotationYMatrix^{(j)}_{m'\,m}(\beta).
+\end{equation}
+
+\subsubsection{Cambio de base \spinhalf~usando ángulos de Euler}
+
+Como ejemplo de la descomposición en ángulos de Euler volveremos a calcular la
+rotación que lleva el autoestado $\ket{+,\vers{z}}$ en el autoestado
+$\ket{+,\vers{n}}$ (ver sección \ref{sec:rotcambiobase}). Queremos descomponer
+la rotación que transforma $\vers{z}$ en $\vers{n}$ y que se muestra en la
+figura \ref{fig:nvrot}. En este caso encontrar esta descomposición en términos
+de rotaciones en $\vers{z}$ y $\vers{y}$ es sencillo. Efectivamente, notemos
+que si rotamos primero en un ángulo $\beta$ alrededor del eje $\vers{y}$ y
+después en un ángulo $\alpha$ alrededor del eje $\vers{z}$, entonces un vector
+que antes apuntaba en la dirección $\vers{z}$ ahora estará en la la dirección
+$\vers{n}$. Por lo tanto,
+\begin{equation}
+  R(\vers{q},\beta) \longrightarrow R(\vers{z},\alpha)R(\vers{y},\beta).
+\end{equation}
+Veamos que esto es efectivamente así. Queremos calcular
+\begin{equation}
+  \RotationOp[1/2](\vers{z},\alpha)\RotationOp[1/2](\vers{y},\beta)\ket{+,\vers{z}}.
+\end{equation}
+Para ver cuál es el resultado, calculamos las componentes del vector resultante
+en la base de $S_z$. Tenemos
+\begin{align}
+  \matrixel{\pm,\vers{z}} {\RotationOp[1/2](\vers{z},\alpha)
+    \RotationOp[1/2](\vers{y},\beta)}{+,\vers{z}} &=
+    \matrixel{\pm,\vers{z}} {e^{-iJ_z\alpha/\hbar} e^{-iJ_y\beta/\hbar}}
+    {+,\vers{z}} \nonumber \\
+  &= e^{\mp \frac{i \alpha}{2}} \matrixel{\pm,\vers{z}}{e^{-iJ_y\beta/\hbar}}
+    {+,\vers{z}} \nonumber \\
+  &= e^{\mp \frac{i \alpha}{2}} \matrixel{\pm,\vers{z}}{\left(
+    \Id\cos\frac{\beta}{2} -i\sigma_y\sin\frac{\beta}{2}\right)} {+,\vers{z}}
+    \nonumber \\
+  &= e^{\mp \frac{i \alpha}{2}} \left(\braket{\pm,\vers{z}}{+,\vers{z}}
+    \cos\frac{\beta}{2} -i\bra{\pm,\vers{z}}
+    \underbrace{\sigma_y\ket{+,\vers{z}}}_{i\ket{-,\vers{z}}}
+    \sin\frac{\beta}{2}\right) \nonumber \\
+  &= e^{\mp \frac{i \alpha}{2}} \left(\braket{\pm,\vers{z}}{+,\vers{z}}
+    \cos\frac{\beta}{2} + \braket{\pm,\vers{z}}{-,\vers{z}}
+    \sin\frac{\beta}{2}\right).
+\end{align}
+Por lo tanto,
+\begin{align}
+  \matrixel{+,\vers{z}} {\RotationOp[1/2](\vers{z},\alpha)
+    \RotationOp[1/2](\vers{y},\beta)}{+,\vers{z}} &=
+    e^{-\frac{i \alpha}{2}} \cos\frac{\beta}{2}, \\
+  \matrixel{-,\vers{z}} {\RotationOp[1/2](\vers{z},\alpha)
+    \RotationOp[1/2](\vers{y},\beta)}{+,\vers{z}} &=
+    e^{+\frac{i \alpha}{2}} \sin\frac{\beta}{2}.
+\end{align}
+Finalmente,
+\begin{equation}
+  \RotationOp[1/2](\vers{z},\alpha)
+    \RotationOp[1/2](\vers{y},\beta)\ket{+,\vers{z}} =
+    e^{-\frac{i \alpha}{2}} \cos\frac{\beta}{2}\ket{+,\vers{z}} +
+    e^{+\frac{i \alpha}{2}} \sin\frac{\beta}{2}\ket{-,\vers{z}}.
+\end{equation}
+Notemos que a menos de una fase global obtenemos el mismo estado que habíamos
+obtenido en \eqref{eq:res:ketnrot}. (en cuanto a la fase global notar dos
+cosas: primero el autoestado de cualquier operador está siempre definido a
+menos de una fase global así que es igualmente de válido; en segundo lugar en
+nuestra descomposición en ángulos de Euler tomamos la primer rotación respecto
+del eje $\vers{z}$ como con ángulo $\gamma = 0$, pero como el estado está
+inicialmente en un autoestado de $S_z$ esta primer rotación es arbitraria y
+solamente imparte una fase global; en particular hubiésemos podido elegir el
+ángulo $\gamma$ de la descomposición de Euler como $\alpha$ y así hubiésemos
+obtenido el mismo vector de antes, fase global incluida).
+
+% =============================================================================
+\section{Momento Angular Orbital}
+
+Hasta ahora nos concetramos en hablar de momento angular como el generador
+infinitesimal de las rotaciones. Siguiendo esta línea es que definimos como
+\emph{operador de momento angular} a todo conjunto de tres operadores que
+satisfacen las reglas de conmutación \eqref{eq:def:Jcommrels}. Aunque esta
+identificación está motivada en la analogía con la mecánica claśica, donde el
+momento angular también es el generador infinitesimal de las rotaciones,
+clásicamente el momento angular también se suele definir, e introducir, como el
+producto vectorial de la posición y el momento, $\vect{L} =
+\vect{r}\times\vect{p}$, donde $\vect{r}$, $\vect{p}$ $\in \Reals^3$ son los
+vectores de la posición y el momento clásicos. Por lo tanto, es natural
+preguntarnos qué sucede con esta cantidad en mecánica cuántica.
+
+Dado los operadores de posición $\vect{r} = \left(x, y, z\right)$ y momento
+$\vect{p} = \left(p_x, p_y, p_z\right)$, que satisfacen las reglas de
+conmutación
+\begin{equation} \label{eq:def:rpcommlers}
+  \comm{x_j}{p_k} = i\hbar\delta_{jk},
+\end{equation}
+definimos el operador $\vect{L} = \left(L_x, L_y, L_z\right)$ como
+\begin{equation} \label{eq:def:Lorbitalcomp}
+  L_i = \lchivita_{ijk}\,r_j\,p_k.
+\end{equation}
+En analogía con la notación de producto vectorial en $\Reals^3$, reescribimos
+\eqref{eq:def:Lorbitalcomp} de forma más compacta como
+\begin{equation} \label{eq:def:Lorbitalvect}
+  \vect{L} = \vect{r}\times\vect{p}.
+\end{equation}
+(Como ya discutimos antes cuandos nos aparecieron ``productos internos'' de
+``vectores'' con las compomentes operadores, esto por ahora es simplemente pura
+notación para expresar estas ecuaciones de forma compacta; más adelante veremos
+que a esta notación se le puede dar un sentido intuitivo y físico bien
+concreto).
+
+A partir de las reglas de conmutación de posición y momento (ec.
+\eqref{eq:def:rpcommlers}), es sencillo mostrar que entonces $L_j$ satisfacen
+las reglas de conmutación
+\begin{equation} \label{eq:def:Lcommrels}
+  \comm{L_j}{L_k} = i\hbar\lchivita_{jkl}L_l.
+\end{equation}
+Por ejemplo, una de ellas es
+\begin{align}
+  \comm{L_x}{L_y} &= \comm{yp_z - zp_y}{zp_x - xp_z} = \comm{yp_z}{zp_x} -
+    \comm{yp_z}{xp_z} - \comm{zp_y}{zp_x} + \comm{zp_y}{xp_z} \nonumber \\
+  &= y\comm{p_z}{z}p_x + x\comm{z}{p_z}p_y
+    = -i\hbar\,yp_x + i\hbar\,xp_y = i\hbar\left(xp_y - yp_x\right)
+    \\ \nonumber
+  &= i\hbar\,L_z.
+\end{align}
+
+Notablemente, las reglas de conmutación \eqref{eq:def:Lcommrels} son
+precisamente las reglas de conmutación de un operador de momento angular y por
+lo tanto $\vect{L} = \vect{r}\times\vect{p}$ es efectivamente un momento
+angular, como uno esperaría de macánica clásica. Sin embargo, no todo operador
+de momento angular corresponde a este tipo de producto entre posición y
+momento (por ejemplo el \spin)  y, por lo tanto, para diferencia al operador
+$\vect{L} = \vect{r}\times\vect{p}$ lo llamaremos \emph{momento angular
+orbital}.
+
+\bigbreak
+
+Como los operadores $\vect{L}$ satisfacen las reglas de conmutación
+\eqref{eq:def:Jcommrels}, entonces todo el análisis anterior de moemnto angular
+general también se aplica a este caso. En particular tendremos una base
+ortonormal de estados $\set{\ket{l,m}}$ tal que
+\begin{equation}
+  L_z\ket{l,m} = \hbar m\ket{l,m}, \qquad L^2\ket{l,m} = \hbar^2
+  l(l+1)\ket{l,m},
+\end{equation}
+donde $L^2 = L_x^2 + L_y^2 + L_z^2$. Además, definiendo los operadores $L_\pm =
+L_x \pm iL_y$ también tendremos
+\begin{equation}
+  L_\pm\ket{l,m} = \lpmprefact\ket{l,m\pm1}.
+\end{equation}
+Y así siguiendo todas las otras igualdades entre $J^2$, $J\pm$ y $J_z$ se
+aplican ahora a $L^2$, $L_\pm$ y $L_z$.
+
+\bigbreak
+
+Una diferencia que tenemos ahora respecto al caso de $\vect{J}$ genérico es que
+ahora tenemos una base de particular interés físico que es la base de posición,
+es decir la base del operador $\vect{r}$. Una pregunta entonces natural es qué
+forman tiene los estados de momento angular orbital $\ket{l,m}$ en la base de
+posición (es decir cuál es su función de onda).
+
+Una forma de notar esta base es como los vectores $\set{\ket{x,y,z}}$ de forma
+tal que $\hat{x}\ket{x,y,z} = x\ket{x,y,z}$, $\hat{y}\ket{x,y,z} =
+y\ket{x,y,z}$ y $\hat{z}\ket{x,y,z}$ (donde aquí para evitar confusión notamos
+con el sombrero $\hat{}$ al operador). Buscar función de onda de los
+$\ket{l,m}$ en esta base sería preguntarse quién es
+\begin{equation}
+  F_{lm}(x, y, z) = \braket{x,y,z}{l,m}.
+\end{equation}
+Alternativamente, en cambio de usar coordenadas cartesianas para parametrizar
+la posición, se pueden usar coordenadas polares, de forma que el autoestado de
+posición es ahora $\ket{r, \theta, \phi}$. Luego, la función de onda del estado
+$\ket{l,m}$ en coordendas esféricas es
+\begin{equation}
+  F_{lm}(r,\theta,\phi) = \braket{r,\theta,\phi}{l,m}.
+\end{equation}
+El motivo por el cual nos va a convenir trabajar en coordenadas eféricas es que
+los autoestados de $\ket{l,m}$ van a tener ciertas simetrías que van a
+simplificar los cálculos en estas coordenadas.
+
+\bigbreak
+
+Para encontrar las funciones de onda de $\ket{l,m}$ resulta útil escribir cómo
+operan los operadores $\vect{L}$, $L_\pm$ en la base de posición. Esto es
+buscamos calcular
+\begin{equation}
+  \matrixel{r,\theta,\phi}{L_i}{\psi} = ?
+\end{equation}
+Para fijar ideas, esto es análogo a buscar cuál es la acción del operador $p$
+en la base de posición, para quién habíamos encontrado que
+$\matrixel{x}{p}{\psi} = i\hbar\pdv{\psi(x)}{x}$. Ahora no preguntamos lo
+análogo a esto pero para los operadores de momento angular. Usando que
+$\vect{L}$, $L_\pm$ se pueden escribir en términos de $\vect{r}$ y $\vect{p}$
+se puede mostrar que (ver teórica)
+\begin{align}
+  \vect{L} &= i\hbar\left(\vers{\theta}\frac{1}{\sin\theta}\pdv{\phi} -
+    \vers{\phi}\pdv{\theta}\right) \\
+  &= i\hbar\left(\vers{x}\left(\sin\phi\pdv{\theta} +
+    \cot\theta\cos\phi\pdv{\phi}\right) + \vers{y}\left(-\cos\phi\pdv{\theta} +
+    \cot\theta\sin\phi\pdv{\phi}\right) - \vers{z}\pdv{\phi}\right)
+    \label{eq:def:Lspherical} \\
+  L_\pm &= \hbar e^{\pm i\phi}\left(\pm\pdv{\theta} +
+    i\cot\theta\pdv{\phi}\right) \label{eq:def:Lpmspherical} \\
+  L^2 &= -\hbar^2\left(
+    \frac{1}{\sin\theta}\pdv{\theta}\left(\sin\theta\pdv{\theta}\right) +
+    \frac{1}{\sin^2\theta}\pdv[2]{\phi}\right). \label{eq:def:L2spherical}
+\end{align}
+
+\bigbreak
+\TODO{agregar algunos pasos de esta cuenta?}
+\bigbreak
+
+Notablemente, en esféricas estos operadores son independientes de la
+coordenada radial $r$.
+Por lo tanto, las funciones de onda de $\ket{l,m}$ tienen que estar degeneradas
+en el parámetro $r$.
+Esto quiere decir que como
+\begin{equation}
+  L^2\braket{r,\theta,\phi}{l,m} = \hbar^2l(l+1)\braket{r,\theta,\phi}{l,m},
+\end{equation}
+entonces si multiplicamos la función de onda por cualquier función $R(r)$
+también es autoestado de $L^2$ con el mismo autovalor
+\begin{equation}
+  L^2\left(R(r)\braket{r,\theta,\phi}{l,m}\right) =
+    R(r)\left(L^2\braket{r,\theta,\phi}{l,m}\right) =
+    \hbar^2l(l+1)R(r)\braket{r,\theta,\phi}{l,m},
+\end{equation}
+(puesto que $L^2$ en \eqref{eq:def:L2spherical} no depende de $r$).
+Análogamente sucede con $L_z$, $L_x$ y $L_y$.
+Esto significa que los valores $l$ y $m$ no me determinan un único estado del
+esapcio de Hilbert, es decir $L^2$ y $L_z$ no forman un conjunto completo de
+observables que conmutan (CCOC). Para tener un CCOC hace falta algún otro
+observable que determine cuál es la dependencia espacial. Este otro observable
+tiene sus propios autoestados que introducen alguna etiqueta adicional $n \in
+\Reals$ que identifica ahora sí los estados de forma única. De esta manera
+$\ket{n,l,m}$ es un único estado del espacio de Hilbert dados $n$, $l$ y $m$ y
+la función de onda es, en el caso más general,
+\begin{equation} \label{eq:def:radialplusharmspheric}
+  \braket{r,\theta,\phi}{n,l,m} = R_{nlm}(r)\Ylm(\theta,\phi).
+\end{equation}
+Qué observable agregamos para tener un CCOC va a depender de cada caso
+particular (por ejemplo para el problema del átomo de Hidrógeno este operador
+adicional es $1/r$). Como además la parte angular $\Ylm(\theta,\phi)$ de la
+función de onda queda totalmente determinada por los valores de $l$ y
+$m$, tiene sentido buscar cuál es la expresión de estas funciones. Como la
+parte radial no nos va a importar vamos a notar
+\begin{equation} \label{eq:def:harmspheric}
+  \Ylm(\theta,\phi) \defeq \braket{\theta,\phi}{l,m}.
+\end{equation}
+(esta notación quedará bien clara cuando veamos producto tensorial de espacios
+de Hilbert).
+
+\bigbreak
+\TODO{esto es mucho más claro con producto tensorial; quizás se puede agregar
+algo sobre eso}
+\bigbreak
+
+A las funciones \eqref{eq:def:harmspheric} se las conoce como \emph{armónicos
+esféricos}. Por ser la representación en la base de posición en esféricas de
+los estados ortonormales $\ket{l,m}$, los armónicos esféricos también
+satisfacen una condición de ortonormalidad, a saber
+\begin{equation}
+  \int_{0}^{2\pi}\dd{\phi}\int_{0}^{\pi}\dd{\theta}\sin\theta\,
+    \conj{\Ylmev{l'}{m'}}(\theta,\phi)\,\Ylmev{l}{m}(\theta,\phi) =
+    \delta_{ll'}\,\delta_{mm'}.
+\end{equation}
+
+\bigbreak
+Antes de proceder a encontrar las expresiones de los $\Ylm$ cabe destacar una
+diferencia importante entre el momento angular orbital y un operador de momento
+angular general. Mientras en general vimos que los $j$ de $J^2$ pueden tomar
+valores enteros o semi-enteros (como es el caso del \spinhalf); para el momento
+angular orbital en cambio el $l$ de $L^2$ puede \emph{śolo tomar valores
+enteros}. Proqué esto debe ser así lo veremos para un caso particular en uno de
+los ejercicios.
+\bigbreak
+
+% -----------------------------------------------------------------------------
+\subsection{Cálculo de armónicos esféricos usando operadores de subida y bajada}
+
+Vamos ahora a ver cómo encontrar la expresión de las funciones de onda de
+$\ket{l,m}$ (i.e. los armónicos esféricos) de forma parecida a cómo nos
+construíamos las autofunciones del oscilador armónico. La idea es buscar la
+expresión de una de las funciones de onda, por ejemplo de $\Ylmev{l}{l}$, y
+luego aplicando los operadores de subida ($L_+$) y bajada ($L_-$) nos vamos a
+poder construir todas las otras $\Ylm$.
+
+\bigbreak
+
+Antes de proceder con el cálculo, vale la pena notar que la dependencia en
+$\phi$ de los armónicos esféricos toma una forma muy sencilla para todo $l,m$.
+Efectivamente, partiendo del hecho que $\ket{l,m}$ es autoestado de $L_z$
+tenemos
+\begin{equation}
+  L_z\ket{l,m} = \hbar m\ket{l,m}.
+\end{equation}
+Luego, projectando sobre la base de posición en coordenadas esféricas y usando
+la expresón de $L_z$ en esta base (ec. \eqref{eq:def:Lspherical}) tenemos
+\begin{align}
+  \matrixel{\theta,\phi}{L_z}{l,m} &= \hbar m\braket{\theta,\phi}{l,m} \\
+  -i\hbar\pdv{\phi}\Ylm(\theta,\phi) &= \hbar m \Ylm(\theta,\phi) \\
+  \pdv{\phi}\Ylm(\theta,\phi) &= im \Ylm(\theta,\phi).
+\end{align}
+Por lo tanto, necesariamente la dependencia en $\phi$ debe ser de la forma
+$e^{im\phi}$, es decir que
+\begin{equation}
+  \Ylm(\theta,\phi) = e^{im\phi}\,\Plm(\theta).
+\end{equation}
+Por convención, se elije redefinir $\Plm$ para poner un factor $(-1)^m$
+adelante
+\begin{equation} \label{eq:def:YlmPlm}
+  \Ylm(\theta,\phi) = (-1)^m\,e^{im\phi}\,\Plm(\theta).
+\end{equation}
+(esto lo podemos hacer en cuanto nunca definimos quién es $\Plm$).
+
+\bigbreak
+
+Ahora sí esbozamos el procedimiento para encontrar $\Ylm$ en un caso general y
+después vemos un ejemplo concreto. Partimos buscando uno de los extremos, es
+decir con $\Ylmev{l}{l}$ o $\Ylmev{l}{-l}$. Elijamos $\Ylmev{l}{l}$. Por la
+teoría de momento angular sabemos que
+\begin{equation}
+  L_+\ketlm{l}{l} = 0.
+\end{equation}
+Projectando en la base de posición en polares
+\begin{equation}
+  \matrixel{\theta,\phi}{L_+}{l,l} = 0.
+\end{equation}
+Ahora usando la expresión de $L_+$ en polares (ec. \eqref{eq:def:Lpmspherical})
+nos va a quedar una ecuación diferencial para $\Ylmev{l}{l}$. Una vez resuelta,
+vamos a poder encontrar todos los otros $\Ylm$ aplicando $L_-$. Efectivamente
+sabemos que
+\begin{equation}
+  L_-\ket{l,l} = \hbar\sqrt{l(l+1) - l(l-1)}\ket{l,l-1} =
+    \hbar\sqrt{2l}\ket{l,l-1}.
+\end{equation}
+Projectando en la base de posición y usando la forma de $L_-$ (ec.
+\eqref{eq:def:Lpmspherical}) tenemos
+\begin{align}
+  \hbar\matrixel{\theta,\phi}{L_-}{l,l} &=
+    \hbar\sqrt{2l}\braket{\theta,\phi}{l,l-1} \\
+  \hbar e^{\pm i\phi}\left(\pm\pdv{\theta}\Ylmev{l}{l} +
+    i\cot\theta\pdv{\phi}\Ylmev{l}{l}\right)
+   &=
+    \hbar\sqrt{2l}\Ylmev{l}{l-1}.
+\end{align}
+Como $\Ylmev{l}{l}$ ya la calculamos, es cuestión simplemente de reemplazar
+para obtener $\Ylmev{l}{l-1}$. Angálogamente, con $\Ylmev{l}{l-1}$ podemos
+obtener $\Ylmev{l}{l-2}$ y así siguiendo.
+
+\bigbreak
+
+La forma de $\Ylmev{l}{l}$ se puede obtener de forma sencilla para todo $l$.
+Efectivamente tenemos
+\begin{align}
+  \matrixel{\theta,\phi}{L_+}{l,l} &= 0 \\
+  \hbar e^{i\phi} \left(\pdv{\theta}\Ylmev{l}{l}(\theta,\phi) +
+    i\cot\theta\pdv{\phi}\Ylmev{l}{l}(\theta,\phi)\right) &= 0 \\
+  \pdv{\theta}\Ylmev{l}{l}(\theta,\phi) +
+    i\cot\theta\pdv{\phi}\Ylmev{l}{l}(\theta,\phi) &= 0 \\
+  (-1)^l e^{il\phi} \pdv{\theta}\Plmev{l}{l}(\theta) -
+    l(-1)^l e^{il\phi} \cot\theta\Plmev{l}{l}(\theta) &= 0 \\
+  \dv{\theta}\Plmev{l}{l}(\theta) -
+    l\cot\theta\Plmev{l}{l}(\theta) &= 0 \\
+  \dv{\theta}\Plmev{l}{l}(\theta) &=
+    l\cot\theta\Plmev{l}{l}(\theta) \\
+  \frac{1}{\Plmev{l}{l}}\dd(\Plmev{l}{l})
+    &= l\cot\theta \dd{\theta} \nonumber \\
+  \int\frac{1}{\Plmev{l}{l}}\dd(\Plmev{l}{l})
+    &= l\int\cot\theta \dd{\theta} \nonumber \\
+  \log(\Plmev{l}{l})
+    &= l\int\cot\theta \dd{\theta} \nonumber \\
+  \log(\Plmev{l}{l})
+    &= l\int\frac{\cos\theta}{\sin\theta} \dd{\theta} \nonumber \\
+  \log(\Plmev{l}{l})
+    &= l\int\frac{\dv{\sin\theta}{\theta}}{\sin\theta} \dd{\theta} \nonumber \\
+  \log(\Plmev{l}{l})
+    &= l\int\frac{1}{\sin\theta} \dd{\sin\theta} \nonumber \\
+  \log(\Plmev{l}{l})
+    &= l\log\sin\theta + C \nonumber \\
+  \log(\Plmev{l}{l})
+    &= \log\sin^l\theta + C \nonumber \\
+  \Plmev{l}{l}(\theta)
+    &= C'\sin^l\theta,
+\end{align}
+donde $C'$ es una constante de integración a determinar por noramlización.
+Entonces,
+\begin{equation}
+  \Ylmev{l}{l}(\theta,\phi) = C'\,(-1)^l\,e^{il\phi}\,\sin^l\theta.
+\end{equation}
+La convención de normalización que tomamos es que integrando
+$\Ylm(\theta,\phi)$ en $\theta$ y $\phi$ (como coordenadas esféricas) de uno;
+es decir
+\begin{equation}
+  \int_{0}^{2\pi}\dd{\phi}
+    \int_{0}^{\pi}\dd{\theta}\sin\theta\,\abs{\Ylm(\theta,\phi)}^2
+    = 1.
+\end{equation}
+En este caso tenemos
+\begin{align}
+  \int_{0}^{2\pi}\dd{\phi}\int_{0}^{\pi}\dd{\theta}\sin^{2l+1}\theta =
+  2\pi\int_{0}^{\pi}\dd{\theta}\sin^{2l+1}\theta.
+\end{align}
+La integral en $\theta$ se puede mostrar que da $2^{2l+1}(l!)^2/(2l+1)!$. De
+esta forma, podemos elegir $C' = \frac{1}{2^l l!}\sqrt{\frac{(2l+1)!}{4\pi}}$ y
+finalmente
+\begin{equation}
+  \Ylmev{l}{l}(\theta,\phi) = \frac{(-1)^l}{2^l l!}
+    \sqrt{\frac{(2l+1)!}{4\pi}}\,e^{il\phi}\,\sin^l\theta.
+\end{equation}
+
+\subsubsection{Armónicos eféricos para $l = 1$}
+
+Empecemos con el caso $l = 1$, que es lo que nos piden en el Problema 10 de la
+Guía 6. Como discutimos antes para empezar tenemos que encontar la expresión de
+uno de los armónicos esféricos. En general conviene por empezar por uno de los
+extremos, es decir con $\Ylmev{1}{1}$ o $\Ylmev{1}{-1}$. Elijamos
+$\Ylmev{1}{1}$. Por la teoría de momento angular sabemos que
+\begin{equation}
+  L_+\ketlm{1}{1} = 0.
+\end{equation}
+Projectando en la base de posición en polares
+\begin{equation}
+  \braket{\theta,\phi}{L_+}{1,1} = 0.
+\end{equation}
+Ahora usando la expresión de $L_+$ en polares (ec. \eqref{eq:def:Lpmspherical})
+esto significa que
+\begin{align}
+  \hbar e^{i\phi}\left(\pdv{\theta}\Ylmev{1}{1}(\theta,\phi) +
+    i\cot\theta\pdv{\phi}\Ylmev{1}{1}(\theta,\phi)\right) &= 0 \\
+    \implies 
+  \pdv{\theta}\Ylmev{1}{1}(\theta,\phi) +
+    i\cot\theta\pdv{\phi}\Ylmev{1}{1}(\theta,\phi) &= 0.
+\end{align}
+Usando que ya mostramos cómo tiene que ser la dependencia en $\phi$ de los
+$\Ylm$ (ec. \eqref{eq:def:YlmPlm}) tenemos
+\begin{align}
+  e^{i\phi}\pdv{\theta}\Plmev{1}{1}(\theta)
+    -e^{i\phi}\cot\theta\Plmev{1}{1}(\theta) &= 0. \\
+  \pdv{\theta}\Plmev{1}{1}(\theta)
+    -\cot\theta\Plmev{1}{1}(\theta) &= 0.
+\end{align}
+
+Esta es una ecuación diferencial para $\Plmev{1}{1}(\theta)$ que tenemos
+que resolver. La podemos reescribir más comodamente como
+\begin{equation}
+  \frac{1}{\Plmev{1}{1}}\pdv{\Plmev{1}{1}}{\theta}
+    = \cot\theta.
+\end{equation}
+La ecuación la podemos resolver de la forma
+\begin{align}
+  \frac{1}{\Plmev{1}{1}}\dd(\Plmev{1}{1})
+    &= \cot\theta \dd{\theta} \nonumber \\
+  \int\frac{1}{\Plmev{1}{1}}\dd(\Plmev{1}{1})
+    &= \int\cot\theta \dd{\theta} \nonumber \\
+  \log(\Plmev{1}{1})
+    &= \int\cot\theta \dd{\theta} \nonumber \\
+  \log(\Plmev{1}{1})
+    &= \int\frac{\cos\theta}{\sin\theta} \dd{\theta} \nonumber \\
+  \log(\Plmev{1}{1})
+    &= \int\frac{\dv{\sin\theta}{\theta}}{\sin\theta} \dd{\theta} \nonumber \\
+  \log(\Plmev{1}{1})
+    &= \int\frac{1}{\sin\theta} \dd{\sin\theta} \nonumber \\
+  \log(\Plmev{1}{1})
+    &= \log\sin\theta + C \nonumber \\
+  \Plmev{1}{1}(\theta)
+    &= C'\sin\theta,
+\end{align}
+donde $C'$ es una constante de integración a determinar por normalización.
+Entonces,
+\begin{equation}
+  \Ylmev{1}{1}(\theta,\phi) = -C'\,e^{i\phi}\,\sin\theta.
+\end{equation}
+(donde el signo negativo viene de la convención elejida en
+\eqref{eq:def:YlmPlm}).
+La convención de normalización que tomamos es que integrando
+$\Ylm(\theta,\phi)$ en $\theta$ y $\phi$ (como coordenadas esféricas) de uno;
+es decir
+\begin{equation}
+  \int_{0}^{2\pi}\dd{\phi}
+    \int_{0}^{\pi}\dd{\theta}\sin\theta\,\abs{\Ylm(\theta,\phi)}^2
+    = 1.
+\end{equation}
+En este caso tenemos
+\begin{align}
+  \int_{0}^{2\pi}\dd{\phi}\int_{0}^{\pi}\dd{\theta}\sin^3\theta =
+  2\pi\int_{0}^{\pi}\dd{\theta}\sin^3\theta = 2\pi\,\frac{4}{3} =
+  \frac{8\pi}{3}.
+\end{align}
+Por lo tanto podemos tomar $C'= \sqrt{\frac{3}{8\pi}}$ y finalmente
+\begin{equation}
+  \Ylmev{1}{1}(\theta,\phi) = -\sqrt{\frac{3}{8\pi}}\,e^{i\phi}\,\sin\theta.
+\end{equation}
+
+Ahora que tenemos $\Ylmev{1}{1}$ podemos proceder a clacular los otros. Para
+$\Ylmev{1}{0}$ tenemos
+\begin{align}
+  L_-\ket{1,1} &= \hbar\sqrt{2}\ket{1,0} \\
+  \matrixel{\theta,\phi}{L_-}{1,1} &=
+    \hbar\sqrt{2}\braket{\theta,\phi}{1,0} \\
+  \hbar e^{-i\phi}\left(-\pdv{\theta}\Ylmev{1}{1}(\theta,\phi) +
+    i\cot\theta\pdv{\phi}\Ylmev{1}{1}(\theta,\phi)\right) &=
+    \hbar\sqrt{2}\Ylmev{1}{0}(\theta,\phi) \\
+  \frac{1}{\sqrt{2}}e^{-i\phi}\left(
+    \sqrt{\frac{3}{8\pi}}e^{i\phi}\cos\theta +
+    \sqrt{\frac{3}{8\pi}}\cot\theta e^{i\phi}\sin\theta\right) &=
+    \Ylmev{1}{0}(\theta,\phi) \\
+  \sqrt{\frac{3}{16\pi}}\left( \cos\theta + \cos\theta\right) &=
+    \Ylmev{1}{0}(\theta,\phi) \\
+  \sqrt{\frac{3}{4\pi}}\cos\theta &= \Ylmev{1}{0}(\theta,\phi).
+\end{align}
+
+Análogamente podemos proceder para encontar $\Ylmev{1}{-1}(\theta,\phi)$.
+
+% -----------------------------------------------------------------------------
+\subsection{Expansión de funciones en términos de armónicos esféricos}
+
+A continuación veremos una aplicación de conocer los armónicos esféricos para
+calcular probabilidades y valores medios de $L^2$ y $L_z$. Efectivamente,
+tomemos como ejemplo el Problema 13 de la Guía 6. Nos dicen que una partícula
+tiene está en un estado cuya función de onda es
+\begin{equation}
+  \psi(x,y,z) = (x + y + 3z)f(r),
+\end{equation}
+donde $f(r)$ es alguna función de la coordenada radial $r = \sqrt{x^2 + y^2 +
+z^2}$. Queremos saber si se mide $L^2$ o $L_z$ sobre la partícula qué
+resultados se pueden obtener y con qué probabilidad. Esta pregunta a priori no
+es para nada sencilla.
+
+%Aún si tuviesemos que solamente calcular los valores medios de $L^2$ y $L_z$,
+%eso implicaría utilizar los operadores en términos de derivadas como en
+%\eqref{eq:def:Lspherical} y \eqref{eq:def:L2spherical} y realizar una integral
+%en todo el espacio
+%\begin{equation}
+%  \expval{L_z} = \int_{0}^{2\pi}\dd{\phi}\int_{0}^{\pi}\dd{\theta}\sin\theta\,
+%  \conj{\psi}(x,y,z)L_z\psi(x,y,z).
+%\end{equation}
+%(por supuesto haciendo el cambio de variable apropiado en $\psi$ para pasar a
+%coordenadas esféricas). En general esta integral en todo el espacio es bastante
+%complicada de calcular.
+
+%Calcular las probabilidades de los distintos resultados parece ser aún más
+%complicado.
+
+Como siempre, para saber cuál es la probabilidad de los distintos resultados,
+tenemos que escribir el estado en la base de autoestados del operador que
+estamos midiendo. En este caso sería la base $\ket{l,m}$ de autoestados de
+$L^2$ y $L_z$. En términos de funciones de onda, esto sería escribir
+$\psi(x,y,z)$ como combinación lineal de armónicos esféricos. Notemos que esto
+lo podemos hacer a ojo en este caso. $\psi$ escrita en coordenadas esféricas es
+\begin{equation}
+  \psi(r,\theta,\phi) = \left(r\sin\theta\cos\phi + r\sin\theta\sin\phi +
+    3r\cos\theta\right)f(r) =
+  \left(\sin\theta\cos\phi + \sin\theta\sin\phi +
+    3\cos\theta\right)rf(r).
+\end{equation}
+Notemos que los armónicos esféricos para $l=1$ (los calculamos antes) son
+\begin{align}
+  \Ylmev{1}{1}(\theta,\phi) &= -\sqrt{\frac{3}{8\pi}}\,e^{i\phi}\,\sin\theta, \\
+  \Ylmev{1}{0}(\theta,\phi) &= \sqrt{\frac{3}{4\pi}}\cos\theta, \\
+  \Ylmev{1}{-1}(\theta,\phi) &= \sqrt{\frac{3}{8\pi}}\,e^{-i\phi}\,\sin\theta.
+\end{align}
+Por lo tanto,
+\begin{align}
+  \Ylmev{1}{1} + \Ylmev{1}{-1} &=
+    \sqrt{\frac{3}{8\pi}}\left(-e^{i\phi} + e^{-i\phi}\right)\sin\theta =
+    -2i\sqrt{\frac{3}{8\pi}}\sin\phi\sin\theta =
+    -2i\sqrt{\frac{3}{8\pi}}\,\frac{y}{r}, \\
+  \Ylmev{1}{1} - \Ylmev{1}{-1} &=
+    \sqrt{\frac{3}{8\pi}}\left(-e^{i\phi} - e^{-i\phi}\right)\sin\theta =
+    -2\sqrt{\frac{3}{8\pi}}\cos\phi\sin\theta =
+    -2\sqrt{\frac{3}{8\pi}}\,\frac{x}{r} \\
+  \Ylmev{1}{0}(\theta,\phi) &= \sqrt{\frac{3}{4\pi}}\cos\theta =
+    \sqrt{\frac{3}{4\pi}}\,\frac{z}{r}.
+\end{align}
+Por lo tanto,
+\begin{align}
+  \psi(r,\theta,\phi) &=
+  \sqrt{\frac{8\pi}{3}}\left(-\frac{\Ylmev{1}{1}(\theta,\phi) +
+    \Ylmev{1}{-1}(\theta,\phi)}{2i} - \frac{\Ylmev{1}{1}(\theta,\phi) -
+    \Ylmev{1}{-1}(\theta,\phi)}{2} +
+    \frac{3}{\sqrt{2}}\Ylmev{1}{0}(\theta,\phi)\right)rf(r) \\
+  &= -\sqrt{\frac{2\pi}{3}}\left((1 - i)\Ylmev{1}{1}(\theta,\phi) -
+    (1 + i)\Ylmev{1}{-1}(\theta,\phi) +
+    3\sqrt{2}\Ylmev{1}{0}(\theta,\phi)\right)rf(r) \\
+  &= \left(\frac{1 - i}{\sqrt{22}}\Ylmev{1}{1}(\theta,\phi) -
+    \frac{1 + i}{\sqrt{22}}\Ylmev{1}{-1}(\theta,\phi) +
+    \frac{3\sqrt{2}}{\sqrt{22}}\Ylmev{1}{0}(\theta,\phi)\right)
+    \left(-\sqrt{\frac{44\pi}{3}}rf(r)\right) \\
+  &= \left(\frac{1 - i}{\sqrt{22}}\Ylmev{1}{1}(\theta,\phi) -
+    \frac{1 + i}{\sqrt{22}}\Ylmev{1}{-1}(\theta,\phi) +
+    \frac{3\sqrt{2}}{\sqrt{22}}\Ylmev{1}{0}(\theta,\phi)\right)
+    F(r),
+\end{align}
+donde en el último paso agrupamos toda la dependencia en $r$ y algunas
+constantes en una nueva función $F(r)$. Notemos que las constanes las
+factorizamos de forma tal que el módulo al cuadrado de los coeficientes que
+mulitplican los armónicos esféricos $\Ylm$ suman 1. Como la función de onda
+$\psi$ está normalizada, es decir $\int\dd[3]{r}\abs{\psi}^2 = 1$, y los
+armónicos esféricos también están normalziados y son ortogonales entre sí,
+necesariamente esto implica que $\int\dd{r}\abs{F}^2 = 1$. Como todos los
+armónicos esféricos que aparecen tienen $l =1$, el estado $\psi$ es autoestado
+de $L^2$ con $l = 1$. Además las probailidades de medir los resultados $m$ son
+\begin{equation} \label{eq:res:probexc13}
+  P(m=\hbar) = \abs{\frac{1-i}{\sqrt{22}}}^2 = \frac{1}{11}, \quad
+  P(m=-\hbar) = \abs{-\frac{1+i}{\sqrt{22}}}^2 = \frac{1}{11}, \quad
+  P(m=0) = \abs{\frac{3\sqrt{2}}{\sqrt{22}}}^2 = \frac{9}{11}.
+\end{equation}
+Otra forma de ver esto, que me parece particularmente instructiva es pasar la
+función de onda $\psi$ a notación de kets. Recordemos que por definición de
+función de onda en la notación de Dirac, $\psi(r,\theta,\phi) =
+\braket{r,\theta,\phi}{\psi}$. Por otro lado, la projección en la parte angular
+de la posición del estado $\ket{l,m}$ nos da los armónicos esféricos. Como
+habíamos visto antes, los valores de $l$ y $m$ dejan la parte radial sin
+especificar. Por lo tanto, podemos definir el ket $\ket{F,l,m}$ de forma tal
+que $\braket{r,\theta,\phi}{F,l,m} = F(r)\Ylm(\theta,\phi)$. De esta forma,
+tenemos que
+\begin{equation}
+  \braket{r,\theta,\phi}{\psi} =
+    \frac{1 - i}{\sqrt{22}}\braket{r,\theta,\phi}{F,1,1}
+    -\frac{1 + i}{\sqrt{22}}\braket{r,\theta,\phi}{F,1,-1}
+    \frac{3\sqrt{2}}{\sqrt{22}}\braket{r,\theta,\phi}{F,1,0}.
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  \ket{\psi} =
+    \frac{1 - i}{\sqrt{22}}\ket{F,1,1} -
+    \frac{1 + i}{\sqrt{22}}\ket{F,1,-1} +
+    \frac{3\sqrt{2}}{\sqrt{22}}\ket{F,1,0}.
+\end{equation}
+Claramente, $\ket{\psi}$ es autoestado de $L^2$ para $l = 1$ y las
+probabilidades de medir $m = \hbar, 0, -\hbar$ son las dadas en
+\eqref{eq:res:probexc13}.
+
+\bigbreak
+\TODO{nuevamente, con producto tensorial esto es mucho más claro; quiźas
+agregar algo sobre eso}.
+\bigbreak
+
+% =============================================================================
+\end{document}

@@ -1,0 +1,1484 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[DIV=14]{typearea}
+% DIV defaults for A4 base
+% font size: 10pt 11pt 12pt | DIV: 8 10 12
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xfrac}
+\usepackage{extarrows}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{placeins}
+
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\setotherlanguage{english}
+
+% =============================================================================
+\usepackage{fontspec}
+
+% =============================================================================
+\input{../common/commands.tex}
+
+\graphicspath{{./}{./images/}}
+
+% =============================================================================
+\usepackage[type={CC},modifier={by-nc-sa},version={4.0},lang={en}]{doclicense}
+
+\usepackage[framemethod=tikz]{mdframed}
+\mdfdefinestyle{mainframe}{
+  frametitlebackgroundcolor=black!15,
+  frametitlerule=true,
+  roundcorner=10pt,
+  middlelinewidth=1pt,
+  innermargin=0.5cm,
+  outermargin=0.5cm,
+  innerleftmargin=0.5cm,
+  innerrightmargin=0.5cm,
+  innertopmargin=\topskip,
+  innerbottommargin=\topskip,
+}
+
+% =============================================================================
+\newcommand{\jpmprefact}{\hbar\sqrt{j(j+1) - m(m\pm1)}}
+\newcommand{\jpmprefactev}[2]{\hbar\sqrt{{#1} - {#2}}}
+\newcommand{\lpmprefact}{\hbar\sqrt{l(l+1) - m(m\pm1)}}
+\newcommand{\Ylm}{Y_{l,m}}
+\newcommand{\Ylmev}[2]{Y_{#1,#2}}
+\newcommand{\Plm}{P_{l,m}}
+\newcommand{\Plmev}[2]{P_{#1,#2}}
+\newcommand{\jmax}{j_{\text{max}}}
+
+% Header ======================================================================
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancyhead[L]{Apunte TPs Física Teórica 2: Suma de Momento Angular, Operadores
+  Tensoriales y Wigner-Eckart}
+\fancyhead[C]{}
+\fancyhead[R]{\thepage/\pageref{LastPage}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.5pt}
+\pagestyle{fancy}
+
+\usepackage{titlesec}
+%\renewcommand{\thesection}{\Roman{section}}
+%\renewcommand{\thesubsection}{\Roman{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+%\titleformat{\section}{\large\bfseries\filcenter}{\Roman{section}.}{0.5em}{}
+%\titleformat{\subsection}{\large\bfseries\filcenter}{\Roman{subsection}.}{0.5em}{}
+
+\numberwithin{equation}{subsection}
+\allowdisplaybreaks
+
+\setcounter{tocdepth}{3}
+
+% =============================================================================
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={Apunte TPs Física Teórica 2: Suma de Momento Angular, Operadores
+      Tensoriales y Wigner-Eckart},
+    pdfauthor={Federico Cerisola},
+    pdfencoding=auto,
+    pdfstartview=Fit,
+    pdfpagemode=UseOutlines,
+    hypertexnames=false,
+}
+
+% =============================================================================
+\begin{document}
+
+% =============================================================================
+\title{Apunte TPs Física Teórica 2: Suma de Momento Angular, Operadores
+  Tensoriales y Teorema de Wigner-Eckart}
+\author{Federico Cerisola
+  \\ \small{Departamento de Física -- FCEyN -- Universidad de Buenos Aires}
+  \\ \small{\href{mailto:cerisola@df.uba.ar}{\nolinkurl{cerisola@df.uba.ar}}}
+}
+\date{\small Última actualización: \today \\[1em]
+  Última versión disponible en: \\
+  \texttt{
+    \href{https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+    {https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+  }}
+\maketitle
+\thispagestyle{empty}
+
+\vfill
+\doclicenseThis
+
+\pagebreak
+
+% =============================================================================
+\newpage
+  \tableofcontents
+\newpage
+
+% =============================================================================
+\section{Introducción a Sistemas Compuestos}
+
+\TODO{pasar las notas de la clase introducción sistemas compuestos}
+
+% -----------------------------------------------------------------------------
+\subsection{Introducción a producto tensorial}
+
+\TODO{pasar las notas de clase introducción producto tensorial}
+
+% -----------------------------------------------------------------------------
+\subsection{Aplicación producto tensorial al espacio de Hilbert de posición}
+
+\TODO{pasar las notas de clase ejemplo producto tensorial para posición 3d
+  de una partícula}
+
+% =============================================================================
+\section{Suma de Momento Angular}
+
+En la siguiente sección estudiaremos con detalle las propiedades de un sistema
+dado por la composición de dos momentos angulares distintos. Esto es,
+supongamos que tenemos dos grados de libertad de momento angular, $\vect{J_1}$
+y $\vect{J_2}$, cada uno de los cuales tiene asociado su respectivo espacio de
+Hilbert $\Hilbert_{J_1}$ y $\Hilbert_{J_2}$. Nos interesa estudiar las
+propiedades del sistema compuesto por estas dos partes, cuyo espacio de Hilbert
+es, según la regla de composición de producto tensorial, $\Hilbert_{12} =
+\Hilbert_{J_1}\tensor\Hilbert_{J_2}$. Este problema es de gran interés práctico
+dada su ubicuidad en gran cantidad de aplicaciones y sistemas físicos reales,
+resultando por ejemplo absolutamente esencial en el estudio de la física atómica
+y química cuántica. Cabe además destacar que estos dos momentos angulares que
+estamos acoplando pueden corresponder a momentos angulares de dos partículas
+distintas o a dos grados de libertad de momento angular de la misma partícula,
+es decir a su \spin~intrínseco y su momento angular orbital.
+
+Como cada grado de libertad es un momento angular $\vect{J_1}$ y $\vect{J_2}$,
+tendremos que
+\begin{align}
+  \comm{J_{1k}}{J_{1l}} &= i\hbar\lchivita_{klm}J_{1m}, \qquad
+    \comm{J_1^2}{J_{1i}} = 0, \\
+  \comm{J_{2k}}{J_{2l}} &= i\hbar\lchivita_{klm}J_{2m}, \qquad
+    \comm{J_2^2}{J_{2i}} = 0.
+\end{align}
+Por lo tanto, como vimos en las prácticas de momento angular, para cada espacio
+podemos tomar una base ortonormal dada por los autoestados simultáneos de
+$\set{J_1^2, J_{1z}}$ y $\set{J_2^2, J_{2z}}$, respectivamente,
+\begin{align}
+  \set{\ket{j_1,m_1}\,:\,J_1^2\ket{j_1,m_1} = \hbar^2j_1(j_1+1)\ket{j_1,m_1},
+    J_{1z}\ket{j_1,m_1} = \hbar m_1\ket{j_1,m_1}} \;
+    \text{base ortonormal de } \Hilbert_{J_1}, \\
+  \set{\ket{j_2,m_2}\,:\,J_2^2\ket{j_2,m_2} = \hbar^2j_2(j_2+1)\ket{j_2,m_2},
+    J_{2z}\ket{j_2,m_2} = \hbar m_2\ket{j_2,m_2}} \;
+    \text{base ortonormal de } \Hilbert_{J_2}.
+\end{align}
+
+Luego, una base ortonormal del sistema compuesto $\Hilbert_{12} =
+\Hilbert_{J_1}\otimes\Hilbert_{J_2}$ es simplemente la base producto tensorial
+\begin{equation}
+  \set{\ket{j_1,j_2;m_1,m_2} \eqdef \ket{j_1,m_1}\tensor\ket{j_2,m_2}}
+  \; \text{base ortonormal de } \Hilbert_{12} =
+  \Hilbert_{J_1}\tensor\Hilbert_{J_2}.
+\end{equation}
+(donde $\ket{j_1,j_2;m_1,m_2}$ es simplemente notación un poco más compacta
+para no escribir explícitamente el producto tensorial todo el tiempo).
+Claramente esta base es autoestado de los mismos operadores que antes (pero
+ahora promovidos al espacio producto). Efectivamente,
+\begin{align}
+  \left(J_1^2\tensor\Id\right)\ket{j_1,j_2;m_1,m_2} &=
+    \left(J_1^2\tensor\Id\right)\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \left(J_1^2\ket{j_1,m_1}\right)\tensor\ket{j_2,m_2} \\
+  &= \hbar^2j_1(j_1+1)\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \hbar^2j_1(j_1+1)\ket{j_1,j_2;m_1,m_2}. \\
+  \left(J_{1z}\tensor\Id\right)\ket{j_1,j_2;m_1,m_2} &=
+    \left(J_{1z}\tensor\Id\right)\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \left(J_{1z}\ket{j_1,m_1}\right)\tensor\ket{j_2,m_2} \\
+  &= \hbar m_1\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \hbar m_1\ket{j_1,j_2;m_1,m_2}. \\
+  \left(\Id\tensor J_2^2\right)\ket{j_1,j_2;m_1,m_2} &=
+    \left(\Id\tensor J_2^2\right)\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \ket{j_1,m_1}\tensor\left(J_2^2\ket{j_2,m_2}\right) \\
+  &= \hbar^2j_2(j_2+1)\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \hbar^2j_2(j_2+1)\ket{j_1,j_2;m_1,m_2}. \\
+  \left(\Id\tensor J_{2z}\right)\ket{j_1,j_2;m_1,m_2} &=
+    \left(\Id\tensor J_{1z}\right)\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \ket{j_1,m_1}\tensor\left(J_{2z}\ket{j_2,m_2}\right) \\
+  &= \hbar m_2\ket{j_1,m_1}\tensor\ket{j_2,m_2} =
+    \hbar m_2\ket{j_1,j_2;m_1,m_2}.
+\end{align}
+Efectivamente, los operadores $\set{J_1^2\tensor\Id, J_{1z}\tensor\Id,
+\Id\tensor J_2^2, \Id\tensor J_{2z}}$ forman un CCOC del espacio compuesto
+$\Hilbert_{12} = \Hilbert_{J_1}\tensor\Hilbert_{J_2}$. (Cabe notar que de ahora
+en adelante nos daremos la libertad de omitir la identidad cuando no haya
+mucha posibilidad de confusión, es decir que usaremos $J_1^2$ para indicar
+$J_1^2\otimes\Id$ y similarmente para los otros observables).
+
+Los operadores $\vect{J_1}$ y $\vect{J_2}$ que utilizamos para construir la
+base producto nos dan información sobre el momento angular de cada subsistema
+(es decir, de cada partícula o de cada grado de libertad de la partícula). Sin
+embargo, una pregunta que resulta razonable en un sistema compuesto de este
+tipo no es solamente el momento angular de cada uno de sus constituyentes, sino
+que el momento angular \emph{total} del sistema. Definimos el operador de
+momento angular \emph{total} $\vect{J}$ como
+\begin{equation}
+  \vect{J} \eqdef \vect{J_1} + \vect{J_2},
+\end{equation}
+que no es más que la suma componente a componente de los dos momentos angulares
+constituyentes. Para que esta definición tenga sentido, en primer lugar habría
+que demostrar que este operador efectivamente es un operador de momento
+angular. Efectivamente, partiendo de las reglas de conmutación de los
+$\vect{J_1}$ y $\vect{J_2}$ es sencillo mostrar que $\vect{J}$ satisface las
+reglas de conmutación de momento angular. En efecto,
+\begin{align}
+  \comm{J_k}{J_l} &= \comm{J_{1k} + J_{2k}}{J_{1l} + J_{2l}} \nonumber \\
+  &= \underbrace{\comm{J_{1k}}{J_{1l}}}_{i\hbar\lchivita_{klm}J_{1m}} +
+    \underbrace{\comm{J_{1k}}{J_{2l}}}_{\comm{J_{1k}\tensor\Id}{\Id\tensor
+    J_{2l}} = 0} + \underbrace{\comm{J_{2k}}{J_{1l}}}_{\comm{\Id\tensor
+    J_{2k}}{J_{1l}\tensor\Id} = 0} +
+    \underbrace{\comm{J{_2k}}{J_{2l}}}_{i\hbar\lchivita_{klm}J_{2m}} \nonumber
+    \\
+  &= i\hbar\lchivita_{klm}\left(J_{1m} + J_{2m}\right) \nonumber \\
+  &= i\hbar\lchivita_{klm}J_m.
+\end{align}
+
+Por lo tanto, efectivamente $\vect{J}$ es un operador de momento angular. Como
+$\vect{J}$ es un operador de momento angular, todo lo visto en la guía de
+momento angular también se aplica a este caso. En particular, si como es usual
+definimos $J^2 = J_x^2 + J_y^2 + J_z^2$, entonces $\comm{J^2}{J_i} = 0$ y
+podemos encontrar una base de autoestados comunes a $J^2$ y $J_z$. Es más, es
+fácil verificar $\comm{J_1^2}{J^2} = \comm{J_1^2}{J_z} = \comm{J_2^2}{J^2} =
+\comm{J_2^2}{J_z} = 0$. Por lo tanto tendremos una nueva base de autoestados
+\begin{equation}
+  \set{\ket{j_1,j_2;j,m}}, \; \text{base ortonormal de } \Hilbert_{12} =
+    \Hilbert_{J_1}\tensor\Hilbert_{J_2}.
+\end{equation}
+tales que
+\begin{align} 
+  J^2\ket{j_1,j_2;j,m} &= \hbar^2j(j+1)\ket{j_1,j_2;j,m}, \\
+  J_z\ket{j_1,j_2;j,m} &= \hbar m\ket{j,m}, \\
+  J_1^2\ket{j_1,j_2;j,m} &= \hbar^2j_1(j_1+1)\ket{j_1,j_2;j,m}, \\
+  J_2^2\ket{j_1,j_2;j,m} &= \hbar^2j_2(j_2+1)\ket{j_1,j_2;j,m}.
+\end{align}
+Efectivamente, como veremos, los operadores $\set{J^2, J_z, J_1^2, J_2^2}$
+forman un nuevo CCOC. Cabe notar que, dado que los operadores $J^2$ y $J_z$
+actúan sobre ambos espacios de momento angular simultáneamente, los elementos
+de esta nueva base en general ya no serán más estados productos.
+
+\bigbreak
+De ahora en más por simplicidad consideraremos que cada espacio
+$\Hilbert_{J_1}$ y $\Hilbert_{J_2}$ no es solamente un grado de libertad de
+momento angular, sino que además supondremos que el momento angular total
+está bien definido, es decir $\Hilbert_{J_1}$ ($\Hilbert_{J_2}$) es un espacio
+con autovalor de $J_1^2$ ($J_2^2$) bien definido, dado por $j_1$ ($j_2$). Cabe
+destacar que esto no es ninguna pérdida de generalidad dado que el caso más
+general se puede tratar de forma idéntica a lo que sigue.
+
+\bigbreak
+\TODO{dar mejor la justificación de esto; quizás mencionar el resultado formal
+que $\Hilbert_1\tensor\left(\Hilbert_{21}\dirsum\Hilbert_{22}\right) =
+\left(\Hilbert_1\tensor\Hilbert_{21}\right) \dirsum
+\left(\Hilbert_1\tensor\Hilbert_{22}\right)$.}
+\bigbreak
+
+Como vamos a considerar por ahora $j_1$ y $j_2$ fijos, para aligerar la
+notación omitimos estos índices de la base de autoestados de momento angular
+total, es decir $\ket{j,m} \eqdef \ket{j_1,j_2;j,m}$.
+
+\bigbreak
+
+Dado que tenemos definidas dos bases distintas del mismo espacio (la base
+producto de momentos angulares ``locales'' y la base de momento angular total),
+resulta natural preguntarnos cuál es el cambio de base que nos lleva de una a
+la otra, o lo que es lo mismo, cómo se escribe una base en función de la otra.
+Como siempre, tenemos que
+\begin{equation}
+  \ket{j,m} = \left(\sum_{m_1,m_2}\projector{j_1,j_2;m_1,m_2}\right)\ket{j,m}
+    = \sum_{m_1,m_2} \braket{j_1,j_2;m_1,m_2}{j,m} \ket{j_1,j_2;m_1,m_2}.
+\end{equation}
+Por lo tanto, lo único que necesitamos es calcular los coeficientes
+\begin{equation}
+  C_{j_1,j_2;m_1,m_2}^{j,m} \eqdef \braket{j_1,j_2;m_1,m_2}{j,m},
+\end{equation}
+conocidos como los \emph{coeficientes de Clebsch-Gordan}. Estos coeficientes
+son famosos por la utilidad práctica que tiene poder transformar entre estas
+dos bases de momento angular en una gran variedad de problemas de interés.
+Efectivamente por este motivo se pueden fácilmente encontrar tabulados. Sin
+embargo en la siguiente sección veremos un método que nos los permite calcular
+utilizando un procedimiento relativamente sencillo. Antes de pasar a ello,
+notemos algunas propiedades generales de los coeficientes de Clebsch-Gordan,
+que, en particular, no dirán \emph{qué valores de momento angular total son
+posibles}.
+
+\bigbreak
+
+En primer lugar notemos que, como por definición $J_z = J_{1z} + J_{2z}$,
+entonces tenemos lo siguiente
+\begin{align}
+  \matrixel{j_1,j_2;m_1,m_2}{J_z}{j,m} &= \hbar m\braket{j_1,j_2;m_1,m_2}{j,m}
+  \\
+  \matrixel{j_1,j_2;m_1,m_2}{J_z}{j,m} &= 
+  \matrixel{j_1,j_2;m_1,m_2}{\left(J_{1z} + J_{2z}\right)}{j,m} =
+  \hbar(m_1+m_2)\braket{j_1,j_2;m_1,m_2}{j,m}.
+\end{align}
+Por lo tanto, para que $\braket{j_1,j_2;m_1,m_2}{j,m} \neq 0$,
+\emph{necesariamente} $m = m_1 + m_2$, es decir la proyección total de momento
+angular en $z$ tiene que ser la suma de las proyecciones de cada momento
+angular; en cualquier otro caso el coeficiente de Clebsch-Gordan se anula.
+
+Por otro lado, podemos también seleccionar solamente sólo algunos valores de
+$j$ como posibles dados los valores de $j_1$ y $j_2$. Como vieron en la teórica
+se tiene que, \emph{necesariamente}
+\begin{equation}
+  j = \abs{j_1 - j_2}, \abs{j_1 - j_2} - 1, \ldots, j_1 + j_2 - 1, j_1 + j_2,
+\end{equation}
+o análogamente
+\begin{equation}
+  \abs{j_1 - j_2} \leq j \leq j_1 + j_2,
+\end{equation}
+donde sobreentendemos que los valores de $j$ van saltando en una unidad.
+
+\bigbreak
+\TODO{hacer la demostración de esto? es medio larga y pesada ...}
+\bigbreak
+
+En resumen tenemos que, para que el coeficiente de Clebsch-Gordan
+$C_{j_1,j_2;m_1,m_2}^{j,m} = \braket{j_1,j_2;m_1,m_2}{j,m}$ sea distinto de
+cero, necesariamente
+\begin{equation} \label{eq:selrulesumj}
+  m = m_1 + m_2, \qquad \abs{j_1 - j_2} \leq j \leq j_1 + j_2.
+\end{equation}
+
+\bigbreak
+
+Finalmente, cabe notar que se puede mostrar que las fases globales
+(arbitrarias) de los estados $\ket{j,m}$ se pueden siempre elegir de forma tal
+que los coeficientes de Clebsch-Gordan resulten reales. En lo que queda de
+estas notas haremos uso de esto y asumiremos siempre que estamos trabajando con
+esta convención.
+
+% -----------------------------------------------------------------------------
+\subsection{Cálculo coeficientes de Clebsch-Gordan}
+
+Antes de proceder a un ejemplo concreto, esbocemos cuál será el procedimiento
+general. Es más, en primer lugar mostraremos una propiedad de los coeficientes
+de Clebsch-Gordan de suma utilidad práctica.
+
+Como vimos antes, si estamos sumando dos momentos angulares $j_1$ y $j_2$, el
+valor máximo que puede tomar $j$ es (ver ec. \eqref{eq:selrulesumj})
+\begin{equation}
+  \jmax = j_1 + j_2.
+\end{equation}
+En tal caso, $m = -\jmax, \ldots, \jmax$. Consideremos el
+estado $\ket{\jmax, \jmax}$. Su expansión en la base producto
+es
+\begin{equation}
+  \ket{\jmax, \jmax} =
+  \sum_{m_1,m_2}\braket{j_1,j_2;m_1,m_2}{\jmax,\jmax}
+  \ket{j_1,j_2;m_1,m_2}.
+\end{equation}
+Ahora, para que los coeficientes de Clebsch-Gordan de esta expansión no sean
+nulos, como vimos en \eqref{eq:selrulesumj} necesariamente
+\begin{equation} \label{eq:condmjmax}
+  m_1 + m_2 = \jmax = j_1 + j_2.
+\end{equation}
+Pero, $m_1$ y $m_2$ al ser proyecciones de $j_1$ y $j_2$ deben satisfacer que
+\begin{equation}
+  -j_1 \leq m_1 \leq j_1, \qquad -j_2 \leq m_2 \leq j_2.
+\end{equation}
+Claramente, hay una única combinación de $m_1$ y $m_2$ que satisface
+\eqref{eq:condmjmax}, y es la de las proyecciones máximas, es decir $m_1 =
+j_1$ y $m_2 = j_2$. Por lo tanto, hay un único coeficiente de Clebsch-Gordan
+que no se anula y entonces
+\begin{equation}
+  \ket{j = \jmax, m = \jmax} =
+  \ket{j = j_1 + j_2, m = j_1 + j_2} =
+  \ket{j_1,j_2;m_1 = j_1,m_2 = j_2} =
+  \ket{j_1,m_1=j_1}\tensor\ket{j_2,m_2=j_2}.
+\end{equation}
+Esto quiere decir que el estado $\ket{j_1,j_2;m_1 = j_1,m_2 = j_2}$ es un
+estado \emph{común a ambas bases}, tanto la base producto de momentos angulares
+locales y la base de momento angular total.
+
+Análogamente, se prueba que el estado $\ket{j_1,j_2;m_1 = -j_1, m_2 = -j_2}$
+también es un estado de ambas bases y corresponde al estado de momento angular
+total $\ket{j = \jmax, m = -\jmax}$. Se puede mostrar que
+estos dos son los únicos estados comunes a ambas bases.
+
+El hecho que estos estados comunes existan nos permite, entre otras cosas, dar
+un procedimiento relativamente sencillo de cómo encontrar todos los
+coeficientes de Clebsch-Gordan. Efectivamente, supongamos que estamos sumando
+dos momentos angulares $j_1$ y $j_2$. Queremos escribir todos los estados
+\begin{equation}
+  \set{\ket{j,m}, \abs{j_1 - j_2} \leq j \leq j_1 + j_2, -j \leq m \leq j},
+\end{equation}
+en función de los estados producto. Comenzamos con el estado de momento angular
+y proyección en $z$ total máximos. Por lo anterior tenemos que
+\begin{equation}
+  \ket{\jmax, \jmax} = \ket{j_1,j_2; j_1, j_2}.
+\end{equation}
+Luego, aplicando $J_-$ (como hicimos tantas veces en la guía anterior), podemos
+obtener todos los estados $\ket{\jmax, m}$ para todo $m$ ($-\jmax \leq m \leq
+\jmax$). Efectivamente, por ejemplo aplicando $J_-$ una vez tenemos
+\begin{equation}
+  J_-\ket{\jmax, m = \jmax} = \jpmprefactev{\jmax(\jmax+1)}{\jmax(\jmax-1)}
+  \ket{\jmax, m = \jmax - 1}.
+\end{equation}
+Faltaría ver cómo aplicar $J_-$ al estado en la base producto. Afortunadamente,
+esto es sencillo puesto que
+\begin{equation}
+  J_- = J_x - iJ_y = (J_{1x} + J_{2x}) -i(J_{1y} + J_{2y}) = J_{1-} + J_{2-}.
+\end{equation}
+Por lo tanto,
+\begin{align}
+  J_-\ket{\jmax, m = \jmax} &=
+    \left(J_{1-} + J_{2-}\right)\ket{j_1,m_1=j_1}\tensor\ket{j_2,m_2=j_2} \\
+  &= \left(J_{1-}\ket{j_1,m_1=j_1}\right)\tensor\ket{j_2,m_2=j_2}
+    + \ket{j_1,m_1=j_1}\tensor\left(J_{2-}\ket{j_2,m_2=j_2}\right) \\
+  &= \jpmprefactev{j_1(j_1+1)}{j_1(j_1-1)}
+    \ket{j_1,m_1=j_1-1}\tensor\ket{j_2,m_2=j_2} \\
+  &+ \jpmprefactev{j_2(j_2+1)}{j_2(j_2-1)}
+    \ket{j_1,m_1=j_1}\tensor\ket{j_2,m_2=j_2-1}.
+\end{align}
+Por lo tanto, despejando tenemos cómo se escribe $\ket{\jmax, \jmax-1}$ en
+términos de la base producto y así siguiendo podemos calcular todos los estados
+$\ket{\jmax,m}$.
+
+Una vez que tenemos todos estos estados, pasamos al siguiente subespacio de $j$
+total, es decir al subespacio de $j = \jmax - 1$. En primer lugar buscamos el
+estado de proyección máxima, $\ket{j = \jmax - 1, m = \jmax - 1}$. Para
+encontrar este estado lo que hacemos es pedir que sea ortogonal a \emph{todos}
+los estados $\ket{j = \jmax, m}$. Una vez que tenemos el estado $\ket{\jmax -
+1, \jmax - 1}$ nuevamente aplicando $J_-$ calculamos todas las proyecciones
+$m$.
+
+Finalmente, así procedemos para todas las otras proyecciones de $j$ total. A
+continuación veremos un ejemplo concreto.
+
+\subsubsection{Ejemplo $1 \times 1/2$ (Problema 1 -- Guía 7)}
+
+En este ejemplo consideramos una partícula de \spinhalf~que además tiene un
+momento angular orbital con $l = 1$. Buscamos escribir los estados de momento
+angular total $\vect{J} = \vect{L} + \vect{S}$ en función de los de la base
+producto de cada momento angular. La base producto en este caso es
+\begin{equation}
+  \set{\ket{l=1,s=1/2; m_l, m_s}, m_l = 1, 0, -1, m_s = 1/2, -1/2}.
+\end{equation}
+Es decir que tenemos 6 estados,
+\begin{align}
+  &\ket{l=1,s=1/2;m_l=1,m_s=1/2},
+  &&\ket{l=1,s=1/2;m_l=1,m_s=-1/2}, \\
+  &\ket{l=1,s=1/2;m_l=0,m_s=1/2},
+  &&\ket{l=1,s=1/2;m_l=0,m_s=-1/2}, \\
+  &\ket{l=1,s=1/2;m_l=-1,m_s=1/2},
+  &&\ket{l=1,s=1/2;m_l=-1,m_s=-1/2}.
+\end{align}
+
+Veamos en primer lugar cuáles son los valores $j$ de momento angular total
+posibles. Tenemos
+\begin{equation}
+  1 - \frac{1}{2} \leq j \leq 1 + \frac{1}{2} \implies
+  \frac{1}{2} \leq j \leq \frac{3}{2} \implies
+  j = \set{\frac{1}{2}, \frac{3}{2}}.
+\end{equation}
+Por lo tanto, la base de momento angular total está dada por la base del
+subespacio $j = 3/2$, con proyecciones $m = -3/2, -1/2, 1/2, 3/2$,
+\begin{align}
+  &\ket{j=3/2,m=3/2},
+  &&\ket{j=3/2,m=1/2}, \\
+  &\ket{j=3/2,m=-1/2},
+  &&\ket{j=3/2,m=-3/2},
+\end{align}
+más la base del subespacio $j = 1/2$, con proyecciones $m = -1/2, 1/2$,
+\begin{equation}
+  \ket{j=1/2,m=1/2}, \qquad \ket{j=1/2,m=-1/2}.
+\end{equation}
+Notemos que nuevamente tenemos una base con 6 estados, como debe ser (viene
+siempre bien verificar que las dimensiones estén bien para hacer un chequeo
+rápido de que no hubo ningún error de cuentas).
+
+Procedemos como esbozamos antes y comenzamos con el estado de máximo momento
+angular total y máxima proyección. En este caso $\jmax = 3/2$ y este estado,
+que también es un estado producto, es
+\begin{equation}
+  \ket{j=3/2,m=3/2} = \ket{l=1,s=1/2;m_l=1,m_s=1/2}.
+\end{equation}
+Calculamos ahora los $\ket{j=3/2,m}$ remanentes aplicando $J_-$. Por un lado
+tenemos
+\begin{equation} \label{eq:calccgex1a}
+  J_-\ket{j=3/2,m=3/2} = \jpmprefactev{\frac{15}{4}}{\frac{3}{4}}
+    \ket{j=3/2,m=1/2} = \hbar\sqrt{3}\ket{j=3/2,m=1/2}.
+\end{equation}
+Por otro lado,
+\begin{align} \label{eq:calccgex1b}
+  (J_{1-} + J_{2-})\ket{l=1,s=1/2;m_l=1,m_s=1/2}
+  = \hbar\sqrt{2}\ket{l=1,s=1/2;m_l=0,m_s=1/2} \nonumber \\
+  + \hbar\ket{l=1,s=1/2;m_l=1,m_s=-1/2}.
+\end{align}
+Finalmente, igualando \eqref{eq:calccgex1a} y \eqref{eq:calccgex1b} y
+despejando tenemos
+\begin{equation} \label{eq:exccalc1a}
+  \ket{j=3/2,m=1/2} = \sqrt{\frac{2}{3}} \ket{l=1,s=1/2;m_l=0,m_s=1/2}
+    + \frac{1}{\sqrt{3}}\ket{l=1,s=1/2;m_l=1,m_s=-1/2}.
+\end{equation}
+
+Análogamente, volvemos a aplicar $J_-$ para calcular el estado
+$\ket{j=3/2,m=-1/2}$ y luego $\ket{j=3/2,m=-3/2}$ (en realidad para este último
+estado no hace falta aplicar $J_-$ porque como vimos antes este es el otro
+estado que también coincide con un elemento de la base producto).
+
+Una vez que tenemos todos los elementos del subespacio $j = 3/2$, pasamos al
+siguiente valor de $j$, que en este caso es $j = 1/2$. Según el procedimiento
+que esbozamos antes, buscamos el estado $\ket{j=1/2, m=1/2}$ pidiendo que sea
+ortogonal a los cuatro estados con $j=3/2$. Aquí vale la pena notar con cuidado
+como vamos a escribir el estado $\ket{j=1/2, m=1/2}$ dado que si lo hacemos con
+cuidado nos ahorramos una gran cantidad de cuentas. En general, un estado
+cualquiera del espacio compuesto se escribe como una combinación lineal de los
+6 elementos de la base producto de momento angular orbital y \spin. Sin
+embargo, podemos hacer uso del hecho que los coeficientes de Clebsch-Gordan son
+cero si $m \neq m_l + m_s$ (ver ec. \eqref{eq:selrulesumj}). En este caso
+queremos escribir un estado con $m = 1/2$ y las únicas combinaciones de $m_l
+\in \set{1, 0, -1}$ y $m_s \in \set{1/2, -1/2}$ que satisfacen esto son $(m_l =
+1, m_s = -1/2)$ y $(m_l = 0, m_s = 1/2)$. Por lo tanto, el estado $\ket{j=1/2,
+m=1/2}$ se puede escribir como una combinación lineal de solamente dos
+elementos de la base producto
+\begin{equation} \label{eq:exccalc1b}
+  \ket{j=1/2, m=1/2} = C_1\ket{l=1,s=1/2;m_l=1,m_s=-1/2} +
+    C_2\ket{l=1,s=1/2,m_l=0,m_s=1/2}.
+\end{equation}
+Para determinar los coeficientes $C_1$ y $C_2$ vamos a pedir que el estado esté
+normalizado y que sea ortogonal a todos los estados con $j=3/2$. Notemos que
+esta última condición es inmediata para todo estado de $j=3/2$ que no tenga
+también $m=1/2$, puesto que las otras proyecciones de $m$ involucrarán
+combinaciones de $(m_l,m_s)$ distintas a $(m_l = 1, m_s = -1/2)$ y $(m_l = 0,
+m_s = 1/2)$ (sólo el estado $\ket{j=3/2,m=1/2}$ contiene estos dos kets en su
+expansión). Por lo tanto, pidiendo que \eqref{eq:exccalc1a} sea ortogonal a
+\eqref{eq:exccalc1b} tenemos
+\begin{align}
+  \braket{j=3/2, m=1/2}{j=1/2, m=1/2} &= C_2\sqrt{\frac{2}{3}} +
+    C_1\frac{1}{\sqrt{3}} = 0 \\
+  \implies C_2 &= -\frac{1}{\sqrt{2}}C_1.
+\end{align}
+Por otro lado, imponiendo normalización tenemos
+\begin{align}
+  \abs{C_1}^2 + \abs{C_2}^2 &= 1 \\
+  \frac{3}{2}\abs{C_1}^2 &= 1 \\
+  C_1 &= \sqrt{\frac{2}{3}}.
+\end{align}
+Finalmente,
+\begin{equation}
+  \ket{j=1/2, m=1/2} = \sqrt{\frac{2}{3}}\ket{l=1,s=1/2;m_l=1,m_s=-1/2} -
+    \frac{1}{\sqrt{3}}\ket{l=1,s=1/2,m_l=0,m_s=1/2}.
+\end{equation}
+Para calcular $\ket{j=1/2, m=-1/2}$ podemos aplicar $J_-$ a $\ket{j=1/2,
+m=1/2}$.
+
+% =============================================================================
+\section{Operadores Vectoriales y Tensoriales}
+
+En la siguiente sección veremos qué se entiende en mecánica cuántica por
+operadores escalares, vectoriales y tensoriales. Estas definiciones,
+análogamente al caso clásico, se basan en cómo se transforman los operadores
+frente a rotaciones. En particular esto le dará un sentido más claro a la
+notación que venimos usando de ``vectores'' de operadores. En la próxima
+sección veremos la utilidad de esta clasificación de operadores para el cálculo
+de elementos de matriz en la base de momento angular, puesto que dan lugar a
+reglas de selección en la forma del teorema de Wigner-Eckart.
+
+Primero que nada, repasemos muy brevemente las definiciones clásicas de
+operadores y tensores.
+
+% -----------------------------------------------------------------------------
+\subsection{Repaso nociones mecánica clásica: vectores, escalares y tensores
+  cartesianos}
+
+En esta sección repasaremos muy brevemente las nociones de escalar, vector y
+tensor cartesiano de mecánica clásica para luego usar estas definiciones como
+inspiración para el caso cuántico.
+
+\subsubsection{Vector}
+Clásicamente decimos que una dada magnitud conformada por tres componentes,
+$\vect{V} = (V_x, V_y, V_z)$, es un \emph{vector} si ante una rotación $R$ del
+sistema de coordenadas, esta magnitud se transforma de la forma
+\begin{equation}
+  \vect{V} \xrightarrow[R]{\qquad} \vect{V}' = R\,\vect{V},
+\end{equation}
+o, en términos de componentes,
+\begin{equation}
+  V_i \xrightarrow[R]{\qquad} {V'}_i = \sum_j R_{ij}\,V_j.
+\end{equation}
+
+Claramente, la posición $\vect{r}$ es un vector, puesto que justamente la
+matriz de rotación se define precisamente para que $\vect{r}' = R\vect{r}$.
+Casos no triviales de vectores en mecánica clásica son, por ejemplo, el momento
+lineal $\vect{p}$, el momento angular $\vect{L}$, el campo eléctrico $\vect{E}$
+y magnético $\vect{B}$, entre muchos otros.
+
+\subsubsection{Escalar}
+Clásicamente decimos que una dada magnitud $K$ es un \emph{escalar} si ante
+rotaciones del sistema de coordenadas permanece invariante, es decir
+\begin{equation}
+  K \xrightarrow[R]{\qquad} K' = K.
+\end{equation}
+
+Clásicamente, un ejemplo de escalar es el módulo cuadrado $V^2 =
+\vect{V}\cdot\vect{V}$ de un vector $\vect{V}$ cualquiera. Un ejemplo de esto
+es la coordenada radial $r$ en coordenadas esféricas, que claramente permanece
+invariante ante rotaciones. Más en general, si $\vect{V}$ y $\vect{W}$ son dos
+vectores, entonces el producto interno $\vect{V}\cdot\vect{W}$ es un escalar.
+
+\subsubsection{Tensor (cartesiano)}
+Clásicamente, un tensor cartesiano es una generalización directa del concepto
+de un vector. Decimos que un magnitud conformada por $3n$ componentes,
+$T_{i_1,i_2,\dots,i_n}$, ($i_j = 1,2,3; j = 1,\dots,n$), es un \emph{tensor
+cartesiano} de rango $n$ si ante rotaciones se transforma de la forma
+\begin{equation}
+  T_{i_1,i_2,\dots,i_n} \xrightarrow[R]{\qquad}
+    {T'}_{i_1,i_2,\dots,i_n} = \sum_{j_1,j_2,\dots,j_n}
+    R_{i_1j_1}R_{i_2j_2}\dots R_{i_nj_n}\,T_{j_1,j_2,\dots,j_n}.
+\end{equation}
+Es decir que cada índice del tensor $T$ se transforma como un vector.  Una
+forma de construirse un tensor es, por ejemplo, la siguiente: dados dos
+vectores $\vect{V}$ y $\vect{W}$ definimos $T_{ij} \eqdef V_iW_j$. Claramente,
+esto es un tensor cartesiano de rango 2.
+
+Ejemplos clásicos de tensores son el tensor de esfuerzos, el tensor de inercia,
+el tensor electromagnético.
+
+% -----------------------------------------------------------------------------
+\subsection{Operadores Escalares, Vectoriales y Tensoriales} A continuación
+definiremos los conceptos de operadores vectoriales, escalares y tensoriales.
+Las definiciones serán una adaptación directa de las definiciones clásicas.
+
+\subsubsection{Operador Vectorial}
+Dado un conjunto de tres operadores $\vect{V} = (V_x, V_y, V_z)$, decimos que
+$\vect{V}$ es un \emph{operador vectorial} si ante una rotación $R$ los
+operadores $V_i$ transforman de la forma
+\begin{equation} \label{eq:defopvect}
+  V_i \xrightarrow[R]{\qquad} {V'}_i =
+  \RotationOp^\dagger(R)\,V_i\,\RotationOp(R) = \sum_j R_{ij}\,V_j,
+\end{equation}
+donde $\RotationOp(R)$ es el operador unitario que representa la acción de la
+rotación $R$ en el espacio de Hilbert.
+
+Notemos que la definición efectivamente es una adaptación directa de la
+definición clásica. Veremos a continuación algunos ejemplos de magnitudes que
+clásicamente son vectores y también lo son en mecánica cuántica con esta
+definición, manteniendo por lo tanto la idea intuitiva de vector.
+
+Antes de proceder a los ejemplos, notemos que la definición
+\eqref{eq:defopvect}, no obstante ser bastante clara desde un punto de vista
+conceptual, resulta extremadamente poco práctica de verificar, dado que el
+cálculo que implica es en general no trivial de realizar. Por lo tanto, resulta
+esencial el hecho que se puede mostrar que la definición \eqref{eq:defopvect}
+es \emph{equivalente} a la condición
+\begin{equation} \label{eq:commopvect}
+  \comm{L_k}{V_l} = i\hbar\lchivita_{klm}V_m.
+\end{equation}
+(esto sale de considerar una rotación infinitesimal en \eqref{eq:defopvect}).
+En general \eqref{eq:commopvect} es mucho más sencilla de chequear que no
+\eqref{eq:defopvect}.
+
+Pasemos ahora sí a algunos ejemplos. En primer lugar, para que la definición de
+operador vectorial tenga algún contacto con la noción clásica de vector, por lo
+menos, el operador posición $\vect{r}$ debería ser un vector. Veamos que esto
+efectivamente es así. Tenemos
+\begin{align}
+  \comm{L_k}{r_l} &= \comm{\lchivita_{kst}r_sp_t}{r_l} =
+  \lchivita_{kst}\comm{r_sp_t}{r_l} =
+  \lchivita_{kst}r_s\comm{p_t}{r_l} \nonumber \\
+  &= \lchivita_{kst}r_s(-i\hbar\delta_{tl}) =
+  -i\hbar\lchivita_{kst}\delta_{tl}r_s =
+  -i\hbar\lchivita_{ksl}r_s =
+  i\hbar\lchivita_{kls}r_s,
+\end{align}
+donde usamos que dos componentes distintas del operador posición conmutan
+($\comm{r_i}{r_j} = 0$), que componentes distintas de posición y momento
+conmutan ($\comm{r_j}{p_k} = i\hbar\delta_{jk}$) y que el tensor de
+Levi-Chivita es antisimétrico ($\lchivita_{ksl} = -\lchivita_{kls}$).
+Por lo tanto, $\vect{r}$ satisface \eqref{eq:commopvect} y por lo tanto el
+operador posición es efectivamente un operador vectorial.
+
+Análogamente se puede mostrar que el operador momento $\vect{p}$ también es un
+operador vectorial.
+
+Finalmente, como tercer ejemplo veamos qué pasa con el momento angular
+$\vect{L}$. En este caso \eqref{eq:commopvect} se reduce a $\comm{L_k}{L_l} =
+i\hbar\lchivita_{klm}L_m$, lo cual es trivialmente cierto pues esta es la
+definición de un operador de momento angular.
+
+\bigbreak
+Esta definición de operador vectorial finalmente le da más sentido físico a la
+notación que venimos usando hasta ahora de ``vector'' de operadores.
+
+\subsubsection{Operador Escalar}
+Análogo al caso clásico, decimos que un operador $K$ es un \emph{operador
+escalar} si ante rotaciones permanece invariante, es decir
+\begin{equation} \label{eq:defopesc}
+  K \xrightarrow[R]{\qquad} K' =
+  \RotationOp^\dagger(R)\,K\,\RotationOp(R) = K.
+\end{equation}
+Es sencillo ver que esto es equivalente a que el operador $K$ conmute con los
+operadores de momento angular
+\begin{equation} \label{eq:commopesc}
+  \comm{J_i}{K} = 0.
+\end{equation}
+Un ejemplo de un operador que satisface \eqref{eq:commopesc} es el momento
+angular cuadrado $J^2$. Esto también está en acuerdo con lo clásico en cuanto
+esto es como el ``módulo cuadrado'' de un vector. Efectivamente, esto se puede
+generalizar. Supongamos que $\vect{V}$ y $\vect{W}$ son dos operadores
+vectoriales, entonces $\vect{V}\cdot\vect{W} = V_xW_x + V_yW_y + V_zW_z$ es un
+operador escalar. Efectivamente,
+\begin{align}
+  \comm{J_k}{\vect{V}\cdot\vect{W}} &= \comm{J_k}{V_lW_l} =
+  \comm{J_k}{V_l}W_l + V_l\comm{J_k}{W_l} \\
+  &= i\hbar\lchivita_{klm}V_mW_l + i\hbar\lchivita_{klm}V_lW_m
+   = i\hbar\lchivita_{klm}V_mW_l + i\hbar\lchivita_{kml}V_mW_l \\
+  &= i\hbar\lchivita_{klm}V_mW_l - i\hbar\lchivita_{klm}V_mW_l = 0,
+\end{align}
+donde usamos que por hipótesis $\vect{V}$ y $\vect{W}$ son operadores
+vectoriales (y por lo tanto satisfacen \eqref{eq:commopvect}), en la última
+igualdad del segundo renglón renombramos los índices $l\leftrightarrow m$ y
+finalmente usamos que el tensor de Levi-Chivita es antisimétrico.
+
+Vemos que nuevamente recuperamos las propiedades que también valían
+clásicamente. En particular, una consecuencia de este resultado es que el
+operador $r$ de la coordenada radial en coordenadas esféricas es un escalar.
+
+\subsubsection{Tensores (Cartesianos)}
+Finalmente, un conjunto de $3n$ operadores $\set{T_{i_1,\dots,i_n}, i_j=1,2,3,
+j=1,\dots,m}$ forman un \emph{tensor cartesiano} de rango $n$ si ante
+rotaciones se transforman de la forma
+\begin{equation} \label{eq:defoptenscart}
+  T_{i_1,i_2,\dots,i_n} \xrightarrow[R]{\qquad}
+    {T'}_{i_1,i_2,\dots,i_n} = \RotationOp^\dagger(R) T_{i_1,i_2,\dots,i_n}
+    \RotationOp(R) = \sum_{j_1,j_2,\dots,j_n}
+    R_{i_1j_1}R_{i_2j_2}\dots R_{i_nj_n}\,T_{j_1,j_2,\dots,j_n}.
+\end{equation}
+Como en el caso clásico, si $\vect{V}$ y $\vect{W}$ son dos vectores, entonces
+claramente $T_{ij} = V_iW_j$ define un tensor cartesiano de rango 2.
+
+% -----------------------------------------------------------------------------
+\subsection{Tensores Esféricos Irreducibles}
+A continuación veremos otra familia de operadores tensoriales, los tensores
+esféricos irreducibles. Estos operadores serán de particular interés para
+nosotros pues ante rotaciones se comportan de forma muy particular, permitiendo
+dar reglas de selección, en la forma del teorema de Wigner-Eckart,  para los
+elementos de matriz de estos operadores en la base de momento angular.
+
+Dado un conjunto de $2k+1$ operadores $\set{T^{(k)}_{q}, q =
+-k,-k+1,\dots,k-1,k}$, decimos que forman un \emph{tensor esférico irreducible}
+de rango $k$ si ante rotaciones se transforma de forma
+\begin{equation} \label{eq:defoptensesf}
+  T^{(k)}_{q} \xrightarrow[R]{\qquad}
+    {T'}^{(k)}_{q} = \RotationOp(R) T^{(k)}_{q}
+    \RotationOp^\dagger(R) = \sum_{q'}
+    \RotationOp^{(k)}_{q'q}(R)\,T^{(k)}_{q'},
+\end{equation}
+con $\RotationOp^{(k)}_{q'q}(R)$ los elementos de matriz del operador de
+rotación en la base de momento angular $k$, es decir
+$\RotationOp^{(k)}_{q'q}(R) = \matrixel{kq'}{\RotationOp(R)}{kq}$.
+Como en los casos anteriores, mirando rotaciones infinitesimales se puede
+mostrar que la condición \eqref{eq:defoptensesf} es equivalente a
+\begin{equation} \label{eq:commoptensesf}
+  \comm{J_z}{T^{(k)}_{q}} = \hbar q\,T^{(k)}_{q}, \qquad
+  \comm{J_{\pm}}{T^{(k)}_{q}} = \jpmprefactev{k(k+1)}{q(q\pm1)}\,
+    T^{(k)}_{q\pm1}.
+\end{equation}
+Notemos que las condiciones \eqref{eq:commoptensesf} recuerdan mucho a la
+acción de los operadores $J_z$ y $J_\pm$ sobre los estados de momento angular
+$\ket{k,q}$.
+
+A continuación veremos cómo construir operadores que son tensores esféricos
+irreducibles y luego en la próxima sección veremos la utilidad de estos
+operadores para el cálculo de elementos de matriz en la base de autoestados de
+momento angular.
+
+\subsubsection{Reescritura de un operador vectorial como tensor esférico de
+  rango 1}
+
+En primer lugar veamos cómo, dado un operador vectorial $\vect{V} = (V_x, V_y,
+V_z)$ podemos definir un tensor esférico irreducible de rango 1.  Definimos
+\begin{equation} \label{eq:defvecttensone}
+  V^{(1)}_{0} \eqdef V_z, \qquad V^{(1)}_{\pm1} \eqdef \mp\frac{V_x \pm
+    iV_y}{\sqrt{2}}.
+\end{equation}
+Veamos que efectivamente $V^{(1)}_q$ definen un tensor esférico de rango 1.
+Para ello tenemos que ver que satisfacen \eqref{eq:commoptensesf}.
+Para $q = 0$ tenemos
+\begin{equation}
+  \comm{J_z}{V^{(1)}_{0}} = \underbrace{\comm{J_z}{V_z}}_{\substack{= 0 \\
+    \text{por \eqref{eq:commopvect}}}} = 0,
+\end{equation}
+donde usamos que $\vect{V}$ es un operador vectorial y por lo tanto satisface
+\eqref{eq:commopvect}.
+Para $q = \pm1$ tenemos
+\begin{align}
+  \comm{J_z}{V^{(1)}_{\pm1}} &= \comm{J_z}{\mp\frac{V_x \pm iV_y}{\sqrt{2}}}
+    = \mp\frac{1}{\sqrt{2}}\Big(
+      \underbrace{\comm{J_z}{V_x}}_{\substack{i\hbar\lchivita_{zxy}V_y \\
+        \text{por \eqref{eq:commopvect}}}}
+      \pm i
+      \underbrace{\comm{J_z}{V_y}}_{\substack{i\hbar\lchivita_{zyx}V_x \\
+      \text{por \eqref{eq:commopvect}}}}
+      \Big)
+    \nonumber \\
+  &= \mp\frac{1}{\sqrt{2}}\left(i\hbar\lchivita_{zxy}V_y \pm
+    ii\hbar\lchivita_{zyx}V_x\right)
+    = \mp\frac{1}{\sqrt{2}}\left(i\hbar V_y \pm \hbar V_x\right) \nonumber \\
+  &= \mp\hbar\frac{1}{\sqrt{2}}\left(\pm V_x + i\hbar V_y\right)
+    = \begin{cases}
+      -\hbar\frac{1}{\sqrt{2}}\left(V_x + i\hbar V_y\right) = \hbar
+        V^{(1)}_{+1}, & (q = +1) \\
+      \hbar\frac{1}{\sqrt{2}}\left(-V_x + i\hbar V_y\right) = -\hbar
+      V^{(1)}_{-1}, & (q = -1) \\
+    \end{cases} \nonumber \\
+  &= \pm\hbar V^{(1)}_{\pm1}.
+\end{align}
+Por lo tanto se satisfacen las reglas de conmutación \eqref{eq:commoptensesf}
+con $J_z$. Falta verificar las reglas de conmutación \eqref{eq:commoptensesf}
+con $J_\pm$. Para $q = 0$ tenemos
+\begin{align}
+  \comm{J_{\pm}}{V^{(1)}_{0}} &= \comm{J_{\pm}}{V_z} = \comm{J_x \pm iJ_y}{V_z}
+    = \comm{J_x}{V_z} \pm i\comm{J_y}{V_z} \nonumber \\
+  &= i\hbar\lchivita_{xzy}V_y \pm ii\hbar\lchivita_{yzx}V_x
+    = \hbar\left(-iV_y \mp V_x\right)
+    = \hbar\left[\mp\left(V_x \pm iV_y\right)\right] \nonumber \\
+  &= \hbar\sqrt{2}\left[\mp\frac{V_x \pm iV_y}{\sqrt{2}}\right]
+    = \hbar\sqrt{2}V^{(1)}_{\pm1}.
+\end{align}
+Efectivamente, $V^{(1)}_{0}$ satisface \eqref{eq:commoptensesf}. Solamente
+queda verificar los conmutadores de $J_\pm$ con las componentes $q = \pm 1$.
+Tenemos
+\begin{align}
+  \comm{J_\pm}{V^{(1)}_\pm} &= \comm{J_x \pm iJ_y}{\mp\frac{V_x \pm
+    iV_y}{\sqrt{2}}} = \mp\frac{1}{\sqrt{2}}\comm{J_x \pm iJ_y}{V_x \pm iV_y}
+    \nonumber \\
+  &= \mp\frac{1}{\sqrt{2}}\left(\comm{J_x}{V_x} \pm i\comm{J_x}{V_y} \pm
+    i\comm{J_y}{V_x} - \comm{J_y}{V_y}\right) \nonumber \\
+  &= \mp\frac{1}{\sqrt{2}}\left(\pm ii\hbar\lchivita_{xyz}V_z \pm
+    ii\hbar\lchivita_{yxz}V_z\right)
+    = \hbar\frac{1}{\sqrt{2}}\left(\lchivita_{xyz}V_z +
+    \lchivita_{yxz}V_z\right) \nonumber \\
+  &= \hbar\frac{1}{\sqrt{2}}\left(V_z - V_z\right) = 0.
+\end{align}
+Finalmente,
+\begin{align}
+  \comm{J_\pm}{V^{(1)}_\mp} &= \comm{J_x \pm iJ_y}{\pm\frac{V_x \mp
+    iV_y}{\sqrt{2}}} = \pm\frac{1}{\sqrt{2}}\comm{J_x \pm iJ_y}{V_x \mp iV_y}
+    \nonumber \\
+  &= \pm\frac{1}{\sqrt{2}}\left(\comm{J_x}{V_x} \mp i\comm{J_x}{V_y} \pm
+    i\comm{J_y}{V_x} + \comm{J_y}{V_y}\right) \nonumber \\
+  &= \pm\frac{1}{\sqrt{2}}\left(\mp ii\hbar\lchivita_{xyz}V_z \pm
+    ii\hbar\lchivita_{yxz}V_z\right)
+    = \pm\hbar\frac{1}{\sqrt{2}}\left(\pm\lchivita_{xyz}V_z
+    \mp\lchivita_{yxz}V_z\right) \nonumber \\
+  &= \pm\hbar\frac{1}{\sqrt{2}}\left(\pm V_z \pm V_z\right)
+    = \hbar \frac{2}{\sqrt{2}}V_z = \hbar\sqrt{2}V^{(1)}_{0}.
+\end{align}
+Por lo tanto, verificamos que las definiciones \eqref{eq:defvecttensone}
+satisfacen todas las condiciones \eqref{eq:commoptensesf} y por lo tanto
+definen un tensor esférico de rango 1.
+
+\subsubsection{Regla de composición de tensores esféricos}
+\label{sec:reglacomptens}
+
+En la sección anterior vimos cómo construir un tensor esférico de rango 1 a
+partir de un vector. Queda la pregunta de cómo armarnos tensores esféricos de
+mayor rango. A continuación veremos un resultado formal que nos permite hacer
+esto.
+
+\bigbreak
+
+Sean $V^{(k_1)}$ y $W^{(k_2)}$ dos tensores esféricos de rango $k_1$ y $k_2$,
+respectivamente. Entonces, se puede mostrar que los operadores $T^{(k)}_q$
+dados por
+\begin{equation} \label{eq:deftensorcoupling}
+  T^{(k)}_{q} \eqdef \sum_{q_1, q_2} \braket{k_1,k_2;q_1,q_2}{kq}
+  V^{(k_1)}_{q_1} W^{(k_2)}_{q_2},
+\end{equation}
+definen un tensor esférico de rango $k$. La demostración de esto es inmediata
+de calcular $\RotationOp T^{(k)}_{q} \RotationOp^\dagger$ y usar que $V^{(k_1)}$
+y $W^{(k_2)}$ satisfacen \eqref{eq:defoptensesf}.
+
+Notar que en \eqref{eq:deftensorcoupling} $\braket{k_1,k_2;q_1,q_2}{kq}$ son
+simplemente los coeficientes de Clebsch-Gordan que provienen de acoplar
+momentos angulares $k_1$ y $k_2$ con proyecciones $q_1$ y $q_2$ para obtener un
+momento angular total $k$ con proyección $q$. Por lo tanto, debido a
+\eqref{eq:selrulesumj} esto nos dice dos cosas importantes.
+\begin{itemize}
+  \item Dados los tensores de rango $k_1$ y $k_2$, solamente nos podremos
+    construir tensores de rango $k = \abs{k_1 - k_2}, \abs{k_1 - k_2} + 1,
+    \ldots, k_1 + k_2 - 1, k_1 + k_2$. Por ejemplo, si tenemos dos tensores de
+    rango 1, entonces nos podremos construir tensores de rango $k = 0, 1, 2$.
+  \item En \eqref{eq:defoptensesf} en realidad no hay dos sumatorias porque los
+    valores posibles de $q_1$ y $q_2$ están restringidos por la condición $q_1
+    + q_2 = q$. Es decir que para construir la componente $q$ de $T^{(k)}$
+    solamente tenemos que sumar sobre las combinaciones de $q_1$ y $q_2$ que
+    satisfagan $q = q_1 + q_2$.
+\end{itemize}
+
+\paragraph{Ejemplo: construcción de un tensor de rango 2 a partir de dos
+  vectores}. \\
+
+Veamos ahora como ejemplo de aplicación de \eqref{eq:deftensorcoupling} cómo
+construirnos un tensor de rango 2 a partir de dos vectores $\vect{V}$ y
+$\vect{W}$. Como vimos en \eqref{eq:defvecttensone}, dado un vector nos podemos
+construir un tensor de rango 1. Podemos entonces usar estos dos tensores de
+rango 1 y \eqref{eq:deftensorcoupling} para construirnos uno de rango 2, es
+decir
+\begin{equation}
+  T^{(2)}_q = \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = q}}
+    \braket{1,1;q_1,q_2}{2,q} V^{(1)}_{q_1} W^{(1)}_{q_2},
+\end{equation}
+con $V^{(1)}$ y $W^{(2)}$ dados por \eqref{eq:defvecttensone}.
+
+Comenzando con $q = 0$ tenemos
+\begin{align}
+  T^{(2)}_0 &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = 0}}
+    \braket{1,1;q_1,q_2}{20} V^{(1)}_{q_1} W^{(1)}_{q_2} \nonumber \\
+  &= \underbrace{\braket{1,1;0,0}{20}}_{\sqrt{2/3}} V^{(1)}_{0} W^{(1)}_{0} +
+    \underbrace{\braket{1,1;1,-1}{20}}_{\sqrt{1/6}} V^{(1)}_{1} W^{(1)}_{-1} +
+    \underbrace{\braket{1,1;-1,1}{20}}_{\sqrt{1/6}} V^{(1)}_{-1} W^{(1)}_{1}
+    \nonumber \\
+  &= \sqrt{\frac{2}{3}} V_z W_z
+    -\sqrt{\frac{1}{6}}\frac{1}{2}\left(V_x+iV_y\right)\left(W_x-iW_y\right)
+    -\sqrt{\frac{1}{6}}\frac{1}{2}\left(V_x-iV_y\right)\left(W_x+iW_y\right)
+    \nonumber \\
+  &= \sqrt{\frac{2}{3}} V_z W_z
+    -\frac{1}{2}\sqrt{\frac{1}{6}}\left(V_xW_x -iV_xW_y +iV_yW_x + V_yW_y
+    +V_xW_x + iV_xW_y - iV_yW_x + V_yW_y\right) \nonumber \\
+  &= \sqrt{\frac{2}{3}} V_z W_z
+    -\sqrt{\frac{1}{6}}\left(V_xW_x + V_yW_y\right) 
+    = \sqrt{\frac{2}{3}} V_z W_z -\sqrt{\frac{1}{6}}\left(\vect{V}\cdot\vect{W}
+    -V_zW_z\right) \nonumber \\
+  &= \left(\sqrt{\frac{2}{3}} + \frac{1}{\sqrt{6}}\right) V_z W_z
+    -\frac{1}{\sqrt{6}}\vect{V}\cdot\vect{W}
+    = \frac{1}{\sqrt{6}}\left(3V_z W_z - \vect{V}\cdot\vect{W}\right).
+\end{align}
+
+Las componentes $q = \pm2$ son más sencillas porque hay una única combinación
+de $q_1$ y $q_2$ que da $2$ o $-2$. Para $q = 2$ tenemos
+\begin{align}
+  T^{(2)}_2 &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = 2}}
+    \braket{1,1;q_1,q_2}{22} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\braket{1,1;1,1}{22}}_{1} V^{(1)}_{1} W^{(1)}_{1} \nonumber
+    \\
+  &= \frac{1}{2}\left(V_x +iV_y\right)\left(W_x +iW_y\right) \\
+  &= \frac{1}{2}\left(V_xW_x - V_yW_y + iV_xW_y + iV_yW_x\right).
+\end{align}
+Análogamente para $q = -2$,
+\begin{align}
+  T^{(2)}_{-2} &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = -2}}
+    \braket{1,1;q_1,q_2}{2,-2} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\braket{1,1;1,1}{2,-2}}_{1} V^{(1)}_{-1} W^{(1)}_{-1}
+    \nonumber \\
+  &= \frac{1}{2}\left(V_x -iV_y\right)\left(W_x -iW_y\right) \\
+  &= \frac{1}{2}\left(V_xW_x - V_yW_y - iV_xW_y - iV_yW_x\right).
+\end{align}
+
+Quedan para calcular las componentes $q = \pm1$. Para $q = 1$ tenemos
+\begin{align}
+  T^{(2)}_{1} &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = 1}}
+    \braket{1,1;q_1,q_2}{21} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\braket{1,1;1,0}{21}}_{\sqrt{1/2}} V^{(1)}_{1} W^{(1)}_{0} +
+    \underbrace{\braket{1,1;0,1}{21}}_{\sqrt{1/2}} V^{(1)}_{0} W^{(1)}_{1}
+    \nonumber \\
+  &= -\frac{1}{2}\left(V_x+iV_y\right)W_z -\frac{1}{2}V_z\left(W_x+iW_y\right)
+    \nonumber \\
+  &= -\frac{1}{2}\left(V_xW_z + V_zW_x + iV_yW_z + iV_zW_y\right).
+\end{align}
+Análogamente para $q = -1$,
+\begin{align}
+  T^{(2)}_{-1} &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = -1}}
+    \braket{1,1;q_1,q_2}{2,-1} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\braket{1,1;-1,0}{2,-1}}_{\sqrt{1/2}}V^{(1)}_{-1}W^{(1)}_{0}
+    + \underbrace{\braket{1,1;0,-1}{2,-1}}_{\sqrt{1/2}}V^{(1)}_{0}W^{(1)}_{-1}
+    \nonumber \\
+  &= \frac{1}{2}\left(V_x-iV_y\right)W_z + \frac{1}{2}V_z\left(W_x-iW_y\right)
+    \nonumber \\
+  &= \frac{1}{2}\left(V_xW_z + V_zW_x - iV_yW_z - iV_zW_y\right).
+\end{align}
+
+En resumen, el tensor de rango 2 que nos construimos a partir de dos vectores
+$\vect{V}$ y $\vect{W}$ es
+\begin{align}
+  T^{(2)}_{0} &= \frac{1}{\sqrt{6}}\left(3V_z W_z -
+    \vect{V}\cdot\vect{W}\right). \\
+  T^{(2)}_{\pm2} &= \frac{1}{2}\left(V_xW_x - V_yW_y \pm iV_xW_y \pm
+    iV_yW_x\right). \\
+  T^{(2)}_{\pm1} &= \mp\frac{1}{2}\left(V_xW_z + V_zW_x \pm iV_yW_z \pm
+    iV_zW_y\right).
+\end{align}
+
+En el caso particular en que $\vect{W} = \vect{V}$  y las componentes de
+$\vect{V}$ conmutan entre sí, esto se reduce a
+\begin{align} \label{eq:rescomp2same}
+  T^{(2)}_0 &= \frac{1}{\sqrt{6}}\left(3V_z^2 - V^2\right). \\
+  T^{(2)}_{\pm2} &= \frac{1}{2}\left(V_x^2 - V_y^2 \pm2iV_xV_y\right). \\
+  T^{(2)}_{\pm1} &= \mp\left(V_xV_z \pm iV_yV_z \right).
+\end{align}
+
+\bigbreak
+
+\TODO{hacer la construccion del de orden 0 a partir de los dos vectores?}
+
+\bigbreak
+
+\subsubsection{Construcción de tensores esféricos a partir de los armónicos
+  esféricos}
+\label{sec:constrtensarmon}
+
+Finalmente, veamos un método alternativo para construirnos tensores esféricos de
+rango $k$. Este método es menos general que el anterior y quizás es un poco
+menos intuitivo por qué funciona. Sin embargo, para muchos de los cálculos que
+vamos a hacer más adelante, personalmente me parece un camino mucho más
+sencillo para llegar a lo que uno busca y que requiere de mucho menos cálculo.
+
+La idea parte del hecho que los armónicos esféricos satisfacen que, ante una
+rotación del sistema de coordenadas, se transforman de la forma
+\begin{equation} \label{eq:transfsphericalharm}
+  \SphericalHarmonic{l}{m} \xrightarrow[R]{\qquad}
+    \left(\SphericalHarmonic{l}{m}\right)' = 
+    \sum_{m'} \RotationOp^{(l)}_{m'm}(R)\,\SphericalHarmonic{l}{m'},
+\end{equation}
+con $\RotationOp^{(l)}_{m'm}(R)$ los elementos de matriz del operador de
+rotación en la base de momento angular $l$, es decir
+$\RotationOp^{(l)}_{m'm}(R) = \matrixel{lm'}{\RotationOp(R)}{lm}$. Notar la
+total analogía con la definición \eqref{eq:defoptensesf} de tensor esférico.
+Sin embargo, \eqref{eq:transfsphericalharm} es una transformación de una
+función sobre $\Reals^3$ (de hecho este es un resultado conocido de mecánica
+clásica, donde los armónicos esféricos también aparecen). Supongamos que
+escribimos los armónicos esféricos en coordenadas cartesianas,
+$\SphericalHarmonic{l}{m}(x,y,z)$. Entonces, al rotar el sistema de coordenadas,
+$(x,y,z)$ se transforman según
+\begin{equation}
+  x'_i = \sum_j R_{ij} x_j,
+\end{equation} con $R$ la matriz de rotación. Entonces,
+\begin{equation}
+  \left(\SphericalHarmonic{l}{m}\right)' = \SphericalHarmonic{l}{m}(x', y', z')
+  = \SphericalHarmonic{l}{m}\left(\sum_j R_{1j}x_j, \sum_j R_{2j}x_j, \sum_j
+  R_{3j}x_j\right).
+\end{equation}
+Por \eqref{eq:transfsphericalharm} esto quiere decir que
+\begin{equation} \label{eq:propsphrotaux}
+  \SphericalHarmonic{l}{m}\left(\sum_j R_{1j}x_j, \sum_j R_{2j}x_j, \sum_j
+  R_{3j}x_j\right) = \sum_{m'} \RotationOp^{(l)}_{m'm}(R)
+  \SphericalHarmonic{l}{m'}(x,y,z).
+\end{equation}
+Por lo tanto, los armónicos esféricos son funciones particulares de $\vect{x}$
+de forma tal que del simple hecho de cómo transforma $\vect{x}$ ante
+rotaciones, se tiene que cumplir \eqref{eq:transfsphericalharm}.
+
+La idea para construirnos los tensores esféricos es entonces la siguiente.
+Nosotros sabemos que un operador vectorial ante rotaciones se comporta
+idénticamente que la posición en $\Reals^3$. Efectivamente, si $\vect{V}$ es un
+operador vectorial entonces ante rotaciones $\vect{V}' = R\vect{V}$.
+Consideraremos además operadores vectoriales cuyas componentes $V_i$ conmutan
+entre sí. Entonces, la idea es que si tomamos la misma función
+$\SphericalHarmonic{l}{m}$ pero en cambio de evaluarla en las coordenadas
+cartesianas $(x,y,z)$ la evaluamos en las componentes del operador
+$(V_x,V_y,V_z)$, como ambos transforman de la misma forma,
+\eqref{eq:propsphrotaux} se va a cumplir y entonces el operador así definido va
+a cumplir \eqref{eq:defoptensesf} y va ser un tensor esférico.
+
+Antes de escribir esto detalladamente, notemos que en cambio de trabajar con
+los armónicos esféricos $\SphericalHarmonic{l}{m}$ directamente para hacer este
+truco, vamos a trabajar con las funciones $r^l\SphericalHarmonic{l}{m}$. El
+motivo por el cuál hacemos esto es que se puede mostrar que, en coordenadas
+cartesianas, el armónico esférico $\SphericalHarmonic{l}{m}$ se puede escribir
+como
+\begin{equation}
+  \SphericalHarmonic{l}{m}(x,y,z) = \frac{\text{poly}(x,y,z)}{r^l},
+\end{equation}
+donde además el polinomio en $x,y,z$ es de grado $l$. Como vamos a querer
+sustituir las variables $(x,y,z)$ por operadores, no queremos el término $r^l$
+dividiendo y por lo tanto multiplicamos, teniendo
+\begin{equation}
+  r^l\SphericalHarmonic{l}{m}(x,y,z) = \text{poly}(x,y,z).
+\end{equation}
+Notar que esto no cambia las propiedades de transformación del
+$\SphericalHarmonic{l}{m}$ ante rotaciones porque $r$ es un escalar (es
+invariante ante rotaciones).
+
+En conclusión, la regla para construirnos el tensor esférico de rango $k$ es la
+siguiente. Dado un operador vectorial $\vect{V}$ cuyas componentes conmutan
+entre sí, definimos
+\begin{equation}
+  T^{(k)}_{q} \eqdef \left(r^k\SphericalHarmonic{k}{q}\right)(V_x, V_y, V_z),
+\end{equation}
+donde el armónico esférico $\SphericalHarmonic{k}{q}$ está escrito en
+coordenadas cartesianas. Entonces, por los argumentos antes dados de cómo
+transforman $\vect{V}$ y los armónicos esféricos, $T^{(k)}$ así definido es un
+tensor esférico de rango $k$.
+
+\paragraph{Ejemplo: construcción de un tensor esférico de rango 1 a partir de
+  $\SphericalHarmonic{1}{m}$}.\\
+
+El caso más sencillo es el de un tensor de rango 1. Para ello necesitamos los
+armónicos esféricos con $l = 1$. Buscando en un tabla, tenemos que
+\begin{equation}
+  \SphericalHarmonic{1}{0} = \sqrt{\frac{3}{4\pi}}\cos\theta, \qquad
+  \SphericalHarmonic{1}{\pm1} = \mp\sqrt{\frac{3}{8\pi}}\sin\theta\,
+    e^{\pm i\phi}.
+\end{equation}
+Multiplicamos por $r$ y escribimos todo en coordenadas cartesianas,
+\begin{align}
+  r\SphericalHarmonic{1}{0} &= \sqrt{\frac{3}{4\pi}}\,r\cos\theta =
+    \sqrt{\frac{3}{4\pi}}\,z. \\
+  r\SphericalHarmonic{1}{\pm1} &= \mp\sqrt{\frac{3}{8\pi}}r\sin\theta\,
+    e^{\pm i\phi} = \mp\sqrt{\frac{3}{8\pi}}r\sin\theta\left(\cos\phi \pm
+    i\sin\phi\right) \nonumber \\
+  &= \mp\sqrt{\frac{3}{8\pi}}\left(r\sin\theta\cos\phi \pm
+  ir\sin\theta\sin\phi\right) = \mp\sqrt{\frac{3}{8\pi}}\left(x \pm iy\right).
+\end{align}
+Por lo tanto, el tensor de rango 1 queda
+\begin{equation}
+  T^{(1)}_{0} = \sqrt{\frac{3}{4\pi}}\,V_z, \qquad
+  T^{(1)}_{\pm1} = \mp\sqrt{\frac{3}{8\pi}}\left(V_x \pm iV_y\right).
+\end{equation}
+Notar que a menos de una constante global (es decir que multiplica \emph{todas}
+las componentes) $\sqrt{3/(4\pi)}$, tenemos exactamente el mismo tensor que
+definimos en \eqref{eq:defvecttensone} y que ya mostramos efectivamente es un
+tensor esférico de rango 1.
+
+\paragraph{Ejemplo: construcción de un tensor esférico de rango 2 a partir de
+  $\SphericalHarmonic{2}{m}$}.\\
+
+Veamos ahora el siguiente caso, el de un tensor de rango 2. Los armónicos
+esféricos con $l=2$ son
+\begin{equation}
+  \SphericalHarmonic{2}{0} = \frac{1}{2}\sqrt{\frac{5}{4\pi}}
+    \left(3\cos^2\theta - 1\right), \qquad
+  \SphericalHarmonic{2}{\pm2} = \frac{1}{4}\sqrt{\frac{15}{2\pi}}\sin^2\theta
+    e^{\pm2i\phi}, \qquad
+  \SphericalHarmonic{2}{\pm1} = \mp\sqrt{\frac{15}{8\pi}}\cos\theta\sin\theta
+    e^{\pm i\phi}.
+\end{equation}
+Multiplicando por $r^2$ y escribiendo en coordenadas cartesianas tenemos
+\begin{align}
+  r^2\SphericalHarmonic{2}{0} &=
+    \frac{1}{2}\sqrt{\frac{5}{4\pi}} \left(3r^2\cos^2\theta - r^2\right) =
+    \frac{1}{2}\sqrt{\frac{5}{4\pi}} \left(3z^2 - r^2\right). \\
+  r^2\SphericalHarmonic{2}{\pm2} &=
+    \frac{1}{4} \sqrt{\frac{15}{2\pi}}r^2\sin^2\theta e^{\pm2i\phi} =
+    \frac{1}{4} \sqrt{\frac{15}{2\pi}}r^2\sin^2\theta\left(\cos\phi \pm
+      i\sin\phi\right)^2 \nonumber \\
+  &= \frac{1}{4} \sqrt{\frac{15}{2\pi}}\left(r^2\sin^2\theta\cos^2\phi -
+    r^2\sin^2\theta\sin^2\phi \pm 2i r^2\sin^2\theta\cos\phi\sin\phi\right)
+    \nonumber \\
+  &= \frac{1}{4} \sqrt{\frac{15}{2\pi}}\left(x^2 - y^2 \pm 2ixy\right). \\
+  r^2\SphericalHarmonic{2}{\pm1} &=
+    \mp\sqrt{\frac{15}{8\pi}}r^2\cos\theta\sin\theta e^{\pm i\phi} =
+    \mp\sqrt{\frac{15}{8\pi}}r^2\cos\theta\sin\theta\left(\cos\phi \pm
+      i\sin\phi\right) \nonumber \\
+  &= \mp\sqrt{\frac{15}{8\pi}}\left(r^2\cos\theta\sin\theta\cos\phi \pm
+      ir^2\cos\theta\sin\theta\sin\phi\right) \nonumber \\
+  &= \mp\sqrt{\frac{15}{8\pi}}\left(zx \pm izy\right).
+\end{align}
+Reemplazando el operador vectorial, tenemos que el tensor de rango 2 es
+\begin{align} \label{eq:tensorspharmonic2}
+  T^{(2)}_0 &= \frac{1}{2}\sqrt{\frac{5}{4\pi}}\left(3V_z^2 - V^2\right). \\
+  T^{(2)}_{\pm2} &= \frac{1}{4}\sqrt{\frac{15}{2\pi}}\left(V_x^2 - V_y^2
+    \pm2iV_xV_y\right). \\
+  T^{(2)}_{\pm1} &= \mp\sqrt{\frac{15}{8\pi}}\left(V_xV_z \pm iV_yV_z \right).
+\end{align}
+Notemos que a menos de una constante global $\sqrt{15/(8\pi)}$, obtenemos
+exactamente el mismo tensor que obtuvimos en \eqref{eq:rescomp2same} utilizando
+la regla de composición de tensores esféricos para el caso particular de
+$\vect{V} = \vect{W}$ y con las componentes de $\vect{V}$ que conmutan entre
+sí. Claramente, ese otro procedimiento es más general que este de los armónicos
+esféricos y nos permite escribir ciertos tensores que así no podemos. Sin
+embargo, para los casos en que queremos armarnos un tensor de rango $k$ a
+partir de un único vector cuyas componentes conmutan (como puede ser la
+posición o el momento), ambos procedimientos dan el mismo resultado (a menos de
+una constante global).
+
+% -----------------------------------------------------------------------------
+\subsection{Teorema de Wigner-Eckart}
+
+Pasamos ahora a ver una de las aplicaciones más útiles de los tensores
+esféricos: el teorema de Wigner-Eckart.
+
+Dado un operador tensorial esférico de rango $k$, $T^{(k)}$, y sea
+$\set{\ket{\alpha,j,m}}$ una base de autoestados de $\set{A, J^2, J_z}$, con
+$A$ cualquier observable que conmuta con $J^2$ y $J_z$ (por ejemplo, en el
+átomo de Hidrógeno, $A$ puede ser el Hamiltoniano $H$). Entonces, el teorema de
+Wigner-Eckart nos dice que los elementos de matriz del operador $T^{(k)}_q$ en
+esta base de momento angular se pueden escribir de la forma
+\begin{equation} \label{eq:teowe}
+  \matrixel{\alpha',j',m'}{T^{(k)}_{q}}{\alpha,j,m} = \braket{jk;mq}{j'm'} \,
+  T_{\alpha',\alpha}^{k,j',j},
+\end{equation}
+donde $\braket{jk;mq}{j'm'}$ es el coeficiente de Clebsch-Gordan que surge de
+sumar momentos angulares $j$ y $k$ con proyecciones $m$ y $q$ para obtener un
+momento angular total $j'$ con proyección $m'$; y $T_{\alpha',\alpha}^{k,j',j}$
+es un coeficiente que depende de $\alpha$, $\alpha'$, $j$, $j'$ y $k$, pero
+notablemente \emph{no} depende de $m$, $m'$ ni $q$. Es decir que el teorema de
+Wigner-Eckart nos dice que la dependencia en $m$, $m'$ y $q$ del elemento de
+matriz de $T^{(k)}_q$ se puede factorizar totalmente en un coeficiente de
+Clebsch-Gordan. A la constante $T_{\alpha',\alpha}^{k,j',j}$ se la suele notar
+como
+\begin{equation}
+  T_{\alpha',\alpha}^{k,j',j} = \doublebarmel{\alpha',j'}{T^{(k)}}{\alpha,j}.
+\end{equation}
+Cabe notar que esta desafortunada notación es muy propensa al engaño, en cuanto
+es similar a la notación que usamos para elementos de matriz, pero aquí no hay
+ningún ket, ni bra, ni operador, ni elemento de matriz; es simplemente notación
+para la constante que no depende de $m$, $m'$ ni $q$. Efectivamente, este
+coeficiente no se puede calcular de forma directa; su definición es
+literalmente el teorema de Wigner-Eckart y si uno quiere saber cuanto vale
+tiene que primero calcular el elemento de matriz de $T^{(k)}_q$ y luego dividir
+por el correspondiente coeficiente de Clebsch-Gordan (esto lo veremos más claro
+luego en un ejemplo concreto).
+
+El hecho que en el teorema de Wigner-Eckart \eqref{eq:teowe} aparezca un
+coeficiente de Clebsch-Gordan es notable, en cuanto nos da restricciones muy
+fuertes sobre los valores de $j$, $j'$, $m$ y $m'$ para que el elemento de
+matriz de $T^{(k)}_q$ sea distinto de cero. Efectivamente para que
+\begin{equation}
+  \matrixel{\alpha',j',m'}{T^{(k)}_{q}}{\alpha,j,m} \neq 0,
+\end{equation}
+necesariamente
+\begin{equation}
+  \braket{jk;mq}{j'm'} \neq 0,
+\end{equation}
+y para que este coeficiente de Clebsch-Gordan sea distinto de cero se tienen
+que cumplir las condiciones \eqref{eq:selrulesumj}, que en este caso se leen
+\begin{equation} \label{eq:selruleswe}
+  m + q = m', \qquad \abs{j-k} \leq j' \leq j + k,
+\end{equation}
+(donde como siempre los valores posibles de $j'$ van saltando de a una unidad).
+Cualquier elemento de matriz que viole cualquiera de las condiciones
+\eqref{eq:selruleswe} es automáticamente cero.
+
+\subsubsection{Ejemplo: Algunos elementos de matriz del átomo de Hidrógeno}
+
+Consideremos el átomo de Hidrógeno, cuya base de estados es
+$\set{\ket{n,l,m}}$. Supongamos que queremos calcular el elemento de matriz
+\begin{equation}
+  \matrixel{5,4,3}{z}{6,4,0}.
+\end{equation}
+Sin ninguna herramienta adicional, la forma directa de calcular este elemento
+de matriz sería realizando la correspondiente integral en todo el espacio (tal
+como uno hacía en Física 4),
+\begin{equation}
+  \matrixel{5,4,3}{z}{6,4,0} =
+  \int\dd[3]{\vect{r}}\,\psi^*_{543}(\vect{r})\,z\,\psi_{640}(\vect{r}),
+\end{equation}
+donde $\psi_{nlm}$ son las funciones de onda (que se pueden factorizar en parte
+radial y armónicos esféricos, etc; pero aquí no nos interesa meternos con las
+integrales). Claramente este tipo de integrales puede ser en general complicado
+de resolver.
+
+Veamos alternativamente cómo podemos utilizar el teorema de Wigner-Eckart.
+Efectivamente estamos mirando el elemento de matriz en una base de autoestados
+de momento angular. Lo que haría falta es chequear que el operador es la
+componente de un tensor esférico. En este caso esto efectivamente es así,
+puesto que $\vect{r}$ es un operador vectorial y como vimos en
+\eqref{eq:defvecttensone}, $z$ es la componente $q = 0$ de un tensor de rango
+1 dado por
+\begin{equation} \label{eq:deftensonepos}
+  T^{(1)}_0 = z, \qquad T^{(1)}_{\pm1} = \mp\frac{x \pm iy}{\sqrt{2}}.
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  \matrixel{5,4,3}{z}{6,4,0} = 
+  \matrixel{5,4,3}{T^{(1)}_0}{6,4,0} = \braket{41;00}{43}
+  \doublebarmel{5,4}{T^{(1)}}{6,4}.
+\end{equation}
+Ahora, sumando momentos angulares $4$ y $1$ se puede obtener momento angular
+total $4$, así que hasta aquí todo bien. Pero, la suma de componentes viola la
+condición \eqref{eq:selruleswe}, puesto que $0 + 0 \neq 3$. Por lo tanto,
+$\braket{41;00}{43} = 0$ y entonces $\matrixel{5,4,3}{z}{6,4,0} = 0$. Notemos
+como el teorema de Wigner-Eckart nos da una forma muy sencilla de chequear que
+efectivamente el elemento de matriz se anula.
+
+\bigbreak
+
+Consideremos ahora el caso en que queremos calcular el elemento de matriz
+\begin{equation}
+  \matrixel{5,4,3}{x}{6,4,0}.
+\end{equation}
+Nuevamente queremos ver qué nos dice el teorema de Wigner-Eckart. Pero, ahora
+la situación es un poco más complicada, porque $x$ no es ninguna de las componentes
+del tensor \eqref{eq:deftensonepos}. Sin embrago, notemos que podemos escribir
+$x$ como combinación lineal de componentes de $T^{(1)}$. Efectivamente,
+tenemos
+\begin{equation}
+  x = \frac{T^{(1)}_{-1} - T^{(1)}_{1}}{\sqrt{2}}.
+\end{equation}
+Por lo tanto,
+\begin{align}
+  \matrixel{5,4,3}{x}{6,4,0} &=
+  \frac{1}{\sqrt{2}}\matrixel{5,4,3}{T^{(1)}_{-1}}{6,4,0} -
+  \frac{1}{\sqrt{2}}\matrixel{5,4,3}{T^{(1)}_{1}}{6,4,0}.
+\end{align}
+Aplicando Wigner-Eckart tenemos
+\begin{align}
+  \matrixel{5,4,3}{x}{6,4,0} &=
+    \frac{1}{\sqrt{2}}\braket{4,1;0,-1}{4,3} \doublebarmel{5,4}{T^{(1)}}{6,4} -
+    \frac{1}{\sqrt{2}}\braket{4,1;0,1}{4,3} \doublebarmel{5,4}{T^{(1)}}{6,4}
+    \nonumber \\
+  &=  \frac{1}{\sqrt{2}}\left(\braket{4,1;0,-1}{4,3} -
+    \braket{4,1;0,1}{4,3}\right) \doublebarmel{5,4}{T^{(1)}}{6,4},
+\end{align}
+donde factorizamos el coeficiente $\doublebarmel{5,4}{T^{(1)}}{6,4}$ dado que
+es el mismo para ambos términos, puesto que sólo difieren en los valores de las
+proyecciones. Ahora, notemos que nuevamente los coeficientes de Clebsch-Gordan
+se anulan dado que se violan las condiciones \eqref{eq:selruleswe}, en
+particular $0 + (-1) \neq 3$ para el primer término y $0 + 1 \neq 3$ para el
+segundo. En conclusión
+\begin{equation}
+  \matrixel{5,4,3}{x}{6,4,0} = 0.
+\end{equation}
+
+\subsubsection{Ejemplo: Momento cuadrupolar (Problema 10 -- Guía 7)}
+
+En el problema 10 de la Guía 7 nos introducen el operador de momento
+cuadrupolar para una carga $q$,
+\begin{equation}
+  Q_{ij} = q\left(3r_ir_j - \delta_{ij}r^2\right),
+\end{equation}
+que es completamente análogo al momento cuadrupolar clásico que aparece cuando
+uno realiza la expansión multipolar del potencial electrostático y sirve, por
+ejemplo, justamente para calcular los valores medios del momento cuadrupolar de
+un sistema cuántico.
+
+En el enunciado nos dicen de tomar por conocido el valor medio del momento
+cuadrupolar $zz$,
+\begin{equation}
+  Q \eqdef \expval{Q_{zz}}{\alpha,j,j} = q\expval{\left(3z^2 -
+    r^2\right)}{\alpha,j,j}.
+\end{equation}
+Este valor medio puede ser que sea conocido porque uno se tomó el trabajo de
+calcular la integral en todo el espacio correspondiente (sea analíticamente, o
+numéricamente) o porque en algún sistema físico se logró medir.
+
+La idea es, usando el teorema de Wigner-Eckart, mostrar que todos los elementos
+de matriz
+\begin{equation}
+  q\matrixel{\alpha,j,m'}{(x^2 - y^2)}{\alpha,j,j}, \quad \forall m',
+\end{equation}
+se pueden escribir en términos de $Q$ y de coeficientes de Clebsch-Gordan.
+Notar que esto significa que todos estos valores medios y elementos de matriz
+se pueden calcular básicamente simplemente habiendo calculado $Q$, que puede
+ser que sea más fácil de calcular su respectiva integral o más sencillo de
+medir en un dado sistema. No sólo, sino que además mientras que $Q$ es en
+principio medible al ser el valor medio de un observable, estos otros elementos
+de matriz no son observables, son elementos de matriz complejos. Por lo tanto,
+la medición de $Q$ nos permitiría calcular estos elementos de matriz, que luego
+pueden resultar útiles para algún otro cálculo.
+
+Para relacionar estos elementos de matriz mediante el teorema de Wigner-Eckart
+la idea es proceder de forma análoga a como hicimos en el ejemplo anterior de
+los elementos de matriz del átomo de Hidrógeno: buscamos escribir todos
+nuestros operadores como combinación lineal de las componentes de un tensor
+esférico de un dado rango $k$. El ejemplo anterior era más sencillo porque para
+las componentes de un vector, tenemos la relación sencilla
+\eqref{eq:defvecttensone} de cómo definir un tensor de rango 1. Pero aquí nos
+aparecen términos cuadráticos, así que necesitaremos ir a un tensor de rango
+mayor. Para ello podemos proceder de dos formas distintas: usamos la regla de
+acoplamiento de tensor esféricos (sección \ref{sec:reglacomptens}) para
+construirnos una de rango 2 a partir del de rango 1 y vemos si las componentes
+que quedan nos sirven. Si no nos sirven, seguimos construyendo tensores de
+mayor rango hasta encontrar las que nos sirven. Alternativamente, podemos
+utilizar la construcción de tensores esféricos basada en los armónicos
+esféricos (sección \ref{sec:constrtensarmon}). En los casos en que se puede el
+camino por los armónicos esféricos (que son los casos en que los operadores
+sólo involucran las componentes de un único vector y estas conmutan entre sí),
+personalmente me parece más sencillo este camino que no la regla de
+composición. En particular me parece que es más sencillo ver qué componentes
+del tensor nos sirven sin tener que calcularlas todas. Veamos esto en nuestro
+ejemplo particular.
+
+Como vimos en \ref{sec:constrtensarmon}, los armónicos esféricos
+$\SphericalHarmonic{l}{m}$ nos dan operadores que son polinomios de grado $l$
+en las componentes del vector. Como en los operadores que nos piden mirar en
+este problema tenemos términos de hasta grado $2$ en $x,y,z$, es buena idea
+comenzar a mirar si los armónicos esféricos $\SphericalHarmonic{2}{m}$ nos van
+a servir. Buscando en una tabla tenemos que
+\begin{equation}
+  \SphericalHarmonic{2}{0} = \frac{1}{2}\sqrt{\frac{5}{4\pi}}
+    \left(3\cos^2\theta - 1\right), \qquad
+  \SphericalHarmonic{2}{\pm2} = \frac{1}{4}\sqrt{\frac{15}{2\pi}}\sin^2\theta
+    e^{\pm2i\phi}, \qquad
+  \SphericalHarmonic{2}{\pm1} = \mp\sqrt{\frac{15}{8\pi}}\cos\theta\sin\theta
+    e^{\pm i\phi}.
+\end{equation}
+Recordemos que para escribir el operador hay que multiplicar por un $r^2$.
+A simple vista ya se puede ver que el armónico esférico con $m = 0$ nos va a
+dar algo proporcional a $3z^2 - r^2$, que justamente es el operador que aparece
+en el valor de expectación $Q$. Efectivamente,
+\begin{equation}
+  T^{(2)}_0 = \frac{1}{2}\sqrt{\frac{5}{4\pi}}\left(3z^2 - r^2\right),
+\end{equation}
+y por lo tanto,
+\begin{equation}
+  3z^2 - r^2  = 2\sqrt{\frac{4\pi}{5}} T^{(2)}_0.
+\end{equation}
+Nos falta ver cómo escribir $(x^2 - y^2)$. Notemos que los armónicos esféricos
+$\SphericalHarmonic{1}{\pm1}$ tienen productos $\cos\theta\sin\theta$ por lo
+que al multiplicar por $r^2$ nos va a dar términos cruzados $zx$ y $zy$. Como
+$z$ no aparece en $(x^2 - y^2)$ en principio no nos interesan estas componentes
+así que seguimos de largo. Los armónicos esféricos
+$\SphericalHarmonic{2}{\pm2}$ en cambio tienen términos de la forma
+$\left(\sin\theta e^{i\phi}\right)^2$ que justamente nos van a dar términos
+tipo $x^2$ e $y^2$, así que son buenos candidatos para tratar de encontrar a
+$(x^2 - y^2)$. Escribiendo los armónicos esféricos
+$\SphericalHarmonic{2}{\pm2}$ en cartesianas obtenemos los operadores (esta
+cuenta la hicimos antes en \eqref{eq:tensorspharmonic2}),
+\begin{equation}
+  T^{(2)}_{\pm2} = \frac{1}{4}\sqrt{\frac{15}{2\pi}}\left(x^2 - y^2
+    \pm2ixy\right).
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  x^2 - y^2 = 2\sqrt{\frac{2\pi}{15}}\left(T^{(2)}_{2} + T^{(2)}_{-2}\right).
+\end{equation}
+
+Ahora sí podemos utilizar el teorema de Wigner-Eckart. Tenemos
+\begin{align}
+  \matrixel{\alpha,j,m'}{(x^2 - y^2)}{\alpha,j,j}
+  &= 2\sqrt{\frac{2\pi}{15}}\matrixel{\alpha,j,m'}{\left(T^{(2)}_{2} +
+    T^{(2)}_{-2}\right)}{\alpha,j,j} \nonumber \\
+  &= 2\sqrt{\frac{2\pi}{15}}\left(
+    \matrixel{\alpha,j,m'}{T^{(2)}_{2}}{\alpha,j,j} +
+    \matrixel{\alpha,j,m'}{T^{(2)}_{-2}}{\alpha,j,j}\right) \nonumber \\
+  &= 2\sqrt{\frac{2\pi}{15}}\left(
+    \braket{j,2;j,2}{jm'} \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} +
+    \braket{j,2;j,-2}{jm'}
+    \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}\right) \nonumber \\
+  &= 2\sqrt{\frac{2\pi}{15}} \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} \left(
+    \braket{j,2;j,2}{jm'} + \braket{j,2;j,-2}{jm'} \right).
+\end{align}
+
+Para relacionar $\doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}$ con $Q$ usamos
+nuevamente el teorema de Wigner-Eckart. Tenemos
+\begin{align}
+  Q &= \expval{\left(3z^2 - r^2\right)}{\alpha,j,j}
+    = 2\sqrt{\frac{4\pi}{5}}\expval{T^{(2)}_{0}}{\alpha,j,j} \nonumber \\
+    &= 2\sqrt{\frac{4\pi}{5}} \braket{j2;j0}{jj}
+      \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}.
+\end{align}
+Entonces,
+\begin{equation}
+  \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} =
+  \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\braket{j2;j0}{jj}}.
+\end{equation}
+Finalmente,
+\begin{align}
+  \matrixel{\alpha,j,m'}{(x^2 - y^2)}{\alpha,j,j}
+    &= 2\sqrt{\frac{2\pi}{15}} 
+    \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\braket{j2;j0}{jj}}
+    \left( \braket{j,2;j,2}{jm'} + \braket{j,2;j,-2}{jm'} \right) \nonumber \\
+  &= \frac{1}{\sqrt{6}} \frac{Q}{\braket{j2;j0}{jj}}
+    \left( \braket{j,2;j,2}{jm'} + \braket{j,2;j,-2}{jm'} \right).
+\end{align}
+Vemos entonces cómo efectivamente podemos relacionar todos esos elementos de
+matriz de $(x^2 - y^2)$ con el valor de expectación $Q$ de $(3z^2 - r^2)$.
+
+\TODO{hacer los elementos de matriz de Qik y cómo se relacionan; en particular
+casos Qxx y Qyy?}
+
+% =============================================================================
+\end{document}

@@ -1,0 +1,1795 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[DIV=14]{typearea}
+% DIV defaults for A4 base
+% font size: 10pt 11pt 12pt | DIV: 8 10 12
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xfrac}
+\usepackage{extarrows}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{placeins}
+
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\setotherlanguage{english}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+
+% =============================================================================
+\usepackage{fontspec}
+
+% =============================================================================
+\input{../common/commands.tex}
+
+\graphicspath{{./}{./images/}}
+
+% =============================================================================
+\usepackage[type={CC},modifier={by-nc-sa},version={4.0},lang={en}]{doclicense}
+
+\usepackage[framemethod=tikz]{mdframed}
+\mdfdefinestyle{mainframe}{
+  frametitlebackgroundcolor=black!15,
+  frametitlerule=true,
+  roundcorner=10pt,
+  middlelinewidth=1pt,
+  innermargin=0.5cm,
+  outermargin=0.5cm,
+  innerleftmargin=0.5cm,
+  innerrightmargin=0.5cm,
+  innertopmargin=\topskip,
+  innerbottommargin=\topskip,
+}
+
+% =============================================================================
+\newcommand{\jpmprefact}{\hbar\sqrt{j(j+1) - m(m\pm1)}}
+\newcommand{\jpmprefactev}[2]{\hbar\sqrt{{#1} - {#2}}}
+\newcommand{\lpmprefact}{\hbar\sqrt{l(l+1) - m(m\pm1)}}
+\newcommand{\Ylm}{Y_{l,m}}
+\newcommand{\Ylmev}[2]{Y_{#1,#2}}
+\newcommand{\Plm}{P_{l,m}}
+\newcommand{\Plmev}[2]{P_{#1,#2}}
+\newcommand{\jmax}{j_{\text{max}}}
+
+% Header ======================================================================
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancyhead[L]{Apunte TPs Física Teórica 2: Estados Mixtos y Matriz Densidad}
+\fancyhead[C]{}
+\fancyhead[R]{\thepage/\pageref{LastPage}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.5pt}
+\pagestyle{fancy}
+
+\usepackage{titlesec}
+%\renewcommand{\thesection}{\Roman{section}}
+%\renewcommand{\thesubsection}{\Roman{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+%\titleformat{\section}{\large\bfseries\filcenter}{\Roman{section}.}{0.5em}{}
+%\titleformat{\subsection}{\large\bfseries\filcenter}{\Roman{subsection}.}{0.5em}{}
+
+\numberwithin{equation}{subsection}
+\allowdisplaybreaks
+
+\setcounter{tocdepth}{3}
+
+% =============================================================================
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={Apunte TPs Física Teórica 2: Estados Mixtos y Matriz Densidad},
+    pdfauthor={Federico Cerisola},
+    pdfencoding=auto,
+    pdfstartview=Fit,
+    pdfpagemode=UseOutlines,
+    hypertexnames=false,
+}
+
+% =============================================================================
+\begin{document}
+
+% =============================================================================
+\title{Apunte TPs Física Teórica 2: Estados Mixtos y Matriz Densidad}
+\author{Federico Cerisola
+  \\ \small{Departamento de Física -- FCEyN -- Universidad de Buenos Aires}
+  \\ \small{\href{mailto:cerisola@df.uba.ar}{\nolinkurl{cerisola@df.uba.ar}}}
+}
+\date{\small Última actualización: \today \\[1em]
+  Última versión disponible en: \\
+  \texttt{
+    \href{https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+    {https://drive.google.com/open?id=1QvWUhozAfBOCPsvxfm5mf6U3gXAdcSAg}
+  }}
+\maketitle
+\thispagestyle{empty}
+
+\vfill
+\doclicenseThis
+
+\pagebreak
+
+% =============================================================================
+\newpage
+  \tableofcontents
+\newpage
+
+% =============================================================================
+\section{Introducción a estados mixtos}
+Hasta ahora hemos descripto el estado de un sistema cuántico como un vector
+$\ket{\psi}$ en un espacio de Hilbert $\Hilbert$, cuya dimensión está asociada
+al número de posibles resultados de una medición (por ejemplo para un
+\spinhalf, un sistema de dimensión 2). En esta práctica estudiaremos una noción
+más general de estado cuántico. Claramente, una pregunta natural es por qué
+querríamos buscar un definición más general de estado que la que estuvimos
+utilizando hasta ahora (y que es suficiente para describir una gran variedad de
+problemas físicos reales). A continuación daremos dos justificaciones para
+nuestra noción más general de estado: (i) mezclas estadísticas de estados, y
+(ii) la descripción del estado de un subsistema de un sistema compuesto.
+
+% -----------------------------------------------------------------------------
+\subsection{Motivación 1: Mezclas estadísticas}
+Comencemos con la motivación que típicamente resulta más intuitiva, la de
+querer describir un estado que es una mezcla estadística. Supongamos que
+tenemos una bolsa llena de partículas en distintos estados cuánticos
+$\ket{\psi} \in \Hilbert$, y tomamos una de ellas al azar; ¿cuál es el estado
+de la partícula? Por ejemplo, si tenemos la bolsa llena de partículas de
+\spinhalf, con la mitad en el estado de \spin~$+\hbar/2$ en $\vers{z}$ y la
+otra mitad con \spin~$-\hbar/2$ en $\vers{z}$, ¿cómo podemos describir
+matemáticamente el estado de una de estas partículas tomadas al azar? Antes de
+proceder a la definición, veamos porqué este estado es distinto a los estados
+$\ket{\psi} \in \Hilbert$ con los cuales estamos acostumbrados a trabajar (y
+que además es un típico error). Por ejemplo comparemos, utilizando lo que ya
+sabemos de cuántica más nuestra intuición de probabilidad, por qué tener con
+$50\%$ de probabilidad el estado $\ket{+,z}$ y $50\%$ el estado $\ket{-,z}$ es
+\emph{distinto} al estado $\ket{\psi} = (\ket{+,z} + \ket{-,z})/\sqrt{2}$.
+
+En la tabla \ref{tab:compmezclasup} se muestra la comparación entre estos dos
+escenarios de las probabilidades de los resultados posibles de distintas
+mediciones de \spin. A continuación discutimos cómo llegamos a esos resultados.
+
+\begin{table}[ht]
+  {\renewcommand{\arraystretch}{2}%
+  \begin{tabular}{| c | c | c |}
+    \hline
+    Medición & Mezcla $50\%\ket{+,z}$, $50\%\ket{-,z}$ &
+    $\frac{1}{\sqrt{2}}(\ket{+,z} + \ket{-,z})$ \\
+    \hline
+    $S_z$ & $\Prob{S_z=+\hbar/2} = \frac{1}{2}$, $\Prob{S_z=-\hbar/2} =
+    \frac{1}{2}$ & $\Prob{S_z=+\hbar/2} = \frac{1}{2}$, $\Prob{S_z=-\hbar/2} =
+    \frac{1}{2}$ \\
+    \hline
+    $S_x$ & {$\begin{aligned}\;\\ \Prob{S_x=+\hbar/2} &=
+      \ProbCond{S_x=+\hbar/2}{\ket{+,z}}\Prob{\ket{+,z}} \\ &+
+      \ProbCond{S_x=+\hbar/2}{\ket{-,z}}\Prob{\ket{-,z}} \\ &=
+      \frac{1}{2}\frac{1}{2} + \frac{1}{2}\frac{1}{2} = \frac{1}{2}, \\
+      \Prob{S_x=-\hbar/2} &= \ProbCond{S_x=-\hbar/2}{\ket{+,z}}\Prob{\ket{+,z}}
+      \\ &+ \ProbCond{S_x=-\hbar/2}{\ket{-,z}}\Prob{\ket{-,z}} \\ &=
+      \frac{1}{2}\frac{1}{2} + \frac{1}{2}\frac{1}{2} = \frac{1}{2}, \\ \;
+    \end{aligned}$} &
+    $\Prob{S_x=+\hbar/2} = 1$, $\Prob{S_x=-\hbar/2} = 0$ \\
+    \hline
+    $S_y$ & {$\begin{aligned}\;\\ \Prob{S_y=+\hbar/2} &=
+      \ProbCond{S_y=+\hbar/2}{\ket{+,z}}\Prob{\ket{+,z}} \\ &+
+      \ProbCond{S_y=+\hbar/2}{\ket{-,z}}\Prob{\ket{-,z}} \\ &=
+      \frac{1}{2}\frac{1}{2} + \frac{1}{2}\frac{1}{2} = \frac{1}{2}, \\
+      \Prob{S_y=-\hbar/2} &= \ProbCond{S_y=-\hbar/2}{\ket{+,z}}\Prob{\ket{+,z}}
+      \\ &+ \ProbCond{S_y=-\hbar/2}{\ket{-,z}}\Prob{\ket{-,z}} \\
+      &= \frac{1}{2}\frac{1}{2} + \frac{1}{2}\frac{1}{2} = \frac{1}{2}, \\ \;
+    \end{aligned}$} &
+    $\Prob{S_y=+\hbar/2} = 1$, $\Prob{S_y=-\hbar/2} = 0$ \\
+    \hline
+  \end{tabular}}
+  \caption{Comparación entre el estado mezcla estadística $50\%\ket{+,z}$,
+  $50\%\ket{-,z}$ y el estado $(\ket{+,z} + \ket{-,z})/\sqrt{2}$ de las
+  probabilidades de los resultados de distintas mediciones de \spin. Mientras
+  que la medición de $S_z$ da resultados idénticos, la medición de $S_x$ da
+  resultados radicalmente distintos.}
+  \label{tab:compmezclasup}
+\end{table}
+
+Para el caso del estado $\ket{\psi} = (\ket{+,z} + \ket{-,z})/\sqrt{2}$, no hay
+nada nuevo, son los mismo cálculos que venimos realizando hasta ahora. Si
+medimos $S_z$ en este estado, claramente tenemos probabilidad $1/2$ de obtener
+el resultado $+\hbar/2$ y probabilidad $1/2$ de obtener el resultado
+$-\hbar/2$. Por otro lado, si medimos $S_x$ tenemos que proyectar el estado
+$\ket{\psi}$ en la base de autoestados de $S_x$. Esto es sencillo porque
+recordemos que el estado $(\ket{+,z} + \ket{-,z})/\sqrt{2}$ es justamente el
+autoestado $\ket{+,x}$ de autovalor $+\hbar/2$ de $S_x$. Por lo tanto, tenemos
+probabilidad 1 de medir $S_x = +\hbar/2$ y probabilidad 0 de medir $-\hbar/2$.
+Finalmente, si medimos $S_y$ tenemos que proyectar el estado $\ket{\psi}$ sobre
+los autoestados de $S_y$. Esta cuenta ya la hemos hecha en guías anteriores y
+da probabilidad equiprobable de obtener $S_y=+\hbar/2$ y $S_y=-\hbar/2$.
+
+Por otro lado, tenemos el caso de tener con $50\%$ de probabilidad el estado
+$\ket{+,z}$ y con $50\%$ de probabilidad el estado $\ket{-,z}$. Si medimos
+$S_z$ en esta situación, 1/2 de las veces tenemos el estado $\ket{+,z}$ y por
+lo tanto medimos $+\hbar/2$; mientras que 1/2 de las veces tenemos el estado
+$\ket{-,z}$ en cuyo caso medimos $-\hbar/2$. Por lo tanto, las mediciones de
+$S_z$ son equiprobables. Hasta aquí tenemos resultados análogos al del estado
+$(\ket{+,z} + \ket{-,z})/\sqrt{2}$. Sin embargo, si medimos otro observable,
+como por ejemplo $S_x$ tenemos resultados completamente diferentes.
+Efectivamente, supongamos que medimos $S_x$; con $50\%$ de probabilidad tenemos
+el estado $\ket{+,z}$ en cuyo caso la probabilidad de medir $S_x=\pm\hbar/2$ es
+1/2 (porque la probabilidad de medir $S_x=\hbar/2$ si estamos en el estado
+$\ket{+,z}$ es 1/2). Alternativamente con $50\%$ de probabilidad tenemos el
+estado $\ket{-,z}$, en cuyo caso las probabilidades de obtener
+$S_x=\pm/\hbar/2$ son 1/2. Por lo tanto, combinando los posibles estados
+iniciales, la probabilidad de obtener $S_x=+\hbar/2$ es
+$\Prob{S_x=+\hbar/2} = \ProbCond{S_x=+\hbar/2}{\ket{+,z}}\Prob{\ket{+,z}} +
+\ProbCond{S_x=+\hbar/2}{\ket{-,z}}\Prob{\ket{-,z}} = \frac{1}{2}\frac{1}{2} +
+\frac{1}{2}\frac{1}{2} = \frac{1}{2}$. Análogamente para $S_x=-\hbar/2$.
+
+Tenemos entonces claramente una diferencia entre los dos estados. Una medición
+de $S_x$ en el estado $\ket{\psi} = (\ket{+,z} + \ket{-,z})/\sqrt{2}$ da con
+certeza como resultado $+\hbar/2$; mientras que si tenemos una mezcla
+estadística $50\%\ket{+,z}$, $50\%\ket{-,z}$ una medición de $S_x$ nos puede
+dar ambos resultados $\pm\hbar/2$ de forma equiprobable. Por lo tanto, su
+representación matemática debe ser diferente. Es más, recordemos que en
+dimensión dos, a menos de una fase global, el estado más general posible es de
+la forma $\ket{\phi} = \cos\beta\ket{+,z} + e^{i\alpha}\sin\beta\ket{-,z}$ y
+es autoestado de $\vect{S}\cdot\vers{n}$, para alguna dirección $\vers{n}$
+(que depende de los ángulos $\alpha$, $\beta$). Sin embargo, es posible
+convencerse de que con uno de estos estados es imposible reproducir la
+estadística que el estado $50\%\ket{+,z}$, $50\%\ket{-,z}$ satisface en la
+tabla \ref{tab:compmezclasup} (efectivamente, tomando valor medio a
+$\vect{S}\cdot\vers{n}$ y usando los resultados de la tabla
+\ref{tab:compmezclasup} es posible convencerse que la medición de \spin~en
+cualquier dirección es equiprobable, lo cual es incompatible con el hecho que
+todo vector de dimensión dos es autoestado de \spin~en alguna dirección).
+Por lo tanto, esto implica la necesidad de tener una definición más general de
+estado para poder describir este tipo de mezcla estadística.
+
+% -----------------------------------------------------------------------------
+\subsection{Motivación 2: Estado de un subsistema de un sistema compuesto}
+A continuación veremos la otra motivación fundamental para querer definir una
+noción de estado más general que la de vector en el espacio de Hilbert. Esta
+motivación a veces no se enfatiza tanto como la de mezcla estadística, pero a
+mi parecer es aún más fundamental y esencial. Efectivamente, la motivación
+anterior podría hacer pensar que el operador densidad sirve solamente para
+mezclas estadísticas. Sin embargo, como veremos a continuación, la necesidad de
+su introducción es mucho más esencial y fundamental, sin requerir de considerar
+problemas estadísticos. Efectivamente, como discutiremos ahora, al trabajar
+con espacios de Hilbert compuestos, la necesidad de introducir una definición
+más general de estado se vuelve absolutamente inevitable.
+
+Consideremos un sistema de dos partículas, $A$ y $B$, de \spinhalf~que se
+encuentra en el estado singlete
+\begin{equation}
+  \ket{\psi_{AB}} = \frac{1}{\sqrt{2}}\left(\ket{+}_A\tensor\ket{-}_B -
+  \ket{-}_A\tensor\ket{+}_B\right).
+\end{equation}
+
+Supongamos que medimos un observable $O_A$ cualquiera solamente sobre la
+partícula $A$. Como vimos cuando introdujimos sistemas compuestos, el valor
+medio de este observable lo calculamos como
+\begin{equation}
+  \expval{O_A} = \matrixel{\psi_{AB}}{O_A\tensor\Id_B}{\psi_{AB}}.
+\end{equation}
+Análogamente, si $\ket{\lambda}$ es autoestado de $O_A$ con autovalor
+$\lambda$, entonces la probabilidad de medir el resultado $\lambda$ es
+\begin{equation}
+  \Prob{\lambda} = \matrixel{\psi_{AB}} {\left(\projector{\lambda}_A \tensor
+  \Id_B\right)} {\psi_{AB}}.
+\end{equation}
+
+%Recordemos que en la guía de sistemas de dimensión dos, mostramos que el
+%observable más general posible de dimensión 2 se puede escribir como
+%\begin{equation}
+%  O_A = c_0\Id + \vect{\sigma}\cdot\vect{c}, \qquad c_i \in \Reals, i=0,1,2,3.
+%\end{equation}
+%Es más, se pueden también calcular los autovalores y autovectores de este
+%observable, obteniendo
+%\begin{align}
+%  \lambda_+ &= c_0 + \abs{c}, \qquad \ket{\lambda_+} = \cos\beta\ket{+,z} +
+%    e^{i\alpha}\sin\beta\ket{-,z}, \\
+%  \lambda_- &= c_0 - \abs{c}, \qquad \ket{\lambda_-} = \sin\beta\ket{+,z} -
+%    e^{i\alpha}\cos\beta\ket{-,z},
+%\end{align}
+%donde $\beta,\alpha$ son funciones de los coeficientes $c_i$ (que acá no
+%reportamos dado que la expresión exacta no nos va a importar para los cálculos
+%a realizar, simplemente la forma que tiene el estado).
+
+Por lo tanto, la probabilidad de obtener el resultado $\lambda$ en el estado
+singlete es
+\begin{align}
+  \Prob{\lambda}
+  &= \matrixel{\psi_{AB}} {\left(\projector{\lambda}_A \tensor \Id_B\right)}
+    {\psi_{AB}} \nonumber \\
+  &= \frac{1}{\sqrt{2}} \left(\bra{+}\tensor\bra{-} -
+    \bra{-}\tensor\bra{+}\right) \left(\projector{\lambda}_A \tensor
+    \Id_B\right) \frac{1}{\sqrt{2}} \left(\ket{+}\tensor\ket{-} -
+    \ket{-}\tensor\ket{+}\right) \nonumber \\
+  &= \frac{1}{2} \Big[
+    \left(\bra{+}\tensor\bra{-}\right)
+    \left(\projector{\lambda} \tensor \Id\right)
+    \left(\ket{+}\tensor\ket{-}\right)
+    -
+    \left(\bra{+}\tensor\bra{-}\right)
+    \left(\projector{\lambda} \tensor \Id\right)
+    \left(\ket{-}\tensor\ket{+}\right)
+    \nonumber \\
+    &\quad -
+    \left(\bra{-}\tensor\bra{+}\right)
+    \left(\projector{\lambda} \tensor \Id\right)
+    \left(\ket{+}\tensor\ket{-}\right)
+    +
+    \left(\bra{-}\tensor\bra{+}\right)
+    \left(\projector{\lambda} \tensor \Id\right)
+    \left(\ket{-}\tensor\ket{+}\right)
+    \Big] \nonumber \\
+  &= \frac{1}{2} \Big[
+    \braket{+}{\lambda}\braket{\lambda}{+}
+    \underbrace{\braket{-}{-}}_{1}
+    -
+    \braket{+}{\lambda}\braket{\lambda}{-}
+    \underbrace{\braket{-}{+}}_{0}
+    -
+    \braket{-}{\lambda}\braket{\lambda}{+}
+    \underbrace{\braket{+}{-}}_{0}
+    +
+    \braket{-}{\lambda}\braket{\lambda}{-}
+    \underbrace{\braket{+}{+}}_{1}
+    \Big] \nonumber \\
+  &= \frac{1}{2} \underbrace{\Big[ \abs{\braket{+}{\lambda}}^2 +
+    \abs{\braket{-}{\lambda}}^2\Big]}_{\norm{\ket{\lambda}}^2 = 1}
+    \nonumber \\
+  &= \frac{1}{2},
+\end{align}
+donde en la última igualdad usamos que $\set{\ket{+}, \ket{-}}$ es una base
+ortonormal y $\ket{\lambda}$ es un vector de norma 1.
+
+Por lo tanto, el resultado de \emph{cualquier} medición sobre la partícula $A$
+es equiprobable para los dos posibles resultados. En otras palabras, tenemos
+incerteza total para \emph{cualquier} medición sobre la partícula $A$. Esto es
+notable, en cuanto no hay ningún vector en el espacio de Hilbert de dimensión 2
+(es decir el espacio de Hilbert de la partícula $A$) que satisfaga esta
+propiedad. Efectivamente, todo vector en un espacio de Hilbert es autoestado de
+algún observable. Por ejemplo, dado un vector $\ket{\psi}$, si definimos
+$O_{\psi} = \projector{\psi}$, es observable (es hermítico) y $\ket{\psi}$ es
+autoestado (con autovalor 1 en este ejemplo). Si medimos $O_{\psi}$ en el
+estado $\ket{\psi}$ obtenemos el resultado $1$ con probabilidad 1. Sin embargo
+recién mostramos que cualquier medición sobre una sola de las partículas nos da
+que todos los resultados posibles son siempre equiprobables. Esto significa
+que si queremos describir el estado de la partícula $A$ por sí sola,
+necesitamos utilizar una representación matemática distinta a la de vectores
+en el espacio de Hilbert que venimos utilizando hasta ahora.
+
+Claramente, uno podría objetar que tenemos el estado de las dos partículas, 
+¿qué nos importa el de una sola? Pero esta es una respuesta insatisfactoria
+desde un punto de vista práctico. En general no sabemos cuál es el estado
+global del sistema, o siquiera cuántas y cuáles partículas forman parte de él.
+Si tenemos un sólo \spin~y queremos caracterizar su estado realizando
+mediciones sobre él, por lo visto anteriormente podríamos tranquilamente medir
+que tenemos incerteza total en todas la mediciones. Si queremos entonces
+describir su estado, no podremos recurrir a un vector en el espacio de Hilbert.
+Empezar a medir todas las partículas que existen junto a la que tenemos para
+determinar el estado global, claramente se vuelve una tarea imposible. Es más,
+si queremos ser dramáticos, el espacio de Hilbert más grande es el espacio de
+Hilbert producto tensorial de todas las partículas del universo; si para
+describir el estado de un sólo \spin~tenemos que dar el ket que describe a
+todas las partículas del universo (al final del día podríamos tener no el
+singlete, pero un estado de la misma forma que involucra tantas partículas como
+queremos), claramente de nada sirve el formalismo que desarrollamos. Por lo
+tanto, para poder describir subsistemas de un sistema compuesto (que
+básicamente es cualquier sistema real) se vuelve absolutamente necesario
+extender nuestra definición de estado de un sistema cuántico.
+
+% =============================================================================
+\section{Operador Densidad}
+
+Para definir el operador densidad, que será nuestro estado cuántico más general
+posible, nos inspiramos en la motivación de mezcla estadística. Más adelante
+veremos que efectivamente también sirve para describir el estado de un
+subsistema.
+
+Supongamos que tenemos una mezcla estadística de estados $\set{\ket{i}}$ con
+probabilidades $\set{p_i}$. Entonces el valor medio de un observable $A$
+cualquiera debería ser
+\begin{align}
+  \expval{A}
+  &= \sum_i p_i \expval{A}_{i}
+  = \sum_i p_i \expval{A}{i}
+  = \sum_i p_i \matrixel{i}{\left(\sum_j\projector{j}\right) A
+    \left(\sum_k\projector{k}\right)}{i}
+  = \sum_{ijk} p_i \matrixel{i}{\left(\projector{j} A \projector{k}\right)}{i}
+    \nonumber \\
+  &= \sum_{ijk} p_i \braket{i}{j} \matrixel{j}{A}{k} \braket{k}{i}
+  = \sum_{jk} \sum_i p_i \braket{k}{i} \braket{i}{j} \matrixel{j}{A}{k}
+  = \sum_{jk} \matrixel{k}{\left(\sum_i p_i \projector{i}\right)}{j}
+    \matrixel{j}{A}{k} \nonumber \\
+  &= \sum_{k} \bra{k}\left(\sum_i p_i \projector{i}\right)
+    \underbrace{\left(\sum_j\projector{j}\right)}_{\Id} A\ket{k}
+  = \sum_{k} \bra{k}\left[\left(\sum_i p_i \projector{i}\right)
+    A\right]\ket{k} \nonumber \\
+  &= \tr\left[\left(\sum_i p_i \projector{i}\right) A\right],
+\end{align}
+donde en la última igualdad usamos que la traza es la suma de los elementos
+diagonales en una base cualquiera.
+Por lo tanto, si tenemos una mezcla estadística de estados $\set{\ket{i}}$ con
+probabilidades $\set{p_i}$ y definimos el operador
+\begin{equation}
+  \rho = \sum_i p_i \projector{i},
+\end{equation}
+entonces el valor medio de un observable $A$ está dado por
+\begin{equation}
+  \expval{A} = \tr\left[\rho A\right].
+\end{equation}
+Usando este razonamiento como inspiración a continuación damos la definición
+formal de matriz densidad y mostramos algunas de sus propiedades esenciales.
+
+% -----------------------------------------------------------------------------
+\subsection{Definición formal de Operador Densidad}
+Dado un sistema físico, el estado del sistema más general posible se representa
+mediante un operador $\rho$ que actúa sobre un espacio de Hilbert $\Hilbert$
+tal que
+\begin{align}
+  \rho^\dagger &= \rho, & &\text{[hermiticidad]}\label{def:opdens:herm} \\
+  \tr\rho &= 1, & &\text{[normalización]} \label{def:opdens:tr} \\
+  \rho &\geq 0. & &\text{[positividad]} \label{def:opdens:pos}
+\end{align}
+A un operador que satisface \eqref{def:opdens:herm}--\eqref{def:opdens:pos} se
+lo llama \emph{operador (o matriz) densidad}. Antes de discutir con detalle
+estas condiciones, veamos cómo se calculan valores medios y probabilidades con
+este tipo de estados.
+
+De la misma forma de antes, toda magnitud física medible se representa en
+nuestro formalismo mediante un operador hermítico. Sea entonces un observable
+$A$ con autovalores $\set{a_i}$ y autovectores $\set{\ket{i}}$,
+\begin{equation}
+  A = \sum_i a_i\projector{i},
+\end{equation}
+entonces, el valor medio de medir $A$ sobre muchas copias del estado $\rho$ es
+\begin{equation} \label{def:opdens:expval}
+  \expval{A}_{\rho} = \tr\left[\rho A\right],
+\end{equation}
+mientras que la probabilidad de medir $A$ y obtener el resultado $a_i$ es
+\begin{equation} \label{def:opdens:probmeas}
+  \ProbCond{a_i}{\rho} = \tr\left[\rho\projector{i}\right].
+\end{equation}
+Escribiendo explícitamente la traza en la base $\set{\ket{i}}$ tenemos
+\begin{equation} \label{def:opdens:probmeasdiagel}
+  \ProbCond{a_i}{\rho} = \tr\left[\rho\projector{i}\right]
+  = \sum_j \bra{j}\left(\rho\projector{i}\right)\ket{j}
+  = \sum_j \bra{j}\rho\ket{i}\underbrace{\braket{i}{j}}_{\delta_{ij}}
+  = \matrixel{i}{\rho}{i},
+\end{equation}
+es decir que la probabilidad es simplemente el correspondiente elemento
+diagonal de la matriz de $\rho$ en la base $\set{\ket{i}}$.
+Más en general, si $a_i$ está degenerado y $\Pi_i$ es el proyector sobre el
+subespacio de tal autovalor, entonces
+\begin{equation} \label{def:opdens:probmeasdeg}
+  \ProbCond{a_i}{\rho} = \tr\left[\rho\Pi_{i}\right].
+\end{equation}
+Notemos que las definiciones \eqref{def:opdens:expval} y
+\eqref{def:opdens:probmeasdeg} son consistentes entre sí, en el sentido que
+\begin{equation}
+  \expval{A}_{\rho} = \sum_i a_i\ProbCond{a_i}{\rho} = \sum_i a_i
+  \tr\left[\rho\Pi_{i}\right] = \tr\left[\rho \sum_i a_i\Pi_i\right] =
+  \tr\left[\rho A\right],
+\end{equation}
+donde simplemente usamos la linealidad de la traza y el hecho que en la última
+igualdad tenemos la descomposición espectral de $A$.
+
+Ahora que tenemos nuestros ``postulados'' de la mecánica cuántica redefinidos
+para estos estados más generales, veamos por qué le pedimos las condiciones
+\eqref{def:opdens:herm}--\eqref{def:opdens:pos} al estado de nuestro sistema.
+La primer condición, \eqref{def:opdens:herm}, nos dice que $\rho$ es hermítica.
+Desde un punto de vista físico, esto quiere decir que es un observable. Por
+otro lado, desde un punto de vista formal, quiere decir que es diagonalizable,
+\begin{equation}
+  \rho = \sum_i p_i \projector{i},
+\end{equation}
+con autovalores $\set{p_i}$ reales y autovectores $\set{\ket{i}}$ que forman
+una base ortonormal del espacio de Hilbert $\Hilbert$.
+La condición \eqref{def:opdens:tr} es una condición de normalización que nos
+dice que la traza de la matriz densidad debe ser siempre uno (como veremos esto
+es equivalente a la condición de normalización de los vectores del espacio de
+Hilbert que veníamos usando hasta ahora). Como la traza es independiente de la
+base, esto en particular quiere decir que
+\begin{equation}
+  \sum_i p_i = 1.
+\end{equation}
+Por ultimo, la condición \eqref{def:opdens:pos} dice que el operador $\rho$ es
+\emph{semi-definido positivo} y formalmente significa que
+\begin{equation}
+  \matrixel{\psi}{\rho}{\psi} \geq 0, \quad\forall\,\ket{\psi}\in\Hilbert.
+\end{equation}
+Para una matriz diagonalizable, esta condición se reduce simplemente a que sus
+autovalores son positivos, $p_i \geq 0$. Junto con la condición
+\eqref{def:opdens:tr} esto significa que
+\begin{equation}
+  \sum_i p_i = 1, \quad p_i\geq 0.
+\end{equation}
+Por lo tanto, los autovalores de $\rho$ son probabilidades. En conclusión, las
+condiciones \eqref{def:opdens:herm}--\eqref{def:opdens:pos} nos dice que los
+operadores densidad son exactamente los operadores que se pueden escribir como
+\begin{equation} \label{def:opdens:spectral}
+  \rho = \sum_i p_i\projector{i}, \qquad \sum_i p_i = 1, \qquad p_i \geq 0.
+\end{equation}
+para alguna base ortonormal $\set{\ket{i}}$ de $\Hilbert$.
+
+Si un operador densidad describe el estado más general posible, entonces en
+particular debe poder describir los mismos estados que antes describíamos
+mediante vectores en $\Hilbert$. Veamos que esto efectivamente es así.
+Dado un vector $\ket{\psi} \in \Hilbert$, consideremos un operador densidad
+dado por
+\begin{equation} \label{def:opdens:puro}
+  \rho = \projector{\psi}.
+\end{equation}
+Es decir que $\rho$ es simplemente el proyector sobre $\ket{\psi}$. Claramente,
+esta es una matriz densidad válida, en cuanto ya la tenemos escrita en su
+descomposición espectral y tiene un autovalor 1 para el estado $\ket{\psi}$ y
+todos los otros autovalores son cero, por lo que satisface
+\eqref{def:opdens:spectral}. Sea un observable
+\begin{equation}
+  A = \sum_i a_i\projector{i},
+\end{equation}
+entonces utilizando \eqref{def:opdens:expval} tenemos que el valor medio es
+\begin{align}
+  \expval{A} &= \tr\left[\rho A\right]
+  = \sum_i \matrixel{i}{\rho A}{i}
+  = \sum_i a_i \matrixel{i}{\rho}{i}
+  = \sum_i a_i \matrixel{i}{\left(\projector{\psi}\right)}{i}
+  = \sum_i a_i \braket{i}{\psi} \braket{\psi}{i} \nonumber \\
+  &= \sum_i a_i \braket{\psi}{i} \braket{i}{\psi}
+  = \bra{\psi}\left(\sum_i a_i \projector{i}\right)\ket{\psi}
+  = \matrixel{\psi}{A}{\psi},
+\end{align}
+y la probabilidad del resultado $a_i$ es
+\begin{align}
+  \ProbCond{a_i}{\rho = \projector{\psi}}
+  = \tr\left[\projector{\psi} \projector{i}\right]
+  = \sum_j \braket{j}{\psi} \braket{\psi}{i}
+    \underbrace{\braket{i}{j}}_{\delta_{ij}}
+  = \braket{i}{\psi} \braket{\psi}{i} = \abs{\braket{i}{\psi}}^2.
+\end{align}
+Por lo tanto, para una matriz densidad que es simplemente un proyector $\rho =
+\projector{\psi}$, recuperamos exactamente las mismas reglas de probabilidades
+y valores medios que teníamos para estados como vectores en $\Hilbert$. Si una
+matriz densidad $\rho$ se puede escribir como \eqref{def:opdens:puro}, que
+sucede sólo cuando $\rho$ tiene un único autovalor distinto de cero, entonces
+decimos que el estado es \emph{puro}. En caso contrario decimos que el estados
+es \emph{mixto}. Todos los estados con los que estuvimos trabajando hasta ahora
+(vectores en $\Hilbert$) son estados puros.
+
+% -----------------------------------------------------------------------------
+\subsection{Operador densidad como mezcla estadística}
+Veamos ahora cómo interpretar la definición anterior de operador densidad en el
+contexto de la motivación basada en estados que son mezclas estadísticas.
+
+Para ello, en primer lugar notemos la descomposición espectral de un operador
+densidad $\rho$ que encontramos en \eqref{def:opdens:spectral},
+\begin{equation}
+  \rho = \sum_i p_i\projector{i}, \qquad \sum_i p_i = 1, \qquad p_i \geq 0.
+\end{equation}
+Tenemos que $\rho$ siempre se puede escribir como una suma de probabilidades
+$\set{p_i}$ por proyectores $\set{\projector{i}}$ sobre vectores en
+$\Hilbert$. Por otro lado, vimos al final de la sección anterior que una matriz
+densidad que es un proyector da los mismos resultados que teníamos para estados
+como vectores. Como además la probabilidad de obtener como resultado de una
+medición el valor $a$ con estado asociado $\ket{a}$ se calcula con la traza y
+la traza es lineal, entonces
+\begin{equation}
+  \ProbCond{a}{\rho = \sum_i p_i \projector{i}}
+  = \tr\left[\projector{a} \sum_i p_i \projector{i}\right]
+  = \sum_i p_i \tr\left[\projector{a} \projector{i}\right]
+  = \sum_i p_i \abs{\braket{a}{i}}^2
+  = \sum_i p_i \ProbCond{a}{\ket{i}},
+\end{equation}
+que es justamente lo que esperaríamos de tener una mezcla estadística de
+estados $\set{\ket{i}}$ con probabilidad $\set{p_i}$. Análogamente para el
+valor medio de un observable cualquiera $A$ tenemos
+\begin{equation}
+  \expval{A}_{\rho = \sum_i p_i \projector{i}}
+  = \tr\left[A \sum_i p_i \projector{i}\right]
+  = \sum_i p_i \tr\left[A \projector{i}\right]
+  = \sum_i p_i \matrixel{i}{A}{i}
+  = \sum_i p_i \expval{A}_{\ket{i}}.
+\end{equation}
+Por lo tanto, tiene sentido interpretar al estado $\rho$ escrito como
+\eqref{def:opdens:spectral} como una mezcla estadística de estados puros
+$\set{\ket{i}}$ con probabilidad $\set{p_i}$.
+
+Más en general, si nos dicen que tenemos una fuente que nos da partículas en
+los estados puros $\set{\ket{x}}$ (no necesariamente ortogonales entre sí) con
+probabilidades $\set{p_x}$, entonces el estado del sistema es el operador
+densidad
+\begin{equation}
+  \rho = \sum_{x} p_x\projector{x}.
+\end{equation}
+La motivación del sentido de esta definición es justamente que se satisfacen
+las relaciones de probabilidades y valores medios que uno esperaría de una
+mezcla estadística de los estados puros ya familiares $\ket{x}$ (las cuentas que
+hicimos antes para el valor medio y probabilidad siguen valiendo en este caso
+donde los estados no son ortogonales, dado que solamente usamos la linealidad
+de la traza).
+
+\subsubsection{Ejemplos de operadores densidad como mezcla estadística
+  (Problema 1 -- Guía 9)}
+Veamos algunos ejemplos concretos de cálculo de la matriz densidad cuando nos
+dan como dato la mezcla de estados que componen al sistema. En particular,
+seguiremos los ejemplos del Problema 1 de la Guía 9.
+
+Consideremos un sistema de \spinhalf. Como es usual, notemos con
+$\set{\ket{+}, \ket{-}}$ la base de autoestados de $S_z$. Escribamos entonces
+los operadores densidad para los siguientes casos.
+\begin{enumerate}[label=(\alph*)]
+  \item Tenemos un estado puro con certeza de que el sistema está en el
+    autoestado $+\hbar/2$ de $S_z$. Entonces,
+    \begin{equation}
+      \rho_1 = \projector{+}.
+    \end{equation}
+    En la base $\set{\ket{\pm}}$, este operador tiene la representación
+    matricial
+    \begin{equation}
+      \rho_1 = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}.
+    \end{equation}
+  \item Tenemos un estado puro con certeza de que el sistema está en el
+    autoestado $+\hbar/2$ de $S_x$. Entonces,
+    \begin{equation}
+      \rho_2 = \projector{+,z}.
+    \end{equation}
+    Escribamos esto en la base $\set{\ket{\pm}}$. Como $\ket{+,x} = (\ket{+} +
+    \ket{-})/\sqrt{2}$, tenemos
+    \begin{equation}
+      \rho_2 = \frac{1}{2}\left(\ket{+} + \ket{-}\right)
+        \left(\bra{+} + \bra{-}\right)
+      = \frac{1}{2}\big( \ketbra{+}{+} + \ketbra{+}{-} + \ketbra{-}{+} +
+        \ketbra{-}{-} \big).
+    \end{equation}
+    La representación matricial de este operador es
+    \begin{equation}
+      \rho_2 = \frac{1}{2} \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}.
+    \end{equation}
+  \item Tenemos una mezcla estadística con $75\%$ de probabilidad de tener el
+    autoestado $+\hbar/2$ de $S_z$ y con $25\%$ de probabilidad de tener el
+    autoestado $-\hbar/2$ de $S_z$. Entonces,
+    \begin{equation}
+      \rho_3 = \frac{3}{4}\projector{+} + \frac{1}{4}\projector{-}.
+    \end{equation}
+    Matricialmente tenemos
+    \begin{equation}
+      \rho_3 = \begin{pmatrix} \frac{3}{4} & 0 \\ 0 & \frac{1}{4}\end{pmatrix}.
+    \end{equation}
+  \item Tenemos una mezcla estadística con $75\%$ de probabilidad de tener el
+    autoestado $+\hbar/2$ de $S_z$ y con $25\%$ de probabilidad de tener el
+    autoestado $+\hbar/2$ de $S_x$. Entonces,
+    \begin{equation}
+      \rho_4 = \frac{3}{4}\projector{+} + \frac{1}{4}\projector{+,x}.
+    \end{equation}
+    Pasemos esto a una única base (es medio feo tener el operador escrito
+    usando proyectores sobre distintas bases). El proyector $\projector{+,x}$
+    en la base $\set{\ket{\pm}}$ lo calculamos en un ejemplo anterior. Tenemos
+    \begin{align}
+      \rho_4 &= \frac{3}{4}\projector{+} + \frac{1}{4}\frac{1}{2}\big(
+        \ketbra{+}{+} + \ketbra{+}{-} + \ketbra{-}{+} + \ketbra{-}{-} \big)
+        \nonumber \\
+      &= \frac{7}{8}\projector{+} + \frac{1}{8}\ketbra{+}{-} +
+        \frac{1}{8}\ketbra{-}{+} + \frac{1}{8}\ketbra{-}{-}.
+    \end{align}
+    Matricialmente tenemos
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{equation}
+      \rho_4 = \begin{pmatrix} \frac{7}{8} & \frac{1}{8} \\ \frac{1}{8} &
+        \frac{1}{8}\end{pmatrix}.
+    \end{equation}}
+\end{enumerate}
+
+Usemos ahora estos estados para calcular algunas probabilidades y valores
+medios. Veamos la probabilidad de medir $S_z$ y obtener $\pm\hbar/2$. Como
+vimos en la introducción formal de operadores densidad, la probabilidad está
+dada por la traza de $\rho$ por el proyector (ec. \eqref{def:opdens:probmeas}),
+que para el caso no degenerado es simplemente el elemento diagonal de $\rho$ en
+el autoestado correspondiente (ec. \eqref{def:opdens:probmeasdiagel}). Es decir
+que
+\begin{equation}
+  \ProbCond{\pm\hbar/2}{\rho} = \matrixel{\pm}{\rho}{\pm}.
+\end{equation}
+Entonces, en nuestros ejemplos tenemos
+\begin{align}
+  \ProbCond{+\hbar/2}{\rho_1} &= \matrixel{+}{\rho_1}{+} = 1, &
+  \ProbCond{-\hbar/2}{\rho_1} &= \matrixel{-}{\rho_1}{-} = 0, \\
+  \ProbCond{+\hbar/2}{\rho_2} &= \matrixel{+}{\rho_2}{+} = \frac{1}{2}, &
+  \ProbCond{-\hbar/2}{\rho_2} &= \matrixel{-}{\rho_2}{-} = \frac{1}{2}, \\
+  \ProbCond{+\hbar/2}{\rho_3} &= \matrixel{+}{\rho_3}{+} = \frac{3}{4}, &
+  \ProbCond{-\hbar/2}{\rho_3} &= \matrixel{-}{\rho_3}{-} = \frac{1}{4}, \\
+  \ProbCond{+\hbar/2}{\rho_4} &= \matrixel{+}{\rho_4}{+} = \frac{7}{8}, &
+  \ProbCond{-\hbar/2}{\rho_4} &= \matrixel{-}{\rho_4}{-} = \frac{1}{8}.
+\end{align}
+
+Para los valores medios de $S_x$, $S_y$, $S_z$, recordemos que las matrices de
+Pauli en la base $\set{\ket{\pm}}$ actúan de la forma
+\begin{equation}
+  \sigma_z\ket{\pm} = \pm\ket{\pm}, \qquad
+  \sigma_x\ket{\pm} = \ket{\mp}, \qquad
+  \sigma_y\ket{\pm} = \pm i\ket{\mp}.
+\end{equation}
+Entonces por ejemplo para el estado $\rho_3$ tenemos
+\begin{align}
+  \expval{\sigma_x}_3
+  &= \tr\left[\sigma_x\rho_3\right]
+  = \tr\left[\frac{3}{4}\sigma_x\projector{+} +
+    \frac{1}{4}\sigma_x\projector{-}\right]
+  = \tr\left[\frac{3}{4}\ketbra{-}{+} +
+    \frac{1}{4}\ketbra{+}{-}\right] \nonumber \\
+  &= \frac{3}{4}\underbrace{\tr\left[\ketbra{-}{+}\right]}_{0} +
+    \frac{1}{4}\underbrace{\tr\left[\ketbra{+}{-}\right]}_{0}
+  = 0,
+\end{align}
+donde usamos que la traza de cualquier operador ket--bra donde el ket y bra son
+ortogonales da cero. Análogamente para el estado $\rho_4$ tenemos
+\begin{align}
+  \expval{\sigma_x}_4
+  &= \tr\left[\sigma_x\rho_4\right]
+  = \tr\left[\frac{7}{8}\sigma_x\ketbra{+}{+} +
+    \frac{1}{8}\sigma_x\ketbra{+}{-} +
+    \frac{1}{8}\sigma_x\ketbra{-}{+} +
+    \frac{1}{8}\sigma_x\ketbra{-}{-}\right] \nonumber \\
+  &= \tr\left[\frac{7}{8}\ketbra{-}{+} +
+    \frac{1}{8}\ketbra{-}{-} +
+    \frac{1}{8}\ketbra{+}{+} +
+    \frac{1}{8}\ketbra{+}{-}\right] \nonumber \\
+  &= \frac{7}{8}\underbrace{\tr\ketbra{-}{+}}_{0} +
+    \frac{1}{8}\underbrace{\tr\ketbra{-}{-}}_{1} +
+    \frac{1}{8}\underbrace{\tr\ketbra{+}{+}}_{1} +
+    \frac{1}{8}\underbrace{\tr\ketbra{+}{-}}_{0}
+  = \frac{2}{8} = \frac{1}{4},
+\end{align}
+donde usamos que si $\ket{i}$ y $\ket{j}$ satisfacen que $\braket{i}{j} =
+\delta_{ij}$ entonces la traza del operador $\ketbra{i}{j}$ vale
+\begin{equation} \label{prop:trketbra}
+  \braket{i}{j} = \delta_{ij} \;\implies\; \tr\left[\ketbra{i}{j}\right] =
+    \delta_{ij}.
+\end{equation}
+
+\subsubsection{La interpretación de un operador densidad como mezcla no es única
+  (Problema 3 -- Guía 9)}
+En la sección anterior escribimos matrices densidad a partir de saber la
+composición estadística del estado. Sin embargo, vale la pena notar que esta
+relación no es uno a uno. Es decir, dada una matriz densidad, su interpretación
+como mezcla estadística de estados que la conforma es ambigua.
+
+Consideremos por ejemplo la matriz densidad,
+\begin{equation}
+  \rho = \frac{3}{4}\ketbra{+}{+} + \frac{1}{4}\ketbra{-}{-}.
+\end{equation}
+Uno podría interpretar esta matriz densidad como un estado que se generó
+mezclando el estado $\ket{+}$ con probabilidad $75\%$ y el estado $\ket{-}$ con
+probabilidad $25\%$ (de hecho así nos construimos el estado en la sección
+anterior). Sin embargo, consideremos los estados
+\begin{equation}
+  \ket{a} = \sqrt{\frac{3}{4}}\ket{+} + \sqrt{\frac{1}{4}}\ket{-}, \qquad
+  \ket{b} = \sqrt{\frac{3}{4}}\ket{+} - \sqrt{\frac{1}{4}}\ket{-},
+\end{equation}
+y supongamos que tenemos una mezcla estadística con $50\%$ del estado $\ket{a}$
+y $50\%$ del estado $\ket{b}$. Entonces es sencillo verificar que la matriz
+densidad es
+\begin{equation}
+  \rho
+  = \frac{1}{2}\ketbra{a}{a} + \frac{1}{2}\ketbra{a}{a}
+  = \frac{3}{4}\ketbra{+}{+} + \frac{1}{4}\ketbra{-}{-}.
+\end{equation}
+Por lo tanto tenemos dos mezclas distintas de estados que nos generan la misma
+matriz densidad (y de hecho se puede mostrar que hay infinitas mezclas que dan
+la misma matriz densidad). Esto no es un problema en el sentido que
+efectivamente cualquiera de esas dos mezclas nos dará estadística idéntica;
+pero sí nos permite ver que tratar de interpretar una matriz densidad como una
+mezcla estadística particular en general no es correcto, en cuanto esta
+interpretación es ambigua.
+
+% -----------------------------------------------------------------------------
+\subsection{Pureza de un estado}
+Dada una matriz densidad $\rho$, es de particular interés saber si el estado es
+puro o no (en cuyo caso decimos que es mixto). Recordemos que decíamos que un
+estado era puro si existe algún vector $\ket{\psi}$ en $\Hilbert$ tal que
+$\rho$ es el proyector sobre $\ket{\psi}$,
+\begin{align}
+  \rho \;\text{puro} \;\iff\; &\exists\ket{\psi}\in\Hilbert \text{ s.t. } \rho
+    = \projector{\psi}. \\
+  \rho \;\text{mixto} \;\iff\; &\nexists\ket{\psi}\in\Hilbert \text{ s.t. }
+    \rho = \projector{\psi}.
+\end{align}
+Como discutimos antes, los estados puros coinciden exactamente con los estados
+como vectores con los que trabajamos hasta ahora.
+
+La importancia física de esta distinción es la siguiente. Si un estado es
+\emph{puro} existe algún observable $O$ (no degenerado) tal que la medición de
+ese observable en el estado puro tiene un único resultado posible con certeza
+absoluta. Matemáticamente esto es fácil de ver, pues simplemente tiene que
+pasar que $\ket{\psi}$ sea un autovector de $O$ y un operador hermítico que
+satisfaga esto siempre existe. Para un estado \emph{mixto}, en cambio, esto no
+es posible. Es decir que cualquier observable que midamos (no degenerado),
+siempre tendremos incerteza en el resultado (acá esto no lo demostramos,
+simplemente comentamos el resultado).
+
+Notemos que la afirmación que existe \emph{algún} observable cuya medición da
+un resultado con certeza es importante. Por ejemplo si tenemos el estado
+$\ket{\psi} = (\ket{+} + \ket{-})/\sqrt{2}$ y medimos $S_z$ tenemos incerteza,
+pero si medimos $S_x$ tenemos certeza total. Es importante distinguir entre la
+aleatoriedad de estas dos mediciones con la aleatoriedad de medir $S_z$ en el
+estado $\rho = (\projector{+} + \projector{-})/2$. Efectivamente, la
+aleatoriedad de medir $S_z$ en la superposición $(\ket{+} + \ket{-})/\sqrt{2}$
+es una aleatoriedad intrínseca de la cuántica. Debido a la incompatibilidad de
+observables que no conmutan, es imposible en mecánica cuántica tener certeza
+total en todas las mediciones posibles. Por otro lado, la aleatoriedad de medir
+$S_z$ en la mezcla estadística $(\projector{+} + \projector{-})/2$ es una
+aleatoriedad clásica; simplemente se debe a que a veces tenemos el estado
+$\ket{+}$ y a veces el estado $\ket{-}$ y no sabemos cual tenemos en cada
+instancia. Por lo tanto, es físicamente relevante distinguir entre el caso en
+que tenemos \emph{alguna} medición cuya resultado tiene certeza absoluta
+(estado puro), en contraste con el caso en que esto no es posible (estado
+mixto).
+
+\bigbreak
+
+Por lo tanto, dada un matriz densidad, una pregunta común es saber si el estado
+es mixto o puro. Una forma de saber esto que siempre funciona es diagonalizar
+$\rho$, puesto que un estado es puro si y sólo si tiene un autovalor $1$ y
+todos los otros $0$. Sin embargo, diagonalizar matrices de tamaño mayor a
+$3\times3$ en general no se puede realizar analíticamente. Por lo tanto es
+importante tratar de encontrar alguna otra condición para determinar si un
+estado es puro que funcione bien para dimensiones arbitrarias. A continuación
+damos un tal criterio.
+
+\bigbreak
+
+Dado un estado $\rho$ definimos la \emph{pureza} del estado como
+\begin{equation} \label{def:pureza}
+  \tr\left[\rho^2\right].
+\end{equation}
+Veamos algunas de las propiedades fundamentales de la pureza, donde $D$ es la
+dimensión del espacio de Hilbert,
+\begin{enumerate}[label=(\alph*)]
+  \item $\frac{1}{D} \leq \tr\left[\rho^2\right] \leq 1$.
+  \item $\tr\left[\rho^2\right] = 1 \iff \rho\text{ es puro}$.
+    \label{prop:puro}
+  \item $\tr\left[\rho^2\right] < 1 \iff \rho\text{ es mixto}$.
+    \label{prop:mixto}
+  \item $\tr\left[\rho^2\right] = \frac{1}{D} \iff \rho = \frac{\Id}{D} \text{
+      i.e. } \rho\text{ es el estado máximamente mixto}$. \label{prop:maxmixt}
+\end{enumerate}
+donde en la última propiedad \ref{prop:maxmixt} introducimos el nombre de
+\emph{estado máximamente mixto} para el estado $\Id/D$. Esta es una matriz
+densidad (satisface todas las propiedades \eqref{def:opdens:herm} --
+\eqref{def:opdens:pos}, como es sencillo de verificar) que tiene la propiedad
+única que cualquier medición no degenerada da todos los resultados posibles de
+forma equiprobable, efectivamente
+\begin{equation}
+  \ProbCond{a}{\frac{\Id}{D}} = \tr\left[\projector{a}\frac{\Id}{D}\right] =
+    \frac{1}{D}\tr\left[\projector{a}\right] = \frac{1}{D}.
+\end{equation}
+
+Por lo tanto, por las propiedades \ref{prop:puro} y \ref{prop:mixto}, la pureza
+nos da un criterio para diferenciar estados puros de mixtos. Es más, en algún
+sentido nos da una cuantificación numérica de cuan mixto es un estado. Por
+ejemplo si $\tr\rho^2$ es muy cercana a 1, entonces se pude mostrar que el
+mayor de los autovalores de $\rho$ también es muy cercano a 1 (y por lo tanto
+parecido a un estado puro).
+
+\bigbreak
+
+\TODO{demostrar estas propiedades de la pureza.}
+
+\subsubsection{Ejemplos de cálculo de pureza (Problema 5 -- Guía 9)}
+Veamos algunos ejemplos de la utilidad de la pureza para determinar si un
+estado es puro o mixto. Para ello, consideremos por ejemplo estos dos estados
+del Problema 5 de la Guía 9,
+\begin{align}
+  \rho_1 &= \frac{1}{3}\ketbra{+}{+} + \frac{\sqrt{2}}{3}\ketbra{+}{-} +
+    \frac{\sqrt{2}}{3}\ketbra{-}{+} + \frac{2}{3}\ketbra{-}{-}. \\
+  \rho_2 &= \frac{3}{8}\ketbra{+}{+} + \frac{\sqrt{2}}{3}\ketbra{+}{-} +
+    \frac{\sqrt{2}}{3}\ketbra{-}{+} + \frac{5}{8}\ketbra{-}{-}.
+\end{align}
+Notemos que los estados a simple vista son relativamente parecidos y no es para
+nada obvio si alguno o ambos de ellos son puros. Veamos qué tenemos al calcular
+la pureza.
+
+Calculemos primero $\rho_1^2$. Recordando que $\braket{+}{-} = 0$,
+$\braket{+}{+} = \braket{-}{-} = 1$, tenemos
+\begin{align}
+  \rho_1^2
+  &= \Big[ \frac{1}{3}\ketbra{+}{+} + \frac{\sqrt{2}}{3}\ketbra{+}{-} +
+    \frac{\sqrt{2}}{3}\ketbra{-}{+} + \frac{2}{3}\ketbra{-}{-} \Big]
+    \Big[ \frac{1}{3}\ketbra{+}{+} + \frac{\sqrt{2}}{3}\ketbra{+}{-} +
+    \frac{\sqrt{2}}{3}\ketbra{-}{+} + \frac{2}{3}\ketbra{-}{-} \Big] \nonumber
+    \\
+  &= \frac{1}{9}\ketbra{+}{+} + \frac{\sqrt{2}}{9}\ketbra{+}{-} +
+    \frac{2}{9}\ketbra{+}{+} + \frac{2\sqrt{2}}{9}\ketbra{+}{-} +
+    \frac{\sqrt{2}}{9}\ketbra{-}{+} + \frac{2}{9}\ketbra{-}{-} +
+    \frac{2\sqrt{2}}{9}\ketbra{-}{+} + \frac{4}{9}\ketbra{-}{-} \nonumber \\
+  &= \frac{1}{3}\ketbra{+}{+} + \frac{(1+2)\sqrt{2}}{9}\ketbra{+}{-} +
+    \frac{(1+2)\sqrt{2}}{9}\ketbra{-}{+} + \frac{2}{3}\ketbra{-}{-}.
+\end{align}
+Por lo tanto, usando \eqref{prop:trketbra} tenemos
+\begin{equation}
+  \tr\rho_1^2 = \frac{1}{3} + \frac{2}{3} = 1.
+\end{equation}
+Por lo tanto, el estado $\rho_1$ es puro. Es decir que existe algún vector
+$\ket{\psi}$ tal que $\rho_1 = \projector{\psi}$. Efectivamente, es fácil
+verificar que el estado $\ket{\psi} = (\ket{+} + \sqrt{2}\ket{-})/\sqrt{3}$
+satisface esto (verificarlo es sencillo, encontrarlo no tanto; en general no
+hay otra forma que diagonalizar $\rho$).
+
+Por otro lado, procediendo de forma análoga para $\rho_2$ tenemos
+\begin{equation}
+  \tr\rho_2^2 = \frac{281}{288} < 1.
+\end{equation}
+Por lo tanto, $\rho_2$ es mixto.
+
+\bigbreak
+
+Notemos que a simple vista en general es difícil poder determinar si un dado
+operador densidad es puro o no. Por lo tanto, la pureza es una herramienta
+cómoda para chequear si lo es.
+
+% -----------------------------------------------------------------------------
+\subsection{Evolución temporal}
+Dado que con la introducción de operador densidad, definimos una noción más
+general de estado cuántico, tenemos que extender el postulado sobre evolución
+temporal para decir cómo evolucionan estos estados.
+
+Supongamos que un sistema tiene Hamiltoniano $H(t)$. Entonces, definimos el
+operador de evolución temporal $U(t)$ como siempre como la solución de la
+ecuación diferencial
+\begin{equation}
+  \dv{t}U(t) = H(t)U(t).
+\end{equation}
+Luego, si inicialmente el sistema se encuentra en el estado $\rho_0$, a tiempo
+$t$ el estado es
+\begin{equation} \label{def:opdens:tevol}
+  \rho(t) = U(t)\,\rho_0\,U^\dagger(t).
+\end{equation}
+Derivando en función del tiempo se obtiene la ecuación diferencial para
+$\rho(t)$
+\begin{equation}
+  \dv{t}\rho = -\frac{1}{i\hbar}\comm{\rho}{H}.
+\end{equation}
+(esta cuenta es totalmente análoga a la que hicimos para la evolución en
+representación de Heisenberg, sólo que con el orden de $U$ y $U^\dagger$
+intercambiados).
+
+Notemos que esta definición es consistente con la conocida para el caso de un
+estado puro. Efectivamente, un vector $\ket{\psi_0}$ evoluciona en el tiempo
+de la forma
+\begin{equation}
+  \ket{\psi(t)} = U(t)\ket{\psi_0}.
+\end{equation}
+Por otro lado, la matriz densidad del estado puro correspondiente evoluciona
+según
+\begin{equation}
+  \rho(t) = U(t)\rho_0U^\dagger(t) = U(t)\projector{\psi_0}U(t) =
+  \projector{\psi(t)},
+\end{equation}
+como debería ser, dado que son dos formas diferentes de representar el mismo
+estado físico.
+
+Más en general, si inicialmente tenemos una mezcla estadística de estados
+$\set{\ket{\psi_i}}$ con probabilidades $\set{p_i}$ entonces la evolución
+temporal es
+\begin{equation}
+  \rho(t)
+  = U(t)\left(\sum_ip_i\projector{\psi_i}\right)U^\dagger(t)
+  = \sum_ip_iU(t)\projector{\psi_i}U^\dagger(t)
+  = \sum_ip_i\projector{\psi_i(t)}.
+\end{equation}
+Es decir que $\rho(t)$ es la mezcla estadística de los estados
+$\set{\ket{\psi_i(t)}}$ con probabilidades $\set{p_i}$, como uno esperaría
+intuitivamente.
+
+\bigbreak
+
+Una conclusión de los análisis anteriores es que si inicialmente el estado del
+sistema es puro, entonces permanece puro a todo tiempo. Análogamente, si
+inicialmente es mixto, entonces permanece mixto. Es más, podemos afirmar algo
+aún más fuerte: la pureza de un estado es constante en el tiempo (si la
+evolución temporal está dada por \eqref{def:opdens:tevol} con $U$ unitaria).
+Efectivamente,
+\begin{equation}
+  \tr\left[\rho^2(t)\right]
+  = \tr\left[\rho(t)\rho(t)\right]
+  = \tr\left[U(t)\rho_0U^\dagger(t)U(t)\rho_0U^\dagger(t)\right]
+  = \tr\left[U(t)\rho_0^2U^\dagger(t)\right]
+  = \tr\left[\rho_0^2U^\dagger(t)U(t)\right]
+  = \tr\left[\rho_0^2\right],
+\end{equation}
+donde simplemente usamos la unitariedad de $U$ y la ciclicidad de la traza.
+
+% =============================================================================
+\section{Operador densidad en sistemas de dimensión 2: Esfera de Bloch}
+En la siguiente sección (que corresponde al Problema 7 de la Guía 9) vamos a
+analizar con detalle las propiedades de la matriz densidad de un sistema de
+dimensión 2. Consideremos la matriz más general de dimensión 2,
+\begin{equation}
+  A = \begin{pmatrix} c_1 & c_3 \\ c_4 & c_2 \end{pmatrix}.
+\end{equation}
+Para que $A$ sea un observable (es decir hermítica) necesitamos que $c_1$ y
+$c_2$ sean reales y que $c_3^* = c_4$. Escribiendo explícitamente el número
+complejo $c_4$ en parte real e imaginaria, $c_4 = a_1 + ia_2$, tenemos entonces
+que
+\begin{align}
+  A &= \begin{pmatrix} c_1 & a_1 - ia_2  \\ a_1 + ia_2 & c_2 \end{pmatrix}
+    = \begin{pmatrix} c_1 & 0 \\ 0 & c_2 \end{pmatrix} + 
+      \begin{pmatrix} 0 & a_1 - ia_2 \\ a_1 + ia_2 & 0 \end{pmatrix} \nonumber
+        \\
+    &= \begin{pmatrix} c_1 & 0 \\ 0 & c_2 \end{pmatrix} + 
+      \begin{pmatrix} 0 & a_1 \\ a_1 & 0 \end{pmatrix} +
+      \begin{pmatrix} 0 & -ia_2 \\ ia_2 & 0 \end{pmatrix}
+    = \begin{pmatrix} c_1 & 0 \\ 0 & c_2 \end{pmatrix} + 
+      a_1\sigma_x + a_2\sigma_y.
+\end{align}
+Si definimos además $a_0 = (c_1 + c_2)/2$ y $a_3 = (c_1 - c_2)/2$, entonces
+\begin{align}
+  A &= \begin{pmatrix} a_0 + a_3 & 0 \\ 0 & a_0 - a_3 \end{pmatrix} + 
+      a_1\sigma_x + a_2\sigma_y
+    = \begin{pmatrix} a_0 & 0 \\ 0 & a_0 \end{pmatrix} + 
+      \begin{pmatrix} a_3 & 0 \\ 0 & -a_3 \end{pmatrix} + 
+      a_1\sigma_x + a_2\sigma_y \nonumber \\
+    &= a_0\Id + a_3\sigma_z + a_1\sigma_x + a_2\sigma_y.
+\end{align}
+En conclusión el operador hermítico (observable) más general posible de
+dimensión 2 se puede siempre escribir de la forma
+\begin{equation}
+  A = a_0\Id + \vect{a}\cdot\vect{\sigma}, \qquad
+    a_0\in\Reals,\vect{a}\in\Reals^3.
+\end{equation}
+
+En particular, el operador densidad es hermítico, y por lo tanto también se
+escribe de esta forma. Además, tiene que satisfacer también la condición de
+normalización (ec. \eqref{def:opdens:tr}) y de positividad (ec.
+\eqref{def:opdens:pos}). Para la traza, recordando que las matrices de Pauli
+tiene traza nula, $\tr\sigma_i = 0$, tenemos entonces que
+\begin{equation}
+  1 = \tr\rho = \tr\left[a_0\Id + \vect{a}\cdot\vect{\sigma}\right] = a_0\tr\Id
+  = 2a_0.
+\end{equation}
+Por lo tanto, necesariamente $a_0 = 1/2$. Parametrizamos entonces la matriz
+densidad más general de un sistema de dimensión 2 como
+\begin{equation}
+  \rho = \frac{\Id + \vect{p}\cdot\vect{\sigma}}{2}, \qquad
+  \vect{p}\in\Reals^3.
+\end{equation}
+Falta solamente imponer la condición de positividad. En cambio de imponer esto
+explícitamente (que en general es una condición difícil de escribir), veamos
+qué sucede si le calculamos la pureza al estado así parametrizado. Recordando
+que las matrices de Pauli satisfacen
+\begin{equation}
+  \left(\vect{a}\cdot\vect{\sigma}\right)
+  \left(\vect{b}\cdot\vect{\sigma}\right)
+  = \left(\vect{a}\cdot\vect{b}\right)\Id +
+  \left(\vect{a}\times\vect{b}\right)\cdot\vect{\sigma},
+\end{equation}
+entonces
+\begin{equation}
+  \rho^2
+  = \frac{1}{4} \left(\Id + \vect{p}\cdot\vect{\sigma}\right) \left(\Id +
+    \vect{p}\cdot\vect{\sigma}\right)
+  = \frac{1}{4} \Big(\Id + 2\vect{p}\cdot\vect{\sigma} +
+    \underbrace{\left(\vect{p}\cdot\vect{\sigma}\right)
+    \left(\vect{p}\cdot\vect{\sigma}\right)}_{p^2\Id} \Big)
+  = \frac{1}{4} \Big((1 + p^2)\Id + 2\vect{p}\cdot\vect{\sigma}\Big).
+\end{equation}
+Entonces, la pureza es
+\begin{equation}
+  \tr\rho^2 = \tr\left[
+    \frac{1}{4} \Big((1 + p^2)\Id + 2\vect{p}\cdot\vect{\sigma}\Big)\right]
+  = \frac{1 + p^2}{2}.
+\end{equation}
+Recordemos que la pureza es siempre menor a uno, $\tr\rho^2 \leq 1$. Por lo
+tanto, necesariamente, para $\rho$ sea una matriz densidad tiene que ser que
+\begin{equation}
+  \abs{\vect{p}} \leq 1.
+\end{equation}
+Se puede mostrar que esta condición es suficiente para garantizar la condición
+\eqref{def:opdens:pos} de positividad de $\rho$.
+
+En conclusión, la matriz densidad mas general posible de dimensión 2 se puede
+siempre escribir como
+\begin{equation}
+  \rho = \frac{\Id + \vect{p}\cdot\vect{\sigma}}{2}, \qquad \vect{p}\in\Reals,
+  \; \abs{\vect{p}} \leq 1.
+\end{equation}
+Para un estado escrito de esta forma además la pureza es
+\begin{equation}
+  \tr\rho^2 = \frac{1 + p^2}{2}.
+\end{equation}
+Por lo tanto, todo estado de dimensión 2 queda totalmente determinado por el
+vector $\vect{p} \in \Reals^3$. Es más, si el estado es puro este vector tiene
+norma 1. Esta última es justamente la representación en la esfera de Bloch que
+habíamos visto para estados como vectores en un espacio de Hilbert de dimensión
+2, donde todos los estados quedaban representados como vectores de norma 1
+sobre una esfera en $\Reals^3$. Ahora tenemos una representación similar para
+los estados $\rho$ más generales. Toda matriz densidad se puede representar
+como un vector en $\Reals^3$ de normal menor o igual 1, es decir con los puntos
+de la bola de radio 1 en $\Reals^3$. Los puntos sobre la superficie de la bola
+se corresponden exactamente con los estados puros.
+
+Veamos que además el vector $\vect{p}$ tiene una interpretación física bien
+clara. Para ello, calculemos el valor medio de $\sigma_i$ en el estado $\rho$.
+Tenemos
+\begin{align}
+  \expval{\sigma_i}
+  &= \tr\left[\sigma_i\rho\right]
+  = \tr\left[\frac{1}{2}\left(\sigma_i +
+    \sum_jp_j\underbrace{\sigma_i\sigma_j}_{\delta_{ij}\Id +
+    \epsilon_{ijk}\sigma_k}\right)\right]
+  = p_i,
+\end{align}
+donde en la última igualdad usamos la linealidad de la traza y el hecho que
+$\tr\sigma_i = 0$. Por lo tanto, $\vect{p}$ es precisamente el valor medio de
+las matrices de Pauli,
+\begin{equation}
+  \expval{\vect{\sigma}} = \vect{p}.
+\end{equation}
+
+Finalmente, veamos cómo es la evolución temporal de $\rho$ en presencia de un
+campo magnético $\vect{B} = B\vers{z}$ estático y uniforme en la dirección $z$
+(es decir el problema de precesión del \spin~que estudiamos en la guía de
+dinámica). Tenemos que
+\begin{equation}
+  \rho(t) = U(t)\rho U^\dagger(t) = U(t)\frac{1}{2}\left(\Id +
+  \vect{p}\cdot\vect{\sigma}\right)U^\dagger(t),
+\end{equation}
+con
+\begin{equation}
+  U(t) = e^{-iHt/\hbar} = e^{-i\omega t\sigma_z}.
+\end{equation}
+Para encontrar $\rho(t)$ podríamos proceder a resolver la ecuación diferencial
+para $\rho$, o podemos expandir $\rho$ en la base de autoestados de $\sigma_z$
+y después aplicar directamente $U(t)$, tal como hacíamos en las primeras guías
+del curso. Alternativamente, aprovechemos todo lo que sabemos sobre rotaciones
+y momento angular, que nos permitirá encontrar $\rho(t)$ de forma elegante y
+sencilla. En primer lugar, recordemos que $\sigma_z$ son los generadores de
+momento angular para $j = 1/2$ y por lo tanto, la evolución temporal $U(t)$ no
+es cualquier operador unitario, sino que es una rotación alrededor del eje
+$\vers{z}$ en un ángulo $\phi(t) = \omega t /2$,
+\begin{equation}
+  U(t) = e^{-i\omega t\sigma_z} = \RotationOp^{(j=1/2)}\left(\phi(t) =
+  \frac{\omega t}{2}, \vers{z}\right).
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  \rho(t) = \frac{1}{2}\left(\Id + \sum_ip_i 
+  \RotationOp\left(\phi(t), \vers{z}\right)\sigma_i
+  {\RotationOp}^\dagger\left(\phi(t), \vers{z}\right)\right).
+\end{equation}
+Para calcular cómo transforma $\sigma_i$, recordemos que $\vect{\sigma}$ es un
+operador vectorial y, por lo tanto, ante rotaciones trasforma de la forma
+\begin{equation}
+  {\RotationOp}^\dagger\left(\phi(t), \vers{z}\right)\sigma_i
+  {\RotationOp}\left(\phi(t), \vers{z}\right) = \sum_j R_{ij} \sigma_j,
+\end{equation}
+donde $R_{ij}$ es la matriz de rotación correspondiente en $\Reals^3$, que en
+este caso es
+\begin{equation}
+  R\left(\phi(t), \vers{z}\right) = \begin{pmatrix} \cos\phi(t) & -\sin\phi(t)
+    & 0 \\ \sin\phi(t) & \cos\phi(t) & 0 \\
+    0 & 0 & 1 \end{pmatrix}.
+\end{equation}
+Reemplazando en $\rho(t)$ se puede llegar a
+\begin{equation}
+  \rho(t) = \frac{1}{2}\left(\Id + \vect{p}(t)\cdot\vect{\sigma}\right),
+\end{equation}
+con
+\begin{equation}
+  \vect{p}(t) = R\left(\frac{\omega t}{2}, \vers{z}\right)\vect{p}.
+\end{equation}
+Por lo tanto, la evolución temporal de $\rho$ se ve como una rotación del
+vector $\vect{p}$ en $\Reals^3$.
+
+\bigbreak
+
+\TODO{hacer más pasos de esta cuenta.}
+
+\bigbreak
+
+\TODO{hacer gráficos de esfera Bloch mixtos.}
+
+% =============================================================================
+\section{Estados reducidos y traza parcial}
+A continuación estudiaremos la segunda motivación que damos para introducir el
+operador densidad: poder describir el estado de un subsistema de un sistema
+compuesto. Efectivamente, como vimos en la introducción, si tenemos dos
+partículas de \spinhalf~en el estado singlete, la estadística de la medición de
+cualquier observable sobre una sola de ellas no se puede describir con un
+vector en el espacio de Hilbert.
+
+Consideremos un sistema compuesto por dos dos subsistemas $A$ y $B$ con
+espacios de Hilbert respectivos $\Hilbert_A$ y $\Hilbert_B$. El sistema
+compuesto $A+B$ tiene entonces espacio de Hilbert $\Hilbert_{AB} =
+\Hilbert_A\tensor\Hilbert_B$. Se puede mostrar que el operador densidad más
+general posible sobre $\Hilbert_{AB}$ se puede escribir como
+\begin{equation} \label{def:opdens:compgen}
+  \rho_{AB} = \sum_{ij} c_{ij}\rho^{(A)}_{i}\tensor\rho^{(B)}_{j},
+\end{equation}
+con $c_{ij}$ algunos coeficientes complejos (tales que $\rho_{AB}$ satisface
+las condiciones \eqref{def:opdens:herm} -- \eqref{def:opdens:pos}),
+$\rho^{(A)}_{i}$ una matriz densidad en $\Hilbert_A$ y análogamente
+$\rho^{(B)}_{j}$.
+
+Supongamos que en este sistema compuesto medimos un observable $O_A$ solamente
+sobre la partícula $A$. El valor medio es entonces
+\begin{equation}
+  \expval{O_A} = \tr\left[(O_A\tensor\Id_B)\,\rho_{AB}\right].
+\end{equation}
+Como mencionamos en la introducción, la idea es poder describir el estado de
+una sola de las partículas, de forma tal que calcular los valores medios de
+mediciones sobre una sola de las partículas no requiera saber cual es el estado
+de todas las otras. Esto quiere decir que, dado el operador densidad
+$\rho_{AB}$ sobre $\Hilbert_{A}\tensor\Hilbert_{B}$, buscamos definir un
+operador densidad $\rho_{A}$ sobre $\Hilbert_{A}$ tal que para todo observable
+$O_A$ del subsistema $A$ vale que
+\begin{equation} \label{def:proppt}
+  \expval{O_A} = \tr\left[(O_A\tensor\Id_B)\,\rho_{AB}\right] =
+    \tr\left[O_A\,\rho_A\right].
+\end{equation}
+Claramente, si conseguimos definir un operador $\rho_A$ que satisface
+\eqref{def:proppt}, entonces $\rho_A$ contiene toda la información necesaria
+para calcular la estadística de cualquier medición sobre ese solo subsistema.
+
+% -----------------------------------------------------------------------------
+\subsection{Definición formal de traza parcial}
+
+A continuación damos la definición formal de \emph{traza parcial}, que será la
+operación que nos dará el operador $\rho_A$, y después discutiremos que
+efectivamente satisface lo que queremos.
+
+\bigbreak
+
+Dado un espacio de Hilbert compuesto $\Hilbert_A\tensor\Hilbert_B$, definimos
+la \emph{traza parcial} sobre $B$, denotada $\tr_B$, como una operación
+\begin{equation}
+  \tr_B: \mathscr{O}\left(\Hilbert_A\tensor\Hilbert_B\right) \rightarrow
+  \mathscr{O}\left(\Hilbert_A\right),
+\end{equation}
+donde $\mathscr{O}\left(\Hilbert\right)$ es el espacio de operadores sobre el
+espacio de Hilbert $\Hilbert$ (es decir que $\tr_B$ toma operadores sobre
+$\Hilbert_A\tensor\Hilbert_B$ y nos devuelve un operador sobre $\Hilbert_A$),
+tal que
+\begin{enumerate}[label=(\alph*)]
+  \item es lineal
+    \begin{equation}
+      \tr_B\left[P + Q\right] = \tr_B\left[P\right] + \tr_B\left[Q\right].
+    \end{equation}
+  \item la acción sobre un operador producto tensorial $O_{A}\tensor O_{B}$ es
+    \begin{equation}
+      \tr_B\left[O_A\tensor O_B\right] = O_A\tr\left[O_B\right],
+    \end{equation}
+    con $\tr$ la traza común.
+\end{enumerate}
+Estas dos propiedades nos definen unívocamente la operación $\tr_B$, puesto que
+todo operador $O_{AB}$ se puede siempre descomponer como combinación lineal de
+operadores producto tensorial. Es más, todo operador $O_{AB}$ siempre se puede
+escribir como
+\begin{equation}
+  O_{AB} = \sum_{a,a',b,b'} C_{aa'bb'}\ketbra{a}{a'}\tensor\ketbra{b}{b'},
+\end{equation}
+donde $\set{\ket{a}}$ es una base de $\Hilbert_A$ y $\set{\ket{b}}$ de
+$\Hilbert_B$. Por lo tanto, para saber cómo actúa $\tr_B$ es suficiente saber
+cómo actúa sobre el operador $\ketbra{a}{a'}\tensor\ketbra{b}{b'}$. Tenemos
+\begin{equation}
+  \tr_B\left[\ketbra{a}{a'}\tensor\ketbra{b}{b'}\right] =
+  \ketbra{a}{a'}\tr\left[\ketbra{b}{b'}\right] = \delta_{b'b}\ketbra{a}{a'}.
+\end{equation}
+Esta expresión será particularmente útil para calcular matrices densidad de
+subsistemas.
+
+\bigbreak
+
+Claramente, de forma análoga podemos definir la traza parcial respecto de $A$.
+
+% -----------------------------------------------------------------------------
+\subsection{Estado reducido de un sistema compuesto}
+Ahora sí finalmente estamos preparados para dar la definición del estado de un
+subsistema de un sistema compuesto.
+
+\bigbreak
+
+Dada la matriz densidad $\rho_{AB}$ de un sistema compuesto $\Hilbert_A \tensor
+\Hilbert_B$, definimos la \emph{matriz densidad reducida} del subsistema $A$,
+$\rho_A$, como la traza parcial de $\rho_{AB}$ respecto de $B$,
+\begin{equation} \label{def:redstate}
+  \rho_{A} \eqdef \tr_B\left[\rho_{AB}\right].
+\end{equation}
+Entonces $\rho_A$ satisface la propiedad \eqref{def:proppt} de reproducir la
+estadística de cualquier observable sobre una sola partícula. Efectivamente,
+sea $O_A$ un observable en $\Hilbert_A$ y utilizando la expresión
+\eqref{def:opdens:compgen} de la matriz densidad más general posible sobre el
+sistema compuesto, tenemos
+\begin{align}
+  \expval{O_A}
+  &= \tr\left[(O_A\tensor\Id_B) \rho_{AB}\right]
+  = \tr\left[(O_A\tensor\Id_B) \sum_{ij}c_{ij} \rho^{(A)}_{i} \tensor
+    \rho^{(B)}_{j}\right]
+  = \sum_{ij}c_{ij} \tr\left[(O_A\tensor\Id_B) (\rho^{(A)}_{i} \tensor
+    \rho^{(B)}_{j})\right] \nonumber \\
+  &= \sum_{ij}c_{ij} \tr\left[(O_A\rho^{(A)}_{i}) \tensor
+    \rho^{(B)}_{j}\right]
+  = \sum_{ij}c_{ij} \sum_{a,b} \bra{a}\tensor\bra{b}\left[(O_A\rho^{(A)}_{i})
+    \tensor \rho^{(B)}_{j}\right] \ket{a}\tensor\ket{b} \nonumber \\
+  &= \sum_{ij}c_{ij} \sum_{a,b} \matrixel{a}{(O_A\rho^{(A)}_{i})}{a}
+      \matrixel{b}{\rho^{(B)}_{j}}{b}
+  = \sum_{ij}c_{ij} \underbrace{\sum_{a}
+      \matrixel{a}{(O_A\rho^{(A)}_{i})}{a}}_{\tr\left[O_A\rho^{(A)}_{j}\right]}
+      \underbrace{\sum_{b}
+      \matrixel{b}{\rho^{(B)}_{j}}{b}}_{\tr\left[\rho^{(B)}_{j}\right] = 1}
+      \nonumber \\
+  &= \sum_{ij}c_{ij} \tr\left[O_A\rho^{(A)}_{i}\right],
+\end{align}
+donde $\set{\ket{a}}$ es una base ortonormal de $\Hilbert_A$ y $\set{\ket{b}}$
+de $\Hilbert_B$. Por otro lado, la matriz densidad reducida es
+\begin{equation}
+  \rho_{A}
+  = \tr_B\left[\rho_{AB}\right]
+  = \tr_B\left[\sum_{ij}c_{ij} \rho^{(A)}_{i} \tensor \rho^{(B)}_{j}\right]
+  = \sum_{ij}c_{ij} \tr_B\left[\rho^{(A)}_{i} \tensor \rho^{(B)}_{j}\right]
+  = \sum_{ij}c_{ij} \rho^{(A)}_{i}
+    \underbrace{\tr\left[\rho^{(B)}_{j}\right]}_{1}
+  = \sum_{ij}c_{ij} \rho^{(A)}_{i}.
+\end{equation}
+Por lo tanto, el valor medio de $O_A$ usando $\rho_A$ es
+\begin{equation}
+  \expval{O_A}
+  = \tr\left[O_A\rho_A\right]
+  = \tr\left[O_A \sum_{ij}c_{ij} \rho^{(A)}_{i}\right]
+  = \sum_{ij}c_{ij} \tr\left[O_A \rho^{(A)}_{i}\right],
+\end{equation}
+que es exactamente lo mismo que habíamos obtenido con $\rho_{AB}$ y por lo
+tanto se satisface la condición \eqref{def:proppt}.
+
+\subsubsection{Ejemplos de cálculo de matriz densidad reducida}
+Veamos a continuación algunos ejemplos de cálculo de matriz densidad reducida
+de un sistema compuesto.
+
+\paragraph{Ejemplo 1: Dos partículas de \spinhalf~(Problema 8 -- Guía 9)}
+Comencemos con el ejemplo de la introducción, dos partículas de \spinhalf~en el
+estado singlete
+\begin{equation}
+  \ket{\psi}_{AB} = \frac{1}{\sqrt{2}}\left(\ket{+}\tensor\ket{-} -
+    \ket{-}\tensor\ket{+}\right).
+\end{equation}
+Entonces, la matriz densidad de este estado puro es
+\begin{align}
+  \rho_{AB}
+  &= \projector{\psi_{AB}} \nonumber \\
+  &= \frac{1}{2}\Big[ (\ket{+}\tensor\ket{-})(\bra{+}\tensor\bra{-}) -
+    (\ket{+}\tensor\ket{-})(\bra{-}\tensor\bra{+}) -
+    (\ket{-}\tensor\ket{+})(\bra{+}\tensor\bra{-}) +
+    (\ket{-}\tensor\ket{+})(\bra{-}\tensor\bra{+}) \Big] \nonumber \\
+  &= \frac{1}{2}\Big[ \ketbra{+}{+}\tensor\ketbra{-}{-} -
+    \ketbra{+}{-}\tensor\ketbra{-}{+} - \ketbra{-}{+}\tensor\ketbra{+}{-} +
+    \ketbra{-}{-}\tensor\ketbra{+}{+} \Big].
+\end{align}
+Luego, la matriz densidad reducida es
+\begin{align}
+  \rho_{A}
+  &= \tr_B\left[\rho_{AB}\right]
+  = \tr_B\left[ \frac{1}{2}\Big( \ketbra{+}{+}\tensor\ketbra{-}{-} -
+    \ketbra{+}{-}\tensor\ketbra{-}{+} - \ketbra{-}{+}\tensor\ketbra{+}{-} +
+    \ketbra{-}{-}\tensor\ketbra{+}{+} \Big) \right] \nonumber \\
+  &= \frac{1}{2}\Big( \tr_B\left[\ketbra{+}{+}\tensor\ketbra{-}{-}\right] -
+    \tr_B\left[\ketbra{+}{-}\tensor\ketbra{-}{+}\right] -
+    \tr_B\left[\ketbra{-}{+}\tensor\ketbra{+}{-}\right] +
+    \tr_B\left[\ketbra{-}{-}\tensor\ketbra{+}{+}\right] \Big) \nonumber \\
+  &= \frac{1}{2}\Big(
+    \ketbra{+}{+}\underbrace{\tr\left[\ketbra{-}{-}\right]}_{1} -
+    \ketbra{+}{-}\underbrace{\tr\left[\ketbra{-}{+}\right]}_{0} -
+    \ketbra{-}{+}\underbrace{\tr\left[\ketbra{+}{-}\right]}_{0} +
+    \ketbra{-}{-}\underbrace{\tr\left[\ketbra{+}{+}\right]}_{1} \Big) \nonumber
+    \\
+  &= \frac{1}{2}\Big( \ketbra{+}{+} \ketbra{-}{-} \Big) = \frac{1}{2}\Id.
+\end{align}
+Por lo tanto, en el caso del estado singlete, la matriz densidad reducida de
+una partícula es el estado máximamente mixto. Esto quiere decir que cualquier
+medición (no degenerada) da todos los resultados posibles de forma
+equiprobable. Esto es consistente con las propiedades que listamos en la tabla
+\ref{tab:compmezclasup}.
+
+Vale la pena remarcar una propiedad notable de este estado. Mientras que el
+estado del sistema compuesto $A+B$ es puro, por lo que hay una medición cuyo
+resultado podemos predecir con certeza absoluta; el estado de una sola de las
+partículas tiene incerteza total. En cierto sentido el estado global no tiene
+ninguna información sobre mediciones sobre cada una de las partículas, sino que
+toda la información está contenida en las correlaciones entre $A$ y $B$. Esta
+es una de las propiedades que define un estado entrelazado (como discutiremos
+con más detalle más adelante).
+
+\bigbreak
+
+\paragraph{Ejemplo 2: Tres partículas de \spinhalf~(Problema 9 -- Guía 9)}
+Supongamos que tenemos tres partículas distinguibles de \spinhalf~y se sabe que
+el estado del sistema completo es
+\begin{align}
+  \rho_{123}
+  &= \frac{1}{2}\ketbra{+++}{+++} + \frac{1}{6}\ketbra{+++}{++-} -
+    \frac{1}{3}\ketbra{+++}{+-+} + \frac{1}{6}\ketbra{++-}{+++}
+    \nonumber \\
+  &- \frac{1}{3}\ketbra{+-+}{+++} + \frac{1}{6}\ketbra{++-}{++-} +
+    \frac{1}{3}\ketbra{+-+}{+-+}.
+\end{align}
+%En primer lugar, veamos si el estado global es puro o mixto. Para ello tenemos
+%que calcular $\rho^2_{123}$. Al calcular $\rho^2_{123}$ tenemos que multiplicar
+%todos los términos entre sí. Pero muchos de ellos son cero, pues solamente
+%sobreviven los productos de términos que cuyo término de la izquierda tiene
+%como bra el ket del término de la derecha, por ejemplo el producto de los
+%términos
+%\begin{equation}
+%  \left(\ketbra{+++}{+++}\right)\left(\ketbra{+++}{++-}\right) = 
+%    \ket{+++}\braket{+++}{+++}\bra{++-} = \ketbra{+++}{++-}.
+%\end{equation}
+%Entonces,
+%\begin{align}
+%  \rho^2_{123}
+%  %&= \frac{1}{4}\ketbra{+++}{+++} + \frac{1}{12}\ketbra{+++}{++-} -
+%  %\frac{1}{6}\ketbra{+++}{+-+} + \frac{1}{36}\ketbra{+++}{+++} \nonumber \\
+%  %&+ \frac{1}{36}\ketbra{+++}{++-} + \frac{1}{9}\ketbra{+++}{+++} +
+%  %\frac{1}{9}\ketbra{+++}{+-+} + \frac{1}{12}\ketbra{++-}{+++} \nonumber \\
+%  %&+ \frac{1}{36}\ketbra{++-}{++-} - \frac{1}{18}\ketbra{++-}{+-+} -
+%  %\frac{1}{6}\ketbra{+-+}{+++} - \frac{1}{18}\ketbra{+-+}{++-} \nonumber \\
+%  %&+ \frac{1}{9}\ketbra{+-+}{+-+} + \frac{1}{36}\ketbra{++-}{+++} -
+%  %\frac{1}{9}\ketbra{+-+}{+++} \\
+%  &= \left(\frac{1}{4} + \frac{1}{9} + \frac{1}{36}\right)\ketbra{+++}{+++} +
+%  \left(\frac{1}{12} + \frac{1}{36}\right)\ketbra{+++}{++-} +
+%  \left(-\frac{1}{6} + \frac{1}{9}\right)\ketbra{+++}{+-+} \nonumber \\
+%  &+ \left(\frac{1}{12} + \frac{1}{36}\right)\ketbra{++-}{+++} +
+%  \frac{1}{36}\ketbra{++-}{++-} - \frac{1}{18}\ketbra{++-}{+-+} +
+%  \left(-\frac{1}{6} + \frac{1}{9}\right)\ketbra{+-+}{+++} \nonumber \\
+%  &- \frac{1}{18}\ketbra{+-+}{++-} + \frac{1}{9}\ketbra{+-+}{+-+} \\
+%  &= \frac{7}{18}\ketbra{+++}{+++} + \frac{1}{9}\ketbra{+++}{++-} -
+%  \frac{1}{18}\ketbra{+++}{+-+} + \frac{1}{9}\ketbra{++-}{+++} \nonumber \\
+%  &+ \frac{1}{36}\ketbra{++-}{++-} - \frac{1}{18}\ketbra{++-}{+-+} -
+%  \frac{1}{18}\ketbra{+-+}{+++} - \frac{1}{18}\ketbra{+-+}{++-} \nonumber \\
+%  &+ \frac{1}{9}\ketbra{+-+}{+-+},
+%\end{align}
+%y
+%\begin{equation}
+%  \tr\rho^2_{123} = \frac{7}{18} + \frac{1}{36} + \frac{1}{9} = \frac{19}{36} <
+%  1.
+%\end{equation}
+%Entonces el estado es mixto.
+
+Supongamos que queremos calcular el valor medio del observable $S_z \tensor S_x
+\tensor \Id$, es decir queremos mirar una correlación entre el \spin~de la
+primer y segunda partícula (ignorando la tercera). El cálculo lo podemos
+realizar de dos formas distintas: (i) directamente calculando $\tr[(S_z \tensor
+S_x \tensor \Id) \rho_{123}]$, o (ii) calculando primero la matriz densidad
+reducida para el estado 12, $\rho_{12} = \tr_3[\rho_{123}]$ y luego calculando
+el valor medio $\tr[(S_x \tensor S_z) \rho_{12}]$.
+
+Veamos primero la primer forma. Para calcular $\tr[(S_z \tensor S_x \tensor
+\Id) \rho_{123}]$ conviene primero ver cómo opera $(S_z \tensor S_x \tensor
+\Id)$ sobre $\rho_{123}$. Para ello, recordemos que
+\begin{equation}
+  S_i = \frac{\hbar}{2}\sigma_i, \qquad \sigma_z\ket{\pm} = \pm\ket{\pm}, \quad
+  \sigma_x\ket{\pm} = \ket{\mp}.
+\end{equation}
+Por lo tanto, al aplicar $(S_z \tensor S_x \tensor \Id)$ sobre un ket de la
+base producto de autoestados de $\sigma_z$, tenemos un signo $\pm$ dependiendo
+de si el primer ket es un estado $\ket{\pm}$, mientras que el segundo ket se
+permuta de un $\ket{+}$ a un $\ket{-}$ y viceversa. Por ejemplo,
+\begin{align}
+  (S_z \tensor S_x \tensor \Id)\ket{++\pm}
+  &= (S_z \tensor S_x \tensor \Id)(\ket{+}\tensor\ket{+}\tensor\ket{\pm})
+  = \underbrace{(S_z \ket{+})}_{\frac{\hbar}{2}\ket{+}} \tensor
+    \underbrace{(S_x\ket{+})}_{\frac{\hbar}{2}\ket{-}} \tensor
+    (\Id\ket{\pm}) \nonumber \\
+  &= \frac{\hbar^2}{4}\ket{+}\tensor\ket{-}\tensor\ket{\pm}
+  = \frac{\hbar^2}{4}\ket{+-\pm},
+\end{align}
+Análogamente,
+\begin{align}
+  (S_z \tensor S_x \tensor \Id)\ket{--\pm}
+  &= (S_z \tensor S_x \tensor \Id)(\ket{-}\tensor\ket{-}\tensor\ket{\pm})
+  = \underbrace{(S_z \ket{-})}_{-\frac{\hbar}{2}\ket{-}} \tensor
+    \underbrace{(S_x\ket{-})}_{\frac{\hbar}{2}\ket{+}} \tensor
+    (\Id\ket{\pm}) \nonumber \\
+  &= -\frac{\hbar^2}{4}\ket{-}\tensor\ket{+}\tensor\ket{\pm}
+  = -\frac{\hbar^2}{4}\ket{-+\pm},
+\end{align}
+y así siguiendo. Por lo tanto,
+\begin{align}
+  (S_z \tensor S_x \tensor \Id)\rho_{123}
+  &= \frac{\hbar^2}{4} \Big(
+    \frac{1}{2}\ketbra{+-+}{+++} + \frac{1}{6}\ketbra{+-+}{++-} -
+    \frac{1}{3}\ketbra{+-+}{+-+} + \frac{1}{6}\ketbra{+--}{+++}
+    \nonumber \\
+  &- \frac{1}{3}\ketbra{+++}{+++} + \frac{1}{6}\ketbra{+--}{++-} +
+    \frac{1}{3}\ketbra{+++}{+-+} \Big).
+\end{align}
+Para la traza solamente contribuyen los términos diagonales (es decir los que
+son proyectores). Entonces,
+\begin{equation}
+  \expval{S_z \tensor S_x \tensor \Id}
+  = \tr\left[(S_z \tensor S_x \tensor \Id)\rho_{123}\right]
+  = \frac{\hbar^2}{4}\left( -\frac{1}{3} -\frac{1}{3}\right)
+  = -\frac{\hbar^2}{6}.
+\end{equation}
+
+Hagamos ahora el cálculo de la segundo forma, es decir calculando primero la
+matriz densidad reducida de $1+2$. Tenemos que tomar la traza parcial respecto
+de 3. Esto quiere decir que los únicos términos en $\rho_{123}$ que sobreviven
+son los términos en que los operadores tienen tanto en el bra como en el ket la
+misma etiqueta para la partícula 3; es decir sólo sobreviven términos de la
+forma $\ketbra{i,j,+}{i',j',+}$ o $\ketbra{i,j,-}{i',j',-}$. Entonces,
+\begin{align}
+  \rho_{12} = \tr_3\left[\rho_{123}\right]
+  &= \frac{1}{2}\ketbra{++}{++} - \frac{1}{3}\ketbra{++}{+-} -
+    \frac{1}{3}\ketbra{+-}{++} + \frac{1}{6}\ketbra{++}{++} +
+    \frac{1}{3}\ketbra{+-}{+-} \nonumber \\
+  &= \frac{2}{3}\ketbra{++}{++} - \frac{1}{3}\ketbra{++}{+-} -
+    \frac{1}{3}\ketbra{+-}{++} + \frac{1}{3}\ketbra{+-}{+-}.
+\end{align}
+Notemos que $\rho_{12}$ es hermítica y tiene traza uno, como debe ser (estos
+son dos chequeos típicamente sencillos de hacer y que permiten detectar
+fácilmente errores de cuenta). Para calcular el valor medio de $S_z \tensor
+S_x$ le aplicamos primero el operador a la matriz densidad
+\begin{equation}
+  (S_z \tensor S_x)\rho_{12} 
+  = \frac{\hbar^2}{4} \left(
+    \frac{2}{3}\ketbra{+-}{++} - \frac{1}{3}\ketbra{+-}{+-} -
+    \frac{1}{3}\ketbra{++}{++} + \frac{1}{3}\ketbra{++}{+-} \right).
+\end{equation}
+Finalmente, el valor medio es
+\begin{equation}
+  \expval{S_z \tensor S_x} = \tr\left[(S_z \tensor S_x)\rho_{12}\right]
+  = \frac{\hbar^2}{4}\left( -\frac{1}{3} - \frac{1}{3}\right)
+  = -\frac{\hbar^2}{6},
+\end{equation}
+que es el mismo resultado que obtuvimos con el primer método, como debe ser.
+
+\bigbreak
+
+\TODO{más ejemplos de cuentas de traza parcial}
+
+% -----------------------------------------------------------------------------
+\subsection{Pureza de un estado reducido como criterio de entrelazamiento}
+Recordemos que cuando introdujimos sistemas compuestos, definimos un
+\emph{estado producto} como un estado $\ket{\psi_{AB}}$ en
+$\Hilbert_A\tensor\Hilbert_B$ tal que existen $\ket{\phi_{A}} \in \Hilbert_A$ y
+$\ket{\varphi_{B}} \in \Hilbert_B$  tales que
+\begin{equation}
+  \ket{\psi_{AB}} = \ket{\phi_{A}}\tensor\ket{\varphi_{B}}.
+\end{equation}
+Si esto no es posible, entonces decimos que $\ket{\psi_{AB}}$ es un
+\emph{estado entrelazado}. En general, chequear si existen o no estados que
+satisfacen esto no es sencillo. A continuación veremos que la traza parcial nos
+da una forma de determinar si un estado puro es entrelazado o no.
+
+\bigbreak
+
+Supongamos que el estado del sistema compuesto $\Hilbert_A\tensor\Hilbert_A$ es
+puro y además es un estado producto, es decir
+\begin{equation}
+  \ket{\psi_{AB}} = \ket{\phi_{A}}\tensor\ket{\varphi_{B}}.
+\end{equation}
+Entonces, la matriz densidad es
+\begin{equation}
+  \rho_{AB} = \projector{\psi_{AB}} =
+  \projector{\phi_{A}}\tensor\projector{\varphi_{B}}.
+\end{equation}
+Por lo tanto, la matriz densidad reducida de $A$ es
+\begin{equation}
+  \rho_A = \tr_B\left[\rho_{AB}\right]
+  = \tr_B\left[\projector{\phi_{A}}\tensor\projector{\varphi_{B}}\right]
+  = \projector{\phi_{A}}\tr\left[\projector{\varphi_{B}}\right]
+  = \projector{\phi_{A}}.
+\end{equation}
+Por lo tanto, el estado reducido también es puro.
+
+\bigbreak
+
+Por lo tanto, esto nos da un criterio para determinar si un estado puro de un
+sistema compuesto es entrelazado:
+Sea $\ket{\psi_{AB}} \in \Hilbert_A\tensor\Hilbert_B$ y sea $\rho_A$ la matriz
+densidad reducida de $A$. Entonces, si $\rho_A$ es puro ($\tr\rho_A^2 = 1$)
+entonces $\ket{\psi_{AB}}$ es un estado producto, mientras que si $\rho_A$ es
+mixto ($\tr\rho_A^2 < 1$), entonces $\ket{\psi_{AB}}$ es entrelazado.
+
+\bigbreak
+Veamos un ejemplo. Consideremos el siguiente estado de dos partículas de
+\spinhalf,
+\begin{equation}
+  \ket{\psi_{AB}} = \sqrt{\frac{2}{3}}\ket{++} + \sqrt{\frac{1}{3}}\ket{--}.
+\end{equation}
+Queremos determinar si es entrelazado o no. La matriz densidad del sistema
+completo es
+\begin{equation}
+  \rho_{AB} = \projector{\psi_{AB}} = \frac{2}{3}\projector{++} +
+  \frac{\sqrt{2}}{3}\ketbra{++}{--} + \frac{\sqrt{2}}{3}\ketbra{--}{++} +
+  \frac{1}{3}\projector{--}.
+\end{equation}
+La matriz densidad reducida de $A$ es
+\begin{equation}
+  \rho_{A} = \tr_B\left[\rho_{AB}\right] = \frac{2}{3}\ketbra{+}{+} +
+    \frac{1}{3}\ketbra{-}{-}.
+\end{equation}
+La pureza de este estado es
+\begin{equation}
+  \tr\rho_A^2 = \tr\left[\frac{4}{9}\ketbra{+}{+} +
+  \frac{1}{9}\ketbra{-}{-}\right] = \frac{4}{9} + \frac{1}{9} = \frac{5}{9} <
+  1.
+\end{equation}
+Por lo tanto, $\rho_{A}$ es mixto y entonces el estado $\ket{\psi_{AB}}$ es
+entrelazado.
+
+% -----------------------------------------------------------------------------
+\subsection{Evolución temporal de un estado reducido}
+Para terminar veamos un problema que es un buen ejercicio en término de
+cálculos de sistemas compuestos y matrices densidad, pero que también tiene
+consecuencias físicas muy importantes.
+
+Consideremos un sistema compuesto por dos partículas distinguibles de
+\spinhalf. Supongamos que inicialmente la primer partícula se encuentra en el
+autoestado de $S_z$ con autovalor $+\hbar/2$, mientras que la segunda partícula
+se encuentra en el autoestado de $S_x$ con autovalor $+\hbar/2$. Es decir que
+inicialmente el sistema se encuentra en el estado
+\begin{equation}
+  \ket{\psi_0} = \ket{+}\tensor\ket{+,\vers{x}} =
+  \ket{+}\tensor\frac{\left(\ket{+} + \ket{-}\right)}{\sqrt{2}}.
+\end{equation}
+El estado global es puro. Además, los estados reducidos sobre cada subsistema
+también son puros. Esto lo podemos ver de forma rápida porque la matriz
+densidad reducida sobre cada sistema es
+\begin{align}
+  \rho_{1} &= \tr_2\rho_{12} = \tr_2\projector{\psi_0} =
+    \tr_2\left(\projector{+}\tensor\projector{+,\vers{x}}\right) =
+    \projector{+}, \\
+  \rho_{2} &= \tr_1\rho_{12} = \tr_1\projector{\psi_0} =
+    \tr_1\left(\projector{+}\tensor\projector{+,\vers{x}}\right) =
+    \projector{+,\vers{x}},
+\end{align}
+que son proyectores (y por lo tanto son estados puros).
+
+Supongamos que el sistema evoluciona según un Hamiltoniano
+\begin{equation}
+  H = \hbar\omega \sigma_x \tensor \sigma_z.
+\end{equation}
+Este tipo de Hamiltoniano es muy común en problemas donde tenemos interacciones
+\spin-\spin~(que podemos interpretar como una interacción entre dos momentos
+magnéticos). Efectivamente, este es un caso particular sencillo de una familia
+de Hamiltonianos muy conocida y estudiada que son los Hamiltonianos del modelo
+de Heisenberg de ferromagnetismo. Supongamos que el sistema evoluciona bajo la
+acción de este Hamiltoniano durante un tiempo $T = \pi/(4\omega)$. De esta
+forma, el operador de evolución temporal está dado por
+\begin{equation}
+  U\left(T = \frac{\pi}{4\omega}\right) = e^{-iHT/\hbar} =
+    e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}.
+\end{equation}
+Veamos entonces cuál es el estado del sistema a tiempo $T$. Tenemos que
+calcular
+\begin{equation}
+  \ket{\psi(T)} = U(T)\ket{\psi_0} = 
+  e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}
+  \left(\ket{+}\tensor\frac{\left(\ket{+} + \ket{-}\right)}{\sqrt{2}}\right).
+\end{equation}
+Para ello, notemos que podemos calcular la acción del operador $U(T)$ sobre la
+base producto. Efectivamente, tenemos
+\begin{equation}
+  e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}
+    \left(\ket{+}\tensor\ket{\pm}\right)
+  = e^{-i\frac{\pi}{4}\sigma_x\tensor\Id(\pm1)}
+    \left(\ket{+}\tensor\ket{\pm}\right),
+\end{equation}
+puesto que $\sigma_z\ket{\pm} = \pm\ket{\pm}$ y tanto el ket como el operador
+en el exponente son producto tensorial. Para mostrar formalmente que esto es
+así, usemos la definición del operador exponencial como serie de potencias,
+\begin{equation}
+  e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}
+  = \sum_{n=0}^{\infty} \frac{(-i\pi/4)^n}{n!}(\sigma_x\tensor\sigma_z)^n
+  = \sum_{n=0}^{\infty} \frac{(-i\pi/4)^n}{n!}\sigma_x^n\tensor\sigma_z^n,
+\end{equation}
+donde en la última igualdad usamos que el producto de dos operadores producto
+tensorial es el producto de cada componente. Por lo tanto, si aplicamos este
+operador a cualquier estado que es un producto tensorial con la base de
+$\sigma_z$ para la segunda partícula tenemos
+\begin{align}
+  e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}(\ket{\phi}\tensor\ket{\pm})
+  &= \sum_{n=0}^{\infty} \frac{(-i\pi/4)^n}{n!}
+    (\sigma_x^n\tensor\sigma_z^n)(\ket{\phi}\tensor\ket{\pm})
+  = \sum_{n=0}^{\infty} \frac{(-i\pi/4)^n}{n!}
+    (\sigma_x^n\ket{\phi}\tensor\sigma_z^n\ket{\pm}) \nonumber \\
+  &= \sum_{n=0}^{\infty} \frac{(-i\pi/4)^n}{n!}
+    (\sigma_x^n\ket{\phi}\tensor(\pm1)^n\ket{\pm})
+  = \sum_{n=0}^{\infty} \frac{(-i\pi/4)^n}{n!}
+    (\sigma_x^n\tensor\Id(\pm1)^n)(\ket{\phi}\tensor\ket{\pm}) \nonumber \\
+  &= e^{-i\frac{\pi}{4}\sigma_x\tensor\Id(\pm1)}(\ket{\phi}\tensor\ket{\pm}).
+\end{align}
+En conclusión
+\begin{equation}
+  e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}
+    \left(\ket{+}\tensor\ket{\pm}\right)
+  = e^{-i\frac{\pi}{4}\sigma_x\tensor\Id(\pm1)}
+    \left(\ket{+}\tensor\ket{\pm}\right)
+  = e^{\mp i\frac{\pi}{4}\sigma_x\tensor\Id}
+    \left(\ket{+}\tensor\ket{\pm}\right)
+  = \left(e^{\mp i\frac{\pi}{4}\sigma_x}\ket{+}\right) \tensor \ket{\pm}.
+\end{equation}
+Nos falta simplemente calcular cómo transforma el primer ket. Notemos que la
+evolución temporal que queda para la primer partícula no es más que una
+rotación en un ángulo $\pm \pi/2$ en la dirección $\vers{x}$,
+\begin{equation}
+  e^{\mp i\frac{\pi}{4}\sigma_x}
+  = \RotationOp^{(j=1/2)}\left(\pm\frac{\pi}{2},\vers{x}\right).
+\end{equation}
+Además notemos que esta rotación está aplicada al autoestado $+1$ de
+$\sigma_z$. Para calcular esto podemos escribir explícitamente la expresión del
+operador de rotación de \spinhalf~en términos de matrices de Pauli que
+encontramos en la guía de momento angular y rotaciones; o, alternativamente,
+usamos lo que ya sabemos de rotaciones y que si rotamos el autoestado $+1$ de
+$\sigma_z$ alrededor del eje $\vers{x}$ en un ángulo $\pi/2$, entonces
+necesariamente lo que tenemos es el autoestado $-1$ de $\sigma_y$.
+Análogamente, si rotamos el el autoestado $+1$ de $\sigma_z$ alrededor del eje
+$\vers{x}$ en un ángulo $-\pi/2$, obtenemos el autoestado $+1$ de $\sigma_y$.
+En conclusión
+\begin{equation}
+  e^{\mp i\frac{\pi}{4}\sigma_x} \ket{+}
+  = \RotationOp\left(\pm\frac{\pi}{2},\vers{x}\right)\ket{+}
+  = \ket{\mp,\vers{y}}.
+\end{equation}
+Por lo tanto,
+\begin{equation}
+  U(T)\left(\ket{+}\tensor\ket{\pm}\right)
+  = e^{-i\frac{\pi}{4}\sigma_x\tensor\sigma_z}
+    \left(\ket{+}\tensor\ket{\pm}\right)
+  = \left( e^{\mp i\frac{\pi}{4}\sigma_x} \ket{+} \right) \tensor \ket{\pm}
+  = \ket{\mp,\vers{y}}\tensor\ket{\pm}.
+\end{equation}
+Finalmente, el estado a tiempo $T$ es
+\begin{align}
+  \ket{\psi(T)}
+  &= U(T)\ket{\psi_0}
+  = U(T) \left(\ket{+}\tensor\frac{\left(\ket{+} + \ket{-}\right)}{\sqrt{2}}\right)
+  = U(T) \frac{1}{\sqrt{2}} \left(\ket{+}\tensor\ket{+} +
+    \ket{+}\tensor\ket{-}\right) \nonumber \\
+  &= \frac{1}{\sqrt{2}} \left(\ket{-,\vers{y}}\tensor\ket{+} +
+    \ket{+,\vers{y}}\tensor\ket{-}\right).
+\end{align}
+El estado global al final de esta evolución también es puro (es un ket). Esto
+no debería sorprender en cuanto mostramos antes que la pureza se conserva ante
+la acción del operador de evolución temporal. Sin embargo, algo mucho más
+interesante sucede si le calculamos la pureza final a la matriz densidad
+reducida. La matriz densidad total es
+\begin{align}
+  \rho_{12}(T)
+  &= \projector{\psi(T)} \nonumber \\
+  &= \frac{1}{2}\left( \ketbra{-,\vers{y}}{-,\vers{y}} \tensor \ketbra{+}{+} +
+    \ketbra{-,\vers{y}}{+,\vers{y}} \tensor \ketbra{+}{-} +
+    \ketbra{+,\vers{y}}{-,\vers{y}} \tensor \ketbra{-}{+} +
+    \ketbra{+,\vers{y}}{+,\vers{y}} \tensor \ketbra{-}{-} \right).
+\end{align}
+Luego, la matriz densidad reducida para la primer partícula es
+\begin{equation}
+  \rho_{1}(T)
+  = \tr_2\left[\rho_{12}(T)\right]
+  = \frac{1}{2}\left( \ketbra{-,\vers{y}}{-,\vers{y}} +
+    \ketbra{+,\vers{y}}{+,\vers{y}} \right)
+  = \frac{\Id}{2}.
+\end{equation}
+Claramente, la matriz densidad reducida final de la partícula 1 es mixta. Pero
+notemos que mostramos que para el estado inicial el estado reducido de la
+partícula 1 era puro! Esto significa que si observamos solamente la evolución
+temporal de la partícula 1 (porque por ejemplo no sabemos siquiera que la
+partícula 2 existe) vamos a ver una evolución temporal que no preserva la
+pureza! Esto implica que si queremos describir la evolución temporal de
+solamente parte del sistema, esta evolución temporal \emph{seguro} no podrá ser
+unitaria y, en particular, no podrá estar dada por la ecuación de Schrödinger.
+Así como querer describir el estado de un subsistema nos forzó a abandonar
+nuestra descripción de estados como vectores en un espacio de Hilbert por una
+definición más general (que es la matriz densidad); si queremos describir la
+evolución temporal de un subsistema estaremos obligados a abandonar las
+evoluciones temporales unitarias y la ecuación de Schrödinger por algo también
+más general. Esto claramente es de interés práctico, pues no siempre queremos,
+ni podemos, describir la evolución temporal de \emph{todas} las partículas sino
+que nos interesa un subconjunto. Es decir, siendo un poco dramáticos, la
+evolución temporal de todo el universo será unitaria, pero apenas querremos
+describir una sub-parte, probablemente necesitaremos representar las evoluciones
+temporales de otra forma. Esto es un tema altamente estudiado dada su
+indispensabilidad a la hora de describir sistemas reales y da lugar a la rama
+de la mecánica cuántica conocida como \emph{dinámica de sistemas cuánticos
+abiertos}.
+
+% =============================================================================
+\end{document}
