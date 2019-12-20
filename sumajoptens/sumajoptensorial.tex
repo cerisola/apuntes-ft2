@@ -1336,7 +1336,7 @@ segundo. En conclusión
 
 En el problema 10 de la Guía 7 nos introducen el operador de momento
 cuadrupolar para una carga $q$,
-\begin{equation}
+\begin{equation} \label{eq:def:momentocuadrupolar}
   Q_{ij} = q\left(3r_ir_j - \delta_{ij}r^2\right),
 \end{equation}
 que es completamente análogo al momento cuadrupolar clásico que aparece cuando
@@ -1354,8 +1354,8 @@ Este valor medio puede ser que sea conocido porque uno se tomó el trabajo de
 calcular la integral en todo el espacio correspondiente (sea analíticamente, o
 numéricamente) o porque en algún sistema físico se logró medir.
 
-La idea es, usando el teorema de Wigner-Eckart, mostrar que todos los elementos
-de matriz
+La idea del ítem (a) es, usando el teorema de Wigner-Eckart, mostrar que todos
+los elementos de matriz
 \begin{equation}
   q\matrixel{\alpha,j,m'}{(x^2 - y^2)}{\alpha,j,j}, \quad \forall m',
 \end{equation}
@@ -1427,7 +1427,7 @@ tipo $x^2$ e $y^2$, así que son buenos candidatos para tratar de encontrar a
 $(x^2 - y^2)$. Escribiendo los armónicos esféricos
 $\SphericalHarmonic{2}{\pm2}$ en cartesianas obtenemos los operadores (esta
 cuenta la hicimos antes en \eqref{eq:tensorspharmonic2}),
-\begin{equation}
+\begin{equation} \label{eq:T22spherharm}
   T^{(2)}_{\pm2} = \frac{1}{4}\sqrt{\frac{15}{2\pi}}\left(x^2 - y^2
     \pm2ixy\right).
 \end{equation}
@@ -1461,12 +1461,12 @@ nuevamente el teorema de Wigner-Eckart. Tenemos
       \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}.
 \end{align}
 Entonces,
-\begin{equation}
+\begin{equation} \label{eq:Qdoublebar}
   \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} =
   \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\braket{j2;j0}{jj}}.
 \end{equation}
 Finalmente,
-\begin{align}
+\begin{align} \label{eq:Qauxmatrixel}
   \matrixel{\alpha,j,m'}{(x^2 - y^2)}{\alpha,j,j}
     &= 2\sqrt{\frac{2\pi}{15}} 
     \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\braket{j2;j0}{jj}}
@@ -1477,8 +1477,157 @@ Finalmente,
 Vemos entonces cómo efectivamente podemos relacionar todos esos elementos de
 matriz de $(x^2 - y^2)$ con el valor de expectación $Q$ de $(3z^2 - r^2)$.
 
-\TODO{hacer los elementos de matriz de Qik y cómo se relacionan; en particular
-casos Qxx y Qyy?}
+\bigbreak
+En el ítem (b) nos piden hacer un análisis similar pero ahora para los valores
+medios de todas la componentes del tensor cuadrupolar. Efectivamente, buscamos
+mostrar que los valores medios de todas las componentes del tensor cuadrupolar
+en el estado $\ket{\alpha,j,j}$,
+\begin{equation}
+  \expval{Q_{ik}}{\alpha,j,j},
+\end{equation}
+se pueden escribir en términos de $Q = \expval{Q_{zz}}{\alpha,j,j}$ y
+coeficientes de Clebsch-Gordan. Análogamente a como discutimos antes, lo
+interesante de este resultado es que significa que midiendo o calculando el
+valor medio de una única componente del momento cuadrupolar en este estado de
+momento angular, podemos inferir el valor de todos los otros.
+
+Notemos de su definición \eqref{eq:def:momentocuadrupolar}, el tensor
+cuadrupolar es simétrico, $Q_{ij} = Q_{ji}$. Por lo tanto, tiene a lo sumo 6
+componentes independientes: las tres diagonales $Q_{xx}$, $Q_{yy}$, $Q_{zz}$; y
+las tres no-diagonales $Q_{xy}$, $Q_{xz}$, $Q_{yz}$ (como veremos en un rato,
+en realidad de estas 6 componentes solamente 5 son realmente independientes
+entre sí; lo cuál está asociado al hecho que el tensor $Q_{ik}$ tiene traza
+nula, como pueden verificar fácilmente). $Q_{zz}$ es el dato, así que tenemos
+que ver cómo escribir las otras 5 componentes en términos de tensores esféricos
+y así usar el teorema de Wigner-Eckart para relacionar $\expval{Q_{ik}}$ con
+$\expval{Q_{zz}}$. Comencemos con los términos no-diagonales, que son los más
+sencillos en cuanto salen de forma directa.
+
+En primer lugar escribamos las expresiones no-diagonales del momento
+cuadrupolar en cartesianas,
+\begin{equation}
+  Q_{xy} = 3\,xy, \quad Q_{xz} = 3\,xz, \quad Q_{yz} = 3\,yz.
+\end{equation}
+Es decir que buscamos cómo escribir los operadores $xy$, $xz$ e $yz$ como
+combinación lineal de tensores esféricos. Como los términos son cuadráticos en
+la posición, esperamos poder escribirlos en términos de tensores esféricos
+de rango a lo sumo 2. Efectivamente, mirando una tabla de armónicos
+esféricos, notemos que
+\begin{equation}
+  r^2\SphericalHarmonic{2}{\pm1} = \mp\frac{1}{2}\sqrt{\frac{15}{2\pi}}
+  \left(xz \pm iyz\right).
+\end{equation}
+Por lo tanto, es sencillo relacionar $Q_{xz}$ y $Q_{yz}$ con tensores de rango
+2. Tenemos las componentes $\pm1$ de un tensor de rango 2, $T^{(2)}$, dadas por
+\begin{equation}
+  T^{(2)}_{\pm1} = \mp\frac{1}{2}\sqrt{\frac{15}{2\pi}}
+  \left(xz \pm iyz\right).
+\end{equation}
+Luego,
+\begin{align}
+  xz &= \sqrt{\frac{2\pi}{15}}\left(T^{(2)}_{-1} - T^{(2)}_{1}\right), \qquad
+  yz = i\sqrt{\frac{2\pi}{15}}\left(T^{(2)}_{-1} + T^{(2)}_{1}\right).
+\end{align}
+Finalmente,
+\begin{align}
+  Q_{xz} &= 3\sqrt{\frac{2\pi}{15}}\left(T^{(2)}_{-1} - T^{(2)}_{1}\right), \qquad
+  Q_{yz} = i3\sqrt{\frac{2\pi}{15}}\left(T^{(2)}_{-1} + T^{(2)}_{1}\right).
+\end{align}
+Para calcular los valores medios $\expval{Q_{xz}}$ y $\expval{Q_{yz}}$ basta
+con calcular los valores medios $\expval{T^{(2)}_{\pm1}}$, los cuales podemos
+relacionar con $Q$ mediante el teorema de Wigner-Eckart. Efectivamente tenemos
+\begin{align}
+  \expval{T^{(2)}_{\pm1}}{\alpha,j,j} = \braket{j,2;j,\pm1}{j,j}
+    \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}.
+\end{align}
+La relación entre $\doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}$ y $Q$ ya la
+encontramos en el ítem (a) (ver ec. \eqref{eq:Qdoublebar}).
+%Sin embargo, notemos que estos valores medios se anulan por las reglas de
+%selcción, en cuanto $j \pm 1 \neq j$.
+
+De los términos no-diagonales nos queda solamente $Q_{xy}$. Para ello,
+volviendo a la tabla de armónicos esféricos notemos que
+\begin{equation}
+  r^2\SphericalHarmonic{2}{\pm2}
+  = \frac{1}{4}\sqrt{\frac{15}{2\pi}} \left(x \pm iy\right)^2
+  = \frac{1}{4}\sqrt{\frac{15}{2\pi}} \left(x^2 - y^2 \pm2ixy\right).
+\end{equation}
+Entonces, como ya escribimos en \eqref{eq:T22spherharm},
+\begin{equation}
+  T^{(2)}_{\pm2} = \frac{1}{4}\sqrt{\frac{15}{2\pi}}\left(x^2 - y^2
+    \pm2ixy\right),
+\end{equation}
+y por lo tanto
+\begin{equation}
+  Q_{xy} = 3\,xy = i3\sqrt{\frac{2\pi}{15}}
+    \left(T^{(2)}_{-2} - T^{(2)}_{2}\right).
+\end{equation}
+La cuenta de los valores medios de $T^{(2)}_{\pm2}$ ya la hicimos en el ítem
+(a) (es el caso particular en que $m' = j$).
+
+Finalmente, quedan los valores medios de los dos términos diagonales
+\begin{equation}
+  Q_{xx} = 3x^2 - r^2, \qquad
+  Q_{yy} = 3y^2 - r^2.
+\end{equation}
+Si miran con detenimiento los armónicos esféricos van a notar que no hay forma
+sencilla de hacer aparecer estos términos. Efectivamente, para poder calcular
+estos valores medios hay que usar una propiedad adicional del tensor de momento
+cuadrupolar. Notemos que el tensor tiene traza cero. Efectivamente,
+\begin{equation}
+  Q_{xx} + Q_{yy} + Q_{zz}
+  = 3x^2 - r^2 + 3y^2 - r^2 + 3z^2 - r^2
+  = 3\left(x^2 + y^2 + z^2\right) - 3r^2
+  = 3r^2 - 3r^2 = 0.
+\end{equation}
+Esto significa que los valores medios de las tres componentes diagonales no
+son independientes entre sí, puesto que conociendo dos de ellos podemos
+calcular el tercero. En particular podemos escribir
+\begin{equation}
+  Q_{xx} + Q_{yy} = -Q_{zz}.
+\end{equation}
+Por lo tanto, para los valores medios tenemos
+\begin{align}
+  \expval{Q_{xx} + Q_{yy}} &= -\expval{Q_{zz}} \\
+  \expval{Q_{xx}} + \expval{Q_{yy}} &= -\expval{Q_{zz}},
+\end{align}
+donde en el segundo renglón usamos que el valor medio es lineal y por lo tanto
+se distribuye en la suma. Ahora, el valor medio de $Q_{zz}$ es conocido (es el
+dato) y entonces
+\begin{equation}
+  \expval{Q_{xx}} + \expval{Q_{yy}} = -\expval{Q_{zz}} = - Q.
+\end{equation}
+Tenemos entonces cuanto vale la suma de los valores medios de $Q_{xx}$ y
+$Q_{yy}$. Si quisiésemos despejar $\expval{Q_{xx}}$ y $\expval{Q_{yy}}$
+necesitamos otra ecuación que nos relaciones, por ejemplo, la diferencia de los
+valores medios con el dato. Veamos cuánto da la diferencia
+\begin{equation}
+  Q_{xx} - Q_{yy} = 3x^2 - r^2 - \left(3y^2 - r^2\right) = 3x^2 - 3y^2
+  = 3(x^2 - y^2).
+\end{equation}
+Este paso, que parece totalmente redundante, es clave porque notemos que ahora
+al operador $x^2 - y^2$ \emph{sí} lo podemos escribir de forma sencilla como
+combinación lineal de componentes de un tensor esférico de rango 2!
+Efectivamente es lo que hicimos en el ítem (a) y de la ecuación
+\eqref{eq:Qauxmatrixel} podemos leer el valor medio de $(x^2 - y^2)$.
+
+Finalmente, como los valores medios $\expval{Q_{zz}}$ y $\expval{x^2 - y^2}$
+están en términos de los datos, podemos despejar $\expval{Q_{xx}}$ y
+$\expval{Q_{yy}}$,
+\begin{align}
+  \expval{Q_{xx}} + \expval{Q_{yy}} &= -\expval{Q_{zz}}, &
+  \expval{Q_{xx}} - \expval{Q_{yy}} &= 3\expval{x^2 - y^2}, \\
+  \expval{Q_{xx}} &= \frac{1}{2}\left(3\expval{x^2 - y^2} -
+                     \expval{Q_{zz}}\right), &
+  \expval{Q_{yy}} &= -\frac{1}{2}\left(3\expval{x^2 - y^2} +
+                     \expval{Q_{zz}}\right).
+\end{align}
+
+\bigbreak
+\TODO{revisar: la idea de cómo proceder para los despejes de las componentes de
+Qik en términos de armónicos esféricos están seguro bien, pero las reglas de
+selección darían que todos los valores medios son 0. Es esto un error de cuentas
+o es el enunciado del problema poco feliz?}
 
 % =============================================================================
 \end{document}
