@@ -297,7 +297,7 @@ Como siempre, tenemos que
 \end{equation}
 Por lo tanto, lo único que necesitamos es calcular los coeficientes
 \begin{equation}
-  C_{j_1,j_2;m_1,m_2}^{j,m} \eqdef \braket{j_1,j_2;m_1,m_2}{j,m},
+  C_{j_1,j_2;m_1,m_2}^{j,m} \eqdef \ClebschGordan{j_1}{j_2}{m_1}{m_2}{j}{m},
 \end{equation}
 conocidos como los \emph{coeficientes de Clebsch-Gordan}. Estos coeficientes
 son famosos por la utilidad práctica que tiene poder transformar entre estas
@@ -314,13 +314,14 @@ posibles}.
 En primer lugar notemos que, como por definición $J_z = J_{1z} + J_{2z}$,
 entonces tenemos lo siguiente
 \begin{align}
-  \matrixel{j_1,j_2;m_1,m_2}{J_z}{j,m} &= \hbar m\braket{j_1,j_2;m_1,m_2}{j,m}
+  \matrixel{j_1,j_2;m_1,m_2}{J_z}{j,m} &= \hbar
+    m\ClebschGordan{j_1}{j_2}{m_1}{m_2}{j}{m}
   \\
   \matrixel{j_1,j_2;m_1,m_2}{J_z}{j,m} &= 
   \matrixel{j_1,j_2;m_1,m_2}{\left(J_{1z} + J_{2z}\right)}{j,m} =
-  \hbar(m_1+m_2)\braket{j_1,j_2;m_1,m_2}{j,m}.
+  \hbar(m_1+m_2) \ClebschGordan{j_1}{j_2}{m_1}{m_2}{j}{m}.
 \end{align}
-Por lo tanto, para que $\braket{j_1,j_2;m_1,m_2}{j,m} \neq 0$,
+Por lo tanto, para que $\ClebschGordan{j_1}{j_2}{m_1}{m_2}{j}{m} \neq 0$,
 \emph{necesariamente} $m = m_1 + m_2$, es decir la proyección total de momento
 angular en $z$ tiene que ser la suma de las proyecciones de cada momento
 angular; en cualquier otro caso el coeficiente de Clebsch-Gordan se anula.
@@ -342,8 +343,8 @@ donde sobreentendemos que los valores de $j$ van saltando en una unidad.
 \bigbreak
 
 En resumen tenemos que, para que el coeficiente de Clebsch-Gordan
-$C_{j_1,j_2;m_1,m_2}^{j,m} = \braket{j_1,j_2;m_1,m_2}{j,m}$ sea distinto de
-cero, necesariamente
+$C_{j_1,j_2;m_1,m_2}^{j,m} = \ClebschGordan{j_1}{j_2}{m_1}{m_2}{j}{m}$ sea
+distinto de cero, necesariamente
 \begin{equation} \label{eq:selrulesumj}
   m = m_1 + m_2, \qquad \abs{j_1 - j_2} \leq j \leq j_1 + j_2.
 \end{equation}
@@ -373,7 +374,7 @@ estado $\ket{\jmax, \jmax}$. Su expansión en la base producto
 es
 \begin{equation}
   \ket{\jmax, \jmax} =
-  \sum_{m_1,m_2}\braket{j_1,j_2;m_1,m_2}{\jmax,\jmax}
+  \sum_{m_1,m_2}\ClebschGordan{j_1}{j_2}{m_1}{m_2}{\jmax}{\jmax}
   \ket{j_1,j_2;m_1,m_2}.
 \end{equation}
 Ahora, para que los coeficientes de Clebsch-Gordan de esta expansión no sean
@@ -893,18 +894,19 @@ Sean $V^{(k_1)}$ y $W^{(k_2)}$ dos tensores esféricos de rango $k_1$ y $k_2$,
 respectivamente. Entonces, se puede mostrar que los operadores $T^{(k)}_q$
 dados por
 \begin{equation} \label{eq:deftensorcoupling}
-  T^{(k)}_{q} \eqdef \sum_{q_1, q_2} \braket{k_1,k_2;q_1,q_2}{kq}
+  T^{(k)}_{q} \eqdef \sum_{q_1, q_2} \ClebschGordan{k_1}{k_2}{q_1}{q_2}{k}{q}
   V^{(k_1)}_{q_1} W^{(k_2)}_{q_2},
 \end{equation}
 definen un tensor esférico de rango $k$. La demostración de esto es inmediata
 de calcular $\RotationOp T^{(k)}_{q} \RotationOp^\dagger$ y usar que $V^{(k_1)}$
 y $W^{(k_2)}$ satisfacen \eqref{eq:defoptensesf}.
 
-Notar que en \eqref{eq:deftensorcoupling} $\braket{k_1,k_2;q_1,q_2}{kq}$ son
-simplemente los coeficientes de Clebsch-Gordan que provienen de acoplar
-momentos angulares $k_1$ y $k_2$ con proyecciones $q_1$ y $q_2$ para obtener un
-momento angular total $k$ con proyección $q$. Por lo tanto, debido a
-\eqref{eq:selrulesumj} esto nos dice dos cosas importantes.
+Notar que en \eqref{eq:deftensorcoupling}
+$\ClebschGordan{k_1}{k_2}{q_1}{q_2}{k}{q}$ son simplemente los coeficientes de
+Clebsch-Gordan que provienen de acoplar momentos angulares $k_1$ y $k_2$ con
+proyecciones $q_1$ y $q_2$ para obtener un momento angular total $k$ con
+proyección $q$. Por lo tanto, debido a \eqref{eq:selrulesumj} esto nos dice dos
+cosas importantes.
 \begin{itemize}
   \item Dados los tensores de rango $k_1$ y $k_2$, solamente nos podremos
     construir tensores de rango $k = \abs{k_1 - k_2}, \abs{k_1 - k_2} + 1,
@@ -928,17 +930,17 @@ rango 1 y \eqref{eq:deftensorcoupling} para construirnos uno de rango 2, es
 decir
 \begin{equation}
   T^{(2)}_q = \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = q}}
-    \braket{1,1;q_1,q_2}{2,q} V^{(1)}_{q_1} W^{(1)}_{q_2},
+    \ClebschGordan{1}{1}{q_1}{q_2}{2}{q} V^{(1)}_{q_1} W^{(1)}_{q_2},
 \end{equation}
 con $V^{(1)}$ y $W^{(2)}$ dados por \eqref{eq:defvecttensone}.
 
 Comenzando con $q = 0$ tenemos
 \begin{align}
   T^{(2)}_0 &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = 0}}
-    \braket{1,1;q_1,q_2}{20} V^{(1)}_{q_1} W^{(1)}_{q_2} \nonumber \\
-  &= \underbrace{\braket{1,1;0,0}{20}}_{\sqrt{2/3}} V^{(1)}_{0} W^{(1)}_{0} +
-    \underbrace{\braket{1,1;1,-1}{20}}_{\sqrt{1/6}} V^{(1)}_{1} W^{(1)}_{-1} +
-    \underbrace{\braket{1,1;-1,1}{20}}_{\sqrt{1/6}} V^{(1)}_{-1} W^{(1)}_{1}
+    \ClebschGordan{1}{1}{q_1}{q_2}{2}{0} V^{(1)}_{q_1} W^{(1)}_{q_2} \nonumber \\
+  &= \underbrace{\ClebschGordan{1}{1}{0}{0}{2}{0}}_{\sqrt{2/3}} V^{(1)}_{0} W^{(1)}_{0} +
+    \underbrace{\ClebschGordan{1}{1}{1}{-1}{2}{0}}_{\sqrt{1/6}} V^{(1)}_{1} W^{(1)}_{-1} +
+    \underbrace{\ClebschGordan{1}{1}{-1}{1}{2}{0}}_{\sqrt{1/6}} V^{(1)}_{-1} W^{(1)}_{1}
     \nonumber \\
   &= \sqrt{\frac{2}{3}} V_z W_z
     -\sqrt{\frac{1}{6}}\frac{1}{2}\left(V_x+iV_y\right)\left(W_x-iW_y\right)
@@ -960,8 +962,8 @@ Las componentes $q = \pm2$ son más sencillas porque hay una única combinación
 de $q_1$ y $q_2$ que da $2$ o $-2$. Para $q = 2$ tenemos
 \begin{align}
   T^{(2)}_2 &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = 2}}
-    \braket{1,1;q_1,q_2}{22} V^{(1)}_{q_1} W^{(1)}_{q_2}
-    = \underbrace{\braket{1,1;1,1}{22}}_{1} V^{(1)}_{1} W^{(1)}_{1} \nonumber
+    \ClebschGordan{1}{1}{q_1}{q_2}{2}{2} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\ClebschGordan{1}{1}{1}{1}{2}{2}}_{1} V^{(1)}_{1} W^{(1)}_{1} \nonumber
     \\
   &= \frac{1}{2}\left(V_x +iV_y\right)\left(W_x +iW_y\right) \\
   &= \frac{1}{2}\left(V_xW_x - V_yW_y + iV_xW_y + iV_yW_x\right).
@@ -969,8 +971,8 @@ de $q_1$ y $q_2$ que da $2$ o $-2$. Para $q = 2$ tenemos
 Análogamente para $q = -2$,
 \begin{align}
   T^{(2)}_{-2} &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = -2}}
-    \braket{1,1;q_1,q_2}{2,-2} V^{(1)}_{q_1} W^{(1)}_{q_2}
-    = \underbrace{\braket{1,1;1,1}{2,-2}}_{1} V^{(1)}_{-1} W^{(1)}_{-1}
+    \ClebschGordan{1}{1}{q_1}{q_2}{2}{-2} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\ClebschGordan{1}{1}{1}{1}{2}{-2}}_{1} V^{(1)}_{-1} W^{(1)}_{-1}
     \nonumber \\
   &= \frac{1}{2}\left(V_x -iV_y\right)\left(W_x -iW_y\right) \\
   &= \frac{1}{2}\left(V_xW_x - V_yW_y - iV_xW_y - iV_yW_x\right).
@@ -979,9 +981,9 @@ Análogamente para $q = -2$,
 Quedan para calcular las componentes $q = \pm1$. Para $q = 1$ tenemos
 \begin{align}
   T^{(2)}_{1} &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = 1}}
-    \braket{1,1;q_1,q_2}{21} V^{(1)}_{q_1} W^{(1)}_{q_2}
-    = \underbrace{\braket{1,1;1,0}{21}}_{\sqrt{1/2}} V^{(1)}_{1} W^{(1)}_{0} +
-    \underbrace{\braket{1,1;0,1}{21}}_{\sqrt{1/2}} V^{(1)}_{0} W^{(1)}_{1}
+    \ClebschGordan{1}{1}{q_1}{q_2}{2}{1} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\ClebschGordan{1}{1}{1}{0}{2}{1}}_{\sqrt{1/2}} V^{(1)}_{1} W^{(1)}_{0} +
+    \underbrace{\ClebschGordan{1}{1}{0}{1}{2}{1}}_{\sqrt{1/2}} V^{(1)}_{0} W^{(1)}_{1}
     \nonumber \\
   &= -\frac{1}{2}\left(V_x+iV_y\right)W_z -\frac{1}{2}V_z\left(W_x+iW_y\right)
     \nonumber \\
@@ -990,9 +992,9 @@ Quedan para calcular las componentes $q = \pm1$. Para $q = 1$ tenemos
 Análogamente para $q = -1$,
 \begin{align}
   T^{(2)}_{-1} &= \sum_{\substack{q_1,q_2\in\set{1,0,-1} \\ q_1 + q_2 = -1}}
-    \braket{1,1;q_1,q_2}{2,-1} V^{(1)}_{q_1} W^{(1)}_{q_2}
-    = \underbrace{\braket{1,1;-1,0}{2,-1}}_{\sqrt{1/2}}V^{(1)}_{-1}W^{(1)}_{0}
-    + \underbrace{\braket{1,1;0,-1}{2,-1}}_{\sqrt{1/2}}V^{(1)}_{0}W^{(1)}_{-1}
+    \ClebschGordan{1}{1}{q_1}{q_2}{2}{-1} V^{(1)}_{q_1} W^{(1)}_{q_2}
+    = \underbrace{\ClebschGordan{1}{1}{-1}{0}{2}{-1}}_{\sqrt{1/2}}V^{(1)}_{-1}W^{(1)}_{0}
+    + \underbrace{\ClebschGordan{1}{1}{0}{-1}{2}{-1}}_{\sqrt{1/2}}V^{(1)}_{0}W^{(1)}_{-1}
     \nonumber \\
   &= \frac{1}{2}\left(V_x-iV_y\right)W_z + \frac{1}{2}V_z\left(W_x-iW_y\right)
     \nonumber \\
@@ -1206,18 +1208,18 @@ $A$ cualquier observable que conmuta con $J^2$ y $J_z$ (por ejemplo, en el
 Wigner-Eckart nos dice que los elementos de matriz del operador $T^{(k)}_q$ en
 esta base de momento angular se pueden escribir de la forma
 \begin{equation} \label{eq:teowe}
-  \matrixel{\alpha',j',m'}{T^{(k)}_{q}}{\alpha,j,m} = \braket{jk;mq}{j'm'} \,
-  T_{\alpha',\alpha}^{k,j',j},
+  \matrixel{\alpha',j',m'}{T^{(k)}_{q}}{\alpha,j,m} =
+    \ClebschGordan{j}{k}{m}{q}{j'}{m'} \, T_{\alpha',\alpha}^{k,j',j},
 \end{equation}
-donde $\braket{jk;mq}{j'm'}$ es el coeficiente de Clebsch-Gordan que surge de
-sumar momentos angulares $j$ y $k$ con proyecciones $m$ y $q$ para obtener un
-momento angular total $j'$ con proyección $m'$; y $T_{\alpha',\alpha}^{k,j',j}$
-es un coeficiente que depende de $\alpha$, $\alpha'$, $j$, $j'$ y $k$, pero
-notablemente \emph{no} depende de $m$, $m'$ ni $q$. Es decir que el teorema de
-Wigner-Eckart nos dice que la dependencia en $m$, $m'$ y $q$ del elemento de
-matriz de $T^{(k)}_q$ se puede factorizar totalmente en un coeficiente de
-Clebsch-Gordan. A la constante $T_{\alpha',\alpha}^{k,j',j}$ se la suele notar
-como
+donde $\ClebschGordan{j}{k}{m}{q}{j'}{m'}$ es el coeficiente de Clebsch-Gordan
+que surge de sumar momentos angulares $j$ y $k$ con proyecciones $m$ y $q$ para
+obtener un momento angular total $j'$ con proyección $m'$; y
+$T_{\alpha',\alpha}^{k,j',j}$ es un coeficiente que depende de $\alpha$,
+$\alpha'$, $j$, $j'$ y $k$, pero notablemente \emph{no} depende de $m$, $m'$ ni
+$q$. Es decir que el teorema de Wigner-Eckart nos dice que la dependencia en
+$m$, $m'$ y $q$ del elemento de matriz de $T^{(k)}_q$ se puede factorizar
+totalmente en un coeficiente de Clebsch-Gordan. A la constante
+$T_{\alpha',\alpha}^{k,j',j}$ se la suele notar como
 \begin{equation}
   T_{\alpha',\alpha}^{k,j',j} = \doublebarmel{\alpha',j'}{T^{(k)}}{\alpha,j}.
 \end{equation}
@@ -1240,7 +1242,7 @@ matriz de $T^{(k)}_q$ sea distinto de cero. Efectivamente para que
 \end{equation}
 necesariamente
 \begin{equation}
-  \braket{jk;mq}{j'm'} \neq 0,
+  \ClebschGordan{j}{k}{m}{q}{j'}{m'} \neq 0,
 \end{equation}
 y para que este coeficiente de Clebsch-Gordan sea distinto de cero se tienen
 que cumplir las condiciones \eqref{eq:selrulesumj}, que en este caso se leen
@@ -1283,15 +1285,15 @@ puesto que $\vect{r}$ es un operador vectorial y como vimos en
 Por lo tanto,
 \begin{equation}
   \matrixel{5,4,3}{z}{6,4,0} = 
-  \matrixel{5,4,3}{T^{(1)}_0}{6,4,0} = \braket{41;00}{43}
+  \matrixel{5,4,3}{T^{(1)}_0}{6,4,0} = \ClebschGordan{4}{1}{0}{0}{4}{3}
   \doublebarmel{5,4}{T^{(1)}}{6,4}.
 \end{equation}
 Ahora, sumando momentos angulares $4$ y $1$ se puede obtener momento angular
 total $4$, así que hasta aquí todo bien. Pero, la suma de componentes viola la
 condición \eqref{eq:selruleswe}, puesto que $0 + 0 \neq 3$. Por lo tanto,
-$\braket{41;00}{43} = 0$ y entonces $\matrixel{5,4,3}{z}{6,4,0} = 0$. Notemos
-como el teorema de Wigner-Eckart nos da una forma muy sencilla de chequear que
-efectivamente el elemento de matriz se anula.
+$\ClebschGordan{4}{1}{0}{0}{4}{3} = 0$ y entonces $\matrixel{5,4,3}{z}{6,4,0} =
+0$. Notemos como el teorema de Wigner-Eckart nos da una forma muy sencilla de
+chequear que efectivamente el elemento de matriz se anula.
 
 \bigbreak
 
@@ -1316,11 +1318,12 @@ Por lo tanto,
 Aplicando Wigner-Eckart tenemos
 \begin{align}
   \matrixel{5,4,3}{x}{6,4,0} &=
-    \frac{1}{\sqrt{2}}\braket{4,1;0,-1}{4,3} \doublebarmel{5,4}{T^{(1)}}{6,4} -
-    \frac{1}{\sqrt{2}}\braket{4,1;0,1}{4,3} \doublebarmel{5,4}{T^{(1)}}{6,4}
-    \nonumber \\
-  &=  \frac{1}{\sqrt{2}}\left(\braket{4,1;0,-1}{4,3} -
-    \braket{4,1;0,1}{4,3}\right) \doublebarmel{5,4}{T^{(1)}}{6,4},
+    \frac{1}{\sqrt{2}}\ClebschGordan{4}{1}{0}{-1}{4}{3}
+    \doublebarmel{5,4}{T^{(1)}}{6,4} -
+    \frac{1}{\sqrt{2}}\ClebschGordan{4}{1}{0}{1}{4}{3}
+    \doublebarmel{5,4}{T^{(1)}}{6,4} \nonumber \\
+  &= \frac{1}{\sqrt{2}}\left(\ClebschGordan{4}{1}{0}{-1}{4}{3} -
+    \ClebschGordan{4}{1}{0}{1}{4}{3}\right) \doublebarmel{5,4}{T^{(1)}}{6,4},
 \end{align}
 donde factorizamos el coeficiente $\doublebarmel{5,4}{T^{(1)}}{6,4}$ dado que
 es el mismo para ambos términos, puesto que sólo difieren en los valores de las
@@ -1444,12 +1447,13 @@ Ahora sí podemos utilizar el teorema de Wigner-Eckart. Tenemos
   &= 2\sqrt{\frac{2\pi}{15}}\left(
     \matrixel{\alpha,j,m'}{T^{(2)}_{2}}{\alpha,j,j} +
     \matrixel{\alpha,j,m'}{T^{(2)}_{-2}}{\alpha,j,j}\right) \nonumber \\
-  &= 2\sqrt{\frac{2\pi}{15}}\left(
-    \braket{j,2;j,2}{jm'} \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} +
-    \braket{j,2;j,-2}{jm'}
+  &= 2\sqrt{\frac{2\pi}{15}} \left( \ClebschGordan{j}{2}{j}{2}{j}{m'}
+    \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} +
+    \ClebschGordan{j}{2}{j}{-2}{j}{m'}
     \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}\right) \nonumber \\
-  &= 2\sqrt{\frac{2\pi}{15}} \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} \left(
-    \braket{j,2;j,2}{jm'} + \braket{j,2;j,-2}{jm'} \right).
+  &= 2\sqrt{\frac{2\pi}{15}} \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}
+    \left( \ClebschGordan{j}{2}{j}{2}{j}{m'} +
+      \ClebschGordan{j}{2}{j}{-2}{j}{m'} \right).
 \end{align}
 
 Para relacionar $\doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}$ con $Q$ usamos
@@ -1457,22 +1461,24 @@ nuevamente el teorema de Wigner-Eckart. Tenemos
 \begin{align}
   Q &= \expval{\left(3z^2 - r^2\right)}{\alpha,j,j}
     = 2\sqrt{\frac{4\pi}{5}}\expval{T^{(2)}_{0}}{\alpha,j,j} \nonumber \\
-    &= 2\sqrt{\frac{4\pi}{5}} \braket{j2;j0}{jj}
+    &= 2\sqrt{\frac{4\pi}{5}} \ClebschGordan{j}{2}{j}{0}{j}{j}
       \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}.
 \end{align}
 Entonces,
 \begin{equation} \label{eq:Qdoublebar}
   \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j} =
-  \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\braket{j2;j0}{jj}}.
+  \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\ClebschGordan{j}{2}{j}{0}{j}{j}}.
 \end{equation}
 Finalmente,
 \begin{align} \label{eq:Qauxmatrixel}
   \matrixel{\alpha,j,m'}{(x^2 - y^2)}{\alpha,j,j}
     &= 2\sqrt{\frac{2\pi}{15}} 
-    \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\braket{j2;j0}{jj}}
-    \left( \braket{j,2;j,2}{jm'} + \braket{j,2;j,-2}{jm'} \right) \nonumber \\
-  &= \frac{1}{\sqrt{6}} \frac{Q}{\braket{j2;j0}{jj}}
-    \left( \braket{j,2;j,2}{jm'} + \braket{j,2;j,-2}{jm'} \right).
+    \frac{1}{2}\sqrt{\frac{5}{4\pi}} \frac{Q}{\ClebschGordan{j}{2}{j}{0}{j}{j}}
+    \left( \ClebschGordan{j}{2}{j}{2}{j}{m'} +
+      \ClebschGordan{j}{2}{j}{-2}{j}{m'} \right) \nonumber \\
+  &= \frac{1}{\sqrt{6}} \frac{Q}{\ClebschGordan{j}{2}{j}{0}{j}{j}}
+    \left( \ClebschGordan{j}{2}{j}{2}{j}{m'} +
+      \ClebschGordan{j}{2}{j}{-2}{j}{m'} \right).
 \end{align}
 Vemos entonces cómo efectivamente podemos relacionar todos esos elementos de
 matriz de $(x^2 - y^2)$ con el valor de expectación $Q$ de $(3z^2 - r^2)$.
@@ -1537,7 +1543,7 @@ Para calcular los valores medios $\expval{Q_{xz}}$ y $\expval{Q_{yz}}$ basta
 con calcular los valores medios $\expval{T^{(2)}_{\pm1}}$, los cuales podemos
 relacionar con $Q$ mediante el teorema de Wigner-Eckart. Efectivamente tenemos
 \begin{align}
-  \expval{T^{(2)}_{\pm1}}{\alpha,j,j} = \braket{j,2;j,\pm1}{j,j}
+  \expval{T^{(2)}_{\pm1}}{\alpha,j,j} = \ClebschGordan{j}{2}{j}{\pm1}{j}{j}
     \doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}.
 \end{align}
 La relación entre $\doublebarmel{\alpha,j}{T^{(2)}}{\alpha,j}$ y $Q$ ya la
